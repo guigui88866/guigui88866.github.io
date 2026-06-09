@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真爱团管理后台</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:13px;color:#1a1a1a;background:#f5f5f5;height:100vh;display:flex;flex-direction:column}
+.topbar{height:48px;background:#fff;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;padding:0 20px;flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:500;color:#1a1a1a}
+.layout{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;background:#fff;border-right:1px solid #e8e8e8;overflow-y:auto;flex-shrink:0}
+.sidebar-section{padding:16px 0 4px 16px;font-size:11px;color:#999;font-weight:500;letter-spacing:.5px}
+.nav-item{padding:10px 16px;cursor:pointer;font-size:13px;color:#555;border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{background:#f0f7ff;color:#1677ff}
+.nav-item.active{background:#e8f0fe;color:#1677ff;border-left-color:#1677ff;font-weight:500}
+.main{flex:1;overflow-y:auto;padding:20px}
+.page-header{margin-bottom:12px}
+.page-title{font-size:16px;font-weight:500}
+.search-bar{background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.search-item{display:flex;align-items:center;gap:8px}
+.search-item label{font-size:13px;color:#555;white-space:nowrap}
+.search-item input{height:32px;padding:0 10px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px;width:180px;color:#1a1a1a;outline:none;transition:border-color .15s}
+.search-item input:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(22,119,255,.1)}
+.btn{height:32px;padding:0 14px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px;cursor:pointer;background:#fff;color:#333;transition:all .15s}
+.btn:hover{border-color:#1677ff;color:#1677ff}
+.btn-primary{background:#1677ff;color:#fff;border-color:#1677ff}
+.btn-primary:hover{background:#0958d9;border-color:#0958d9;color:#fff}
+.table-wrap{background:#fff;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead tr{background:#fafafa}
+th{padding:11px 14px;text-align:left;font-weight:500;font-size:12px;color:#666;border-bottom:1px solid #e8e8e8;white-space:nowrap}
+td{padding:11px 14px;font-size:13px;color:#1a1a1a;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafeff}
+.panel{display:none}
+.panel.active{display:block}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.tag-lv1{background:#e6f4ff;color:#1677ff}
+.tag-lv2{background:#f6ffed;color:#389e0d}
+.tag-lv3{background:#fff7e6;color:#d46b08}
+.tag-lv4{background:#fff1f0;color:#cf1322}
+.lnk{color:#1677ff;cursor:pointer;background:none;border:none;font-size:13px;padding:0;text-decoration:none}
+.lnk:hover{text-decoration:underline}
+.inc{color:#389e0d;font-weight:500}
+.dec{color:#cf1322;font-weight:500}
+.badge-on{display:inline-block;width:6px;height:6px;border-radius:50%;background:#52c41a;margin-right:5px;vertical-align:middle}
+.badge-off{display:inline-block;width:6px;height:6px;border-radius:50%;background:#bfbfbf;margin-right:5px;vertical-align:middle}
+.back-btn{display:inline-flex;align-items:center;gap:4px;cursor:pointer;color:#1677ff;font-size:13px;margin-bottom:14px;background:none;border:none;padding:0}
+.back-btn:hover{text-decoration:underline}
+.search-item select{padding:6px 28px 6px 10px;border:1px solid #d9d9d9;border-radius:4px;font-size:13px;background:#fff;color:#1a1a1a;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 8px center;cursor:pointer;outline:none;min-width:100px}
+.search-item select:focus{border-color:#1677ff;box-shadow:0 0 0 2px rgba(22,119,255,.12)}
+.ov-cards{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.ov-card{background:#f8faff;border:1px solid #e8e8e8;border-radius:8px;padding:12px 14px;min-width:130px}
+.ov-card .lbl{font-size:11px;color:#888;margin-bottom:6px}
+.ov-card .val{font-size:15px;font-weight:500;color:#1a1a1a}
+.ov-card .val-sm{font-size:13px;font-weight:500;color:#1a1a1a;line-height:1.5}
+.pagination{display:flex;align-items:center;gap:6px;padding:12px 14px;background:#fff;border-top:1px solid #f0f0f0;font-size:13px;color:#666}
+.page-btn{width:28px;height:28px;border:1px solid #d9d9d9;border-radius:4px;cursor:pointer;background:#fff;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.page-btn:hover{border-color:#1677ff;color:#1677ff}
+.page-btn.active{background:#1677ff;color:#fff;border-color:#1677ff}
+.page-btn:disabled{opacity:.4;cursor:not-allowed}
+.total-text{color:#888;font-size:13px;margin-right:auto}
+.avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#fff}
+.user-cell,.anchor-cell{display:flex;align-items:center;gap:10px}
+.cell-info{display:flex;flex-direction:column;gap:1px}
+.cell-info .uid{font-size:11px;color:#999}
+.cell-info .name{font-size:13px;color:#1a1a1a}
+.th-sort{cursor:pointer;user-select:none;display:inline-flex;align-items:center;gap:3px}
+.th-sort:hover{color:#1677ff}
+.sort-arrows{display:inline-flex;flex-direction:column;line-height:1;font-size:9px;gap:-2px;vertical-align:middle}
+.sort-arrows span{line-height:.7;color:#bbb;transition:color .15s}
+.sort-arrows span.active{color:#1677ff}
+.col-hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">管理后台</span>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-section">真爱团管理</div>
+    <div class="nav-item active" onclick="switchPage('group',this)">团管理</div>
+    <div class="nav-item" onclick="switchPage('fans',this)">粉丝管理</div>
+  </div>
+
+  <div class="main">
+    <!-- 团管理 -->
+    <div class="panel active" id="panel-group">
+      <div class="page-header"><div class="page-title">团管理</div></div>
+      <div class="search-bar">
+        <div class="search-item">
+          <label>所属主播</label>
+          <input type="text" id="g-anchor" placeholder="请输入主播UID/昵称">
+        </div>
+        <div class="search-item">
+          <label>团名称</label>
+          <input type="text" id="g-gn" placeholder="请输入团名称">
+        </div>
+        <button class="btn btn-primary" onclick="filterGroups()">搜索</button>
+        <button class="btn" onclick="resetGroup()">重置</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>所属主播</th>
+            <th>团名称</th>
+            <th><span class="th-sort" onclick="toggleGroupSort('tot')">粉丝数量 <span id="g-sort-icon-tot"></span></span></th>
+            <th><span class="th-sort" onclick="toggleGroupSort('ext')">铭牌熄灭数量 <span id="g-sort-icon-ext"></span></span></th>
+            <th>操作</th>
+          </tr></thead>
+          <tbody id="gtb"></tbody>
+        </table>
+        <div class="pagination" id="g-pager"></div>
+      </div>
+    </div>
+
+    <!-- 粉丝管理 -->
+    <div class="panel" id="panel-fans">
+      <button class="back-btn" id="f-back-btn" style="display:none" onclick="backFromFansDetail()">‹ 返回团管理</button>
+      <div class="page-header"><div class="page-title">粉丝管理</div></div>
+      <div class="search-bar" id="f-search-bar">
+        <div class="search-item">
+          <label>粉丝</label>
+          <input type="text" id="f-user" placeholder="请输入粉丝UID/昵称">
+        </div>
+        <div class="search-item" id="f-anchor-item">
+          <label>所属主播</label>
+          <input type="text" id="f-anchor" placeholder="请输入主播UID/昵称">
+        </div>
+        <div class="search-item" id="f-gname-item">
+          <label>团名称</label>
+          <input type="text" id="f-gname" placeholder="请输入团名称">
+        </div>
+        <div class="search-item" id="f-badge-item">
+          <label>铭牌状态</label>
+          <select id="f-badge"><option value="">全部</option><option value="on">正常</option><option value="off">熄灭</option></select>
+        </div>
+        <div class="search-item">
+          <label>加入时间</label>
+          <input type="date" id="f-date-from" style="width:130px">
+          <span style="color:#999;font-size:12px">至</span>
+          <input type="date" id="f-date-to" style="width:130px">
+        </div>
+        <button class="btn btn-primary" onclick="filterFans()">搜索</button>
+        <button class="btn" onclick="resetFans()">重置</button>
+      </div>
+      <div class="table-wrap">
+        <table id="f-table">
+          <thead><tr>
+            <th>粉丝</th>
+            <th class="col-anchor-th">所属主播</th>
+            <th class="col-gname-th">团名称</th>
+            <th>加入时间</th>
+            <th>入团天数</th>
+            <th><span class="th-sort" onclick="toggleFansSort()">当前真爱值 <span id="f-sort-icon"></span></span></th>
+            <th>当前真爱等级</th>
+            <th>铭牌状态</th>
+            <th>操作</th>
+          </tr></thead>
+          <tbody id="ftb"></tbody>
+        </table>
+        <div class="pagination" id="f-pager"></div>
+      </div>
+    </div>
+
+    <!-- 真爱值详情 -->
+    <div class="panel" id="panel-detail">
+      <button class="back-btn" onclick="backFromDetail()">‹ 返回粉丝管理</button>
+      <div class="page-header"><div class="page-title">真爱值详情</div></div>
+      <div class="ov-cards" id="d-ov"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>变化时间</th><th>变化类型</th><th>增减数量</th><th>真爱值</th><th>真爱等级</th></tr></thead>
+          <tbody id="dtb"></tbody>
+        </table>
+        <div class="pagination" id="d-pager"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== 常量 =====
+var avatarColors = ['#1677ff','#389e0d','#d46b08','#cf1322','#722ed1','#08979c','#a0d911','#eb2f96','#fa8c16','#2f54eb'];
+
+// ===== 数据生成 =====
+var anchors = [
+  {uid:'A001',nick:'云朵儿',color:avatarColors[0]},
+  {uid:'A002',nick:'小鹿鹿',color:avatarColors[1]},
+  {uid:'A003',nick:'糖果甜',color:avatarColors[2]},
+  {uid:'A004',nick:'星辰夜',color:avatarColors[3]},
+  {uid:'A005',nick:'晴天小猪',color:avatarColors[4]},
+  {uid:'A006',nick:'橙子酱',color:avatarColors[5]},
+  {uid:'A007',nick:'夏日微风',color:avatarColors[6]},
+  {uid:'A008',nick:'月亮姐姐',color:avatarColors[7]},
+  {uid:'A009',nick:'薄荷凉',color:avatarColors[8]},
+  {uid:'A010',nick:'蜜桃酱',color:avatarColors[9]},
+  {uid:'A011',nick:'芒果布丁',color:avatarColors[0]},
+  {uid:'A012',nick:'冰柠清清',color:avatarColors[1]},
+];
+
+var users = [
+  {uid:'U10001',nick:'小星星',color:avatarColors[0]},
+  {uid:'U10002',nick:'萌萌哒',color:avatarColors[1]},
+  {uid:'U10003',nick:'快乐风男',color:avatarColors[2]},
+  {uid:'U10004',nick:'紫罗兰',color:avatarColors[3]},
+  {uid:'U10005',nick:'冰棒侠',color:avatarColors[4]},
+  {uid:'U10006',nick:'橙子汽水',color:avatarColors[5]},
+  {uid:'U10007',nick:'彩虹糖',color:avatarColors[6]},
+  {uid:'U10008',nick:'蓝莓泡泡',color:avatarColors[7]},
+  {uid:'U10009',nick:'柠檬精',color:avatarColors[8]},
+  {uid:'U10010',nick:'草莓味',color:avatarColors[9]},
+  {uid:'U10011',nick:'薰衣草',color:avatarColors[0]},
+  {uid:'U10012',nick:'向日葵',color:avatarColors[1]},
+  {uid:'U10013',nick:'茉莉花',color:avatarColors[2]},
+  {uid:'U10014',nick:'蒲公英',color:avatarColors[3]},
+  {uid:'U10015',nick:'海浪声',color:avatarColors[4]},
+  {uid:'U10016',nick:'晚风凉',color:avatarColors[5]},
+  {uid:'U10017',nick:'猫咪控',color:avatarColors[6]},
+  {uid:'U10018',nick:'电竞少女',color:avatarColors[7]},
+  {uid:'U10019',nick:'甜筒控',color:avatarColors[8]},
+  {uid:'U10020',nick:'阳光男孩',color:avatarColors[9]},
+];
+
+var groupNames = ['真爱团','守护团','心动团','闪耀团','天使团'];
+var changeTypes = ['每日任务','购买守护','送礼','PK','熄灭衰减'];
+
+function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pad2(n){return String(n).padStart(2,'0');}
+function fmtDate(d){
+  return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+' '+pad2(d.getHours())+':'+pad2(d.getMinutes())+':'+pad2(d.getSeconds());
+}
+function randDate(daysAgo){
+  var d=new Date(2026,4,27,17,43,0);
+  d.setDate(d.getDate()-daysAgo);
+  d.setHours(randInt(0,23),randInt(0,59),randInt(0,59));
+  return d;
+}
+
+function avatarHtml(initials,color){
+  return '<div class="avatar" style="background:'+color+'">'+initials+'</div>';
+}
+function anchorCell(a){
+  return '<div class="anchor-cell">'+avatarHtml(a.nick.charAt(0),a.color)+'<div class="cell-info"><span class="uid">UID: '+a.uid+'</span><span class="name">昵称：'+a.nick+'</span></div></div>';
+}
+function userCell(u){
+  return '<div class="user-cell">'+avatarHtml(u.nick.charAt(0),u.color)+'<div class="cell-info"><span class="uid">UID: '+u.uid+'</span><span class="name">昵称：'+u.nick+'</span></div></div>';
+}
+function lvObj(v){
+  if(v>=3000) return {t:'LV4',c:'tag-lv4'};
+  if(v>=1000) return {t:'LV3',c:'tag-lv3'};
+  if(v>=300)  return {t:'LV2',c:'tag-lv2'};
+  return {t:'LV1',c:'tag-lv1'};
+}
+
+// ===== 先定每个主播的团名和粉丝数，再生成粉丝数据，保证团管理的 tot/ext 和粉丝列表完全一致 =====
+
+// 为每个主播分配团名和该团的粉丝人数（5~10人）
+var groupPlan = anchors.map(function(a,i){
+  return {
+    auid: a.uid,
+    nick: a.nick,
+    color: a.color,
+    gn: a.nick.charAt(0)+'的'+groupNames[i % groupNames.length],
+    fanCount: randInt(5,10)
+  };
+});
+
+// 按粉丝人数降序排列作为团列表
+var gd = groupPlan.sort(function(a,b){return b.fanCount-a.fanCount});
+
+// 根据团计划生成粉丝数据（从用户池取人，保证每个团人数 == fanCount）
+var fd = [];
+var userIdx = 0;
+groupPlan.forEach(function(gp){
+  for(var k=0; k<gp.fanCount; k++){
+    var u = users[userIdx % users.length];
+    userIdx++;
+    var daysAgo = randInt(10,500);
+    var joinDate = randDate(daysAgo);
+    var val = randInt(50,6000);
+    var extinct = (userIdx%7===0||userIdx%13===0);
+    fd.push({
+      uuid: u.uid, unick: u.nick, ucolor: u.color,
+      auid: gp.auid, anick: gp.nick, acolor: gp.color,
+      gn: gp.gn,
+      jt: fmtDate(joinDate), days: daysAgo,
+      val: val, extinct: extinct
+    });
+  }
+});
+
+// 额外生成8条"多团用户"记录（部分用户加入第二个团）
+for(var j=0;j<8;j++){
+  var u2 = users[j];
+  var gp2 = groupPlan[(j+3) % groupPlan.length];
+  var d2 = randInt(5,200);
+  var jd2 = randDate(d2);
+  var val2 = randInt(50,3000);
+  fd.push({
+    uuid: u2.uid, unick: u2.nick, ucolor: u2.color,
+    auid: gp2.auid, anick: gp2.nick, acolor: gp2.color,
+    gn: gp2.gn,
+    jt: fmtDate(jd2), days: d2,
+    val: val2, extinct: false
+  });
+  // 多团的也要计入对应团的人数（更新 groupPlan 的 fanCount）
+  groupPlan.forEach(function(gp){
+    if(gp.auid===gp2.auid){ gp.fanCount++; }
+  });
+}
+
+// 重新按粉丝人数排序 gd（因为多团数据追加了人数）
+gd = groupPlan.sort(function(a,b){return b.fanCount-a.fanCount});
+
+// 更新 gd 的 tot 和 ext（从 fd 实时计算）
+function updateGdFromFd(){
+  gd.forEach(function(g){
+    var fans = fd.filter(function(r){return r.auid===g.auid;});
+    g.tot = fans.length;
+    g.ext = fans.filter(function(r){return r.extinct;}).length;
+  });
+}
+updateGdFromFd();
+
+// 粉丝数据按真爱值降序
+fd.sort(function(a,b){return b.val-a.val});
+
+// 真爱值变化记录
+var detailCache={};
+function genDetail(uid,gname,curVal){
+  var key=uid+'|'+gname;
+  if(detailCache[key]) return detailCache[key];
+  var rows=[];
+  var v=curVal;
+  var now=new Date(2026,4,27,17,43,0);
+  for(var i=0;i<randInt(8,20);i++){
+    var tp=changeTypes[randInt(0,4)];
+    var delta;
+    if(tp==='每日任务') delta=randInt(5,20);
+    else if(tp==='购买守护') delta=randInt(100,600);
+    else if(tp==='送礼') delta=randInt(20,300);
+    else if(tp==='PK') delta=randInt(10,150);
+    else delta=-randInt(20,200);
+    var t=new Date(now.getTime()-i*randInt(60,172800)*1000);
+    rows.push({t:fmtDate(t),tp:tp,d:delta,v:v,lv:lvObj(v).t});
+    v=Math.max(0,v-delta);
+  }
+  detailCache[key]=rows;
+  return rows;
+}
+
+// ===== 状态 =====
+var PAGE_SIZE=10;
+var gPage=1,fPage=1,dPage=1;
+var gSortField='tot',gSortDir='desc';
+var fSortField='val',fSortDir='desc';
+var gFiltered=[].concat(gd);
+var fFiltered=[].concat(fd);
+var dData=[];
+var fFromGroup=false;
+
+function sortArrow(curField,curDir,field){
+  return '<span class="sort-arrows"><span class="'+(curDir==='asc'&&curField===field?'active':'')+'">▲</span><span class="'+(curDir==='desc'&&curField===field?'active':'')+'">▼</span></span>';
+}
+
+function renderPager(id,cur,total,onChange){
+  var pages=Math.ceil(total/PAGE_SIZE)||1;
+  var el=document.getElementById(id);
+  var html='<span class="total-text">共 '+total+' 条记录</span>';
+  html+='<div style="display:flex;align-items:center;gap:6px">';
+  html+='<button class="page-btn" '+(cur<=1?'disabled':'')+' onclick="('+onChange.toString()+')('+Math.max(1,cur-1)+')">‹</button>';
+  var start=Math.max(1,cur-2),end=Math.min(pages,cur+2);
+  for(var p=start;p<=end;p++){
+    html+='<button class="page-btn'+(p===cur?' active':'')+'" onclick="('+onChange.toString()+')('+p+')">'+p+'</button>';
+  }
+  html+='<button class="page-btn" '+(cur>=pages?'disabled':'')+' onclick="('+onChange.toString()+')('+Math.min(pages,cur+1)+')">›</button>';
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function toggleGroupSort(field){
+  if(gSortField!==field){gSortField=field;gSortDir='desc';}
+  else if(gSortDir==='desc'){gSortDir='asc';}
+  else{gSortField=null;gSortDir=null;}
+  gPage=1;renderGroups(gFiltered,1);
+}
+function toggleFansSort(){
+  if(fSortField!=='val'){fSortField='val';fSortDir='desc';}
+  else if(fSortDir==='desc'){fSortDir='asc';}
+  else{fSortField=null;fSortDir=null;}
+  fPage=1;renderFans(fFiltered,1);
+}
+
+function renderGroups(data,page){
+  var sorted=[].concat(data);
+  if(gSortField==='tot'){
+    sorted.sort(function(a,b){return gSortDir==='asc'?a.tot-b.tot:b.tot-a.tot;});
+  } else if(gSortField==='ext'){
+    sorted.sort(function(a,b){return gSortDir==='asc'?a.ext-b.ext:b.ext-a.ext;});
+  }
+  document.getElementById('g-sort-icon-tot').innerHTML=sortArrow(gSortField,gSortDir,'tot');
+  document.getElementById('g-sort-icon-ext').innerHTML=sortArrow(gSortField,gSortDir,'ext');
+  var start=(page-1)*PAGE_SIZE,slice=sorted.slice(start,start+PAGE_SIZE);
+  document.getElementById('gtb').innerHTML=slice.map(function(r){
+    return '<tr>'
+      +'<td>'+anchorCell({uid:r.auid,nick:r.nick,color:r.color})+'</td>'
+      +'<td>'+r.gn+'</td>'
+      +'<td><strong>'+r.tot+'</strong></td>'
+      +'<td>'+r.ext+'</td>'
+      +'<td><button class="lnk" onclick="goFansDetail(\''+r.auid+'\')">粉丝详情</button></td>'
+      +'</tr>';
+  }).join('');
+  renderPager('g-pager',page,data.length,function(p){gPage=p;renderGroups(gFiltered,p);});
+}
+
+function setFansColVisibility(hideAnchorAndGroup){
+  document.getElementById('f-anchor-item').style.display = hideAnchorAndGroup ? 'none' : '';
+  document.getElementById('f-gname-item').style.display = hideAnchorAndGroup ? 'none' : '';
+  var anchorThs = document.querySelectorAll('.col-anchor-th');
+  var gnameThs = document.querySelectorAll('.col-gname-th');
+  anchorThs.forEach(function(el){el.style.display = hideAnchorAndGroup ? 'none' : '';});
+  gnameThs.forEach(function(el){el.style.display = hideAnchorAndGroup ? 'none' : '';});
+}
+
+function renderFans(data,page){
+  var sorted=[].concat(data);
+  if(fSortField==='val'){
+    sorted.sort(function(a,b){return fSortDir==='asc'?a.val-b.val:b.val-a.val;});
+  }
+  document.getElementById('f-sort-icon').innerHTML=sortArrow(fSortField,fSortDir,'val');
+  var start=(page-1)*PAGE_SIZE,slice=sorted.slice(start,start+PAGE_SIZE);
+  var hide=fFromGroup;
+  document.getElementById('ftb').innerHTML=slice.map(function(r){
+    var l=lvObj(r.val);
+    var badge=r.extinct?'<span class="badge-off"></span>熄灭':'<span class="badge-on"></span>正常';
+    var anchorCol=hide?'':'<td>'+anchorCell({uid:r.auid,nick:r.anick,color:r.acolor})+'</td>';
+    var gnameCol=hide?'':'<td>'+r.gn+'</td>';
+    return '<tr>'
+      +'<td>'+userCell({uid:r.uuid,nick:r.unick,color:r.ucolor})+'</td>'
+      +anchorCol
+      +gnameCol
+      +'<td>'+r.jt+'</td>'
+      +'<td>'+r.days+'</td>'
+      +'<td><strong>'+r.val.toLocaleString()+'</strong></td>'
+      +'<td><span class="tag '+l.c+'">'+l.t+'</span></td>'
+      +'<td>'+badge+'</td>'
+      +'<td><button class="lnk" onclick="openDetail(\''+r.uuid+'\',\''+r.unick+'\',\''+r.gn+'\','+r.val+','+r.extinct+',\''+r.auid+'\',\''+r.anick+'\')">真爱值详情</button></td>'
+      +'</tr>';
+  }).join('');
+  renderPager('f-pager',page,data.length,function(p){fPage=p;renderFans(fFiltered,p);});
+}
+
+function renderDetail(data,page){
+  var start=(page-1)*PAGE_SIZE,slice=data.slice(start,start+PAGE_SIZE);
+  document.getElementById('dtb').innerHTML=slice.map(function(r){
+    var dc=r.d>0?'inc':'dec',ds=(r.d>0?'+':'')+r.d;
+    return '<tr><td>'+r.t+'</td><td>'+r.tp+'</td><td class="'+dc+'">'+ds+'</td><td>'+r.v.toLocaleString()+'</td><td>'+r.lv+'</td></tr>';
+  }).join('');
+  renderPager('d-pager',page,data.length,function(p){dPage=p;renderDetail(dData,p);});
+}
+
+function filterGroups(){
+  var a=document.getElementById('g-anchor').value.trim();
+  var g=document.getElementById('g-gn').value.trim();
+  gFiltered=gd.filter(function(r){
+    var matchAnchor=!a||(r.auid.indexOf(a)!==-1||r.nick.indexOf(a)!==-1);
+    var matchGroup=!g||r.gn.indexOf(g)!==-1;
+    return matchAnchor&&matchGroup;
+  });
+  gPage=1;renderGroups(gFiltered,1);
+}
+function resetGroup(){
+  document.getElementById('g-anchor').value='';
+  document.getElementById('g-gn').value='';
+  gFiltered=[].concat(gd);gPage=1;renderGroups(gFiltered,1);
+}
+function filterFans(){
+  var u=document.getElementById('f-user').value.trim();
+  var a=document.getElementById('f-anchor').value.trim();
+  var g=document.getElementById('f-gname').value.trim();
+  var b=document.getElementById('f-badge').value;
+  var df=document.getElementById('f-date-from').value;
+  var dt=document.getElementById('f-date-to').value;
+  fFiltered=fd.filter(function(r){
+    var matchUser=!u||(r.uuid.indexOf(u)!==-1||r.unick.indexOf(u)!==-1);
+    var matchAnchor=!a||(r.auid.indexOf(a)!==-1||r.anick.indexOf(a)!==-1);
+    var matchGroup=!g||r.gn.indexOf(g)!==-1;
+    var matchBadge=!b||(b==='on'?!r.extinct:r.extinct);
+    var matchDate=true;
+    if(df&&r.jt<df) matchDate=false;
+    if(dt&&r.jt>dt) matchDate=false;
+    return matchUser&&matchAnchor&&matchGroup&&matchBadge&&matchDate;
+  });
+  fPage=1;renderFans(fFiltered,1);
+}
+function resetFans(){
+  document.getElementById('f-user').value='';
+  document.getElementById('f-anchor').value='';
+  document.getElementById('f-gname').value='';
+  document.getElementById('f-badge').value='';
+  document.getElementById('f-date-from').value='';
+  document.getElementById('f-date-to').value='';
+  fFiltered=[].concat(fd);fPage=1;renderFans(fFiltered,1);
+}
+
+// 团管理「粉丝详情」→ 跳粉丝管理二级页面，显示返回按钮
+function goFansDetail(auid){
+  fFromGroup=true;
+  document.querySelectorAll('.panel').forEach(function(e){e.classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(function(e){e.classList.remove('active');});
+  document.getElementById('panel-fans').classList.add('active');
+  document.querySelectorAll('.nav-item')[1].classList.add('active');
+  setFansColVisibility(true);
+  document.getElementById('f-back-btn').style.display='';
+  document.getElementById('f-anchor').value=auid;
+  document.getElementById('f-user').value='';
+  document.getElementById('f-gname').value='';
+  document.getElementById('f-badge').value='';
+  document.getElementById('f-date-from').value='';
+  document.getElementById('f-date-to').value='';
+  fFiltered=fd.filter(function(r){return r.auid===auid;});
+  fPage=1;renderFans(fFiltered,1);
+}
+
+// 粉丝详情返回团管理
+function backFromFansDetail(){
+  fFromGroup=false;
+  setFansColVisibility(false);
+  document.getElementById('f-back-btn').style.display='none';
+  document.getElementById('f-anchor').value='';
+  document.getElementById('f-user').value='';
+  document.getElementById('f-gname').value='';
+  document.getElementById('f-date-from').value='';
+  document.getElementById('f-date-to').value='';
+  fFiltered=[].concat(fd);fPage=1;
+  document.querySelectorAll('.panel').forEach(function(e){e.classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(function(e){e.classList.remove('active');});
+  document.getElementById('panel-group').classList.add('active');
+  document.querySelectorAll('.nav-item')[0].classList.add('active');
+}
+
+// 侧边栏切换
+function switchPage(p,el){
+  if(p==='fans'){
+    fFromGroup=false;
+    setFansColVisibility(false);
+    document.getElementById('f-back-btn').style.display='none';
+  }
+  document.querySelectorAll('.panel').forEach(function(e){e.classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(function(e){e.classList.remove('active');});
+  document.getElementById('panel-'+p).classList.add('active');
+  el.classList.add('active');
+}
+
+function openDetail(uid,unick,gname,val,extinct,auid,anick){
+  var l=lvObj(val);
+  var badgeHtml=extinct
+    ?'<span class="badge-off"></span>熄灭'
+    :'<span class="badge-on"></span>正常';
+  document.getElementById('d-ov').innerHTML=
+    '<div class="ov-card"><div class="lbl">粉丝UID</div><div class="val-sm">'+uid+'</div></div>'+
+    '<div class="ov-card"><div class="lbl">粉丝昵称</div><div class="val-sm">'+unick+'</div></div>'+
+    '<div class="ov-card"><div class="lbl">所属主播UID</div><div class="val-sm">'+(auid||'-')+'</div></div>'+
+    '<div class="ov-card"><div class="lbl">所属主播昵称</div><div class="val-sm">'+(anick||'-')+'</div></div>'+
+    '<div class="ov-card"><div class="lbl">团名称</div><div class="val-sm">'+gname+'</div></div>'+
+    '<div class="ov-card"><div class="lbl">当前真爱值</div><div class="val">'+val.toLocaleString()+'</div></div>'+
+    '<div class="ov-card"><div class="lbl">当前真爱等级</div><div class="val-sm"><span class="tag '+l.c+'">'+l.t+'</span></div></div>'+
+    '<div class="ov-card"><div class="lbl">铭牌状态</div><div class="val-sm">'+badgeHtml+'</div></div>';
+  dData=genDetail(uid,gname,val);
+  dPage=1;renderDetail(dData,1);
+  document.querySelectorAll('.panel').forEach(function(e){e.classList.remove('active');});
+  document.getElementById('panel-detail').classList.add('active');
+}
+function backFromDetail(){
+  document.querySelectorAll('.panel').forEach(function(e){e.classList.remove('active');});
+  document.getElementById('panel-fans').classList.add('active');
+}
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    if(document.getElementById('panel-group').classList.contains('active')) filterGroups();
+    else if(document.getElementById('panel-fans').classList.contains('active')) filterFans();
+  }
+});
+
+// 初始化
+renderGroups(gd,1);
+renderFans(fd,1);
+</script>
+</body>
+</html>
