@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>幸运礼物数据 — 管理后台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: #f5f7fa; color: #333; padding: 0;
+}
+
+/* ===== 顶部导航 ===== */
+.top-nav {
+  background: #fff; border-bottom: 1px solid #f0f0f0;
+  padding: 0 32px; display: flex; align-items: center; height: 56px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.top-logo { font-size: 16px; font-weight: 700; color: #222; }
+
+/* ===== 主容器 ===== */
+.page-content { padding: 24px 32px; }
+.container { max-width: 1400px; }
+
+/* ===== 总览卡片 ===== */
+.overview-section {
+  display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.overview-card {
+  background: #fff; border-radius: 8px; padding: 20px 28px;
+  min-width: 160px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 6px; flex: 1;
+}
+.ov-label { font-size: 13px; color: #888; }
+.ov-value { font-size: 28px; font-weight: 700; color: #222; }
+.ov-value.blue { color: #1890ff; }
+.ov-value.green { color: #52c41a; }
+.ov-value.orange { color: #fa8c16; }
+.ov-value.purple { color: #722ed1; }
+
+/* ===== 卡片通用 ===== */
+.card {
+  background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 24px; overflow: hidden;
+}
+.card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 24px; border-bottom: 1px solid #f0f0f0;
+}
+.card-title { font-size: 15px; font-weight: 600; color: #333; }
+.card-body { padding: 20px 24px; }
+
+/* ===== 筛选区域 ===== */
+.filter-grid {
+  display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center;
+}
+.filter-item {
+  display: flex; align-items: center; gap: 8px; white-space: nowrap;
+}
+.filter-label {
+  font-size: 13px; color: #555; font-weight: 500; flex-shrink: 0;
+}
+
+/* 输入框 */
+.filter-input {
+  height: 36px; border: 1px solid #d9d9d9; border-radius: 6px;
+  padding: 0 12px; font-size: 13px; color: #333;
+  transition: border-color 0.2s, box-shadow 0.2s; background: #fff;
+  width: 180px;
+}
+.filter-input:focus {
+  outline: none; border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24,144,255,0.15);
+}
+.filter-input::placeholder { color: #bbb; }
+
+/* 下拉选框 */
+.filter-select {
+  height: 36px; border: 1px solid #d9d9d9; border-radius: 6px;
+  padding: 0 28px 0 12px; font-size: 13px; color: #333;
+  background: #fff; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.filter-select:focus {
+  outline: none; border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24,144,255,0.15);
+}
+
+/* 日期 */
+.date-range { display: flex; align-items: center; gap: 8px; }
+.date-input {
+  width: 140px; height: 36px; border: 1px solid #d9d9d9;
+  border-radius: 6px; padding: 0 10px; font-size: 13px;
+  color: #333; background: #fff; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.date-input:focus {
+  outline: none; border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24,144,255,0.15);
+}
+.date-separator { color: #bbb; font-size: 14px; flex-shrink: 0; }
+.filter-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+/* 按钮 */
+.btn {
+  height: 36px; padding: 0 22px; border: none; border-radius: 6px;
+  font-size: 14px; cursor: pointer; transition: all 0.18s; font-weight: 500;
+}
+.btn-primary { background: #1890ff; color: #fff; }
+.btn-primary:hover { background: #40a9ff; }
+.btn-default { background: #fff; color: #555; border: 1px solid #d9d9d9; }
+.btn-default:hover { color: #1890ff; border-color: #1890ff; }
+.btn-danger { background: #fff; color: #ff4d4f; border: 1px solid #ffccc7; }
+.btn-danger:hover { background: #fff1f0; }
+.btn-sm { height: 30px; padding: 0 14px; font-size: 12px; }
+
+
+/* ===== 表格 ===== */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 800px; }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #f5f5f5; font-size: 13px; white-space: nowrap; }
+th { background: #fafafa; font-weight: 600; color: #444; position: sticky; top: 0; }
+td { color: #666; }
+tr:hover td { background: #f9fbff; }
+
+/* 主播信息 */
+.host-info { display: flex; align-items: center; gap: 8px; }
+.host-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #1890ff, #52c41a);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 600; font-size: 12px; flex-shrink: 0;
+}
+.host-text { display: flex; flex-direction: column; gap: 1px; }
+.host-name { color: #333; font-weight: 600; font-size: 13px; }
+.host-id { font-size: 12px; color: #999; }
+
+/* 状态标签 */
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 4px;
+  font-size: 12px; font-weight: 500;
+}
+.tag-blue { background: #e6f7ff; color: #1890ff; }
+.tag-green { background: #f6ffed; color: #52c41a; }
+.tag-purple { background: #f9f0ff; color: #722ed1; }
+.tag-gold { background: #fffbe6; color: #fa8c16; }
+.tag-gray { background: #f5f5f5; color: #999; }
+.tag-red { background: #fff1f0; color: #ff4d4f; }
+
+/* 分页 */
+.pagination {
+  display: flex; justify-content: flex-end; align-items: center;
+  padding: 14px 20px; gap: 6px; border-top: 1px solid #f0f0f0;
+}
+.pagination-info { color: #888; font-size: 13px; margin-right: 12px; }
+.page-btn {
+  min-width: 30px; height: 30px; border: 1px solid #d9d9d9;
+  background: #fff; border-radius: 4px; cursor: pointer;
+  font-size: 13px; display: inline-flex; align-items: center;
+  justify-content: center; padding: 0 8px; transition: all 0.15s;
+  color: #555;
+}
+.page-btn:hover { color: #1890ff; border-color: #1890ff; }
+.page-btn.active { background: #1890ff; color: #fff; border-color: #1890ff; }
+.page-btn:disabled { color: #d9d9d9; border-color: #f0f0f0; cursor: not-allowed; }
+
+/* Toast */
+.toast {
+  position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+  background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  border-radius: 8px; padding: 12px 24px; font-size: 14px;
+  color: #333; z-index: 1000; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s; display: flex; align-items: center; gap: 8px;
+}
+.toast.show { opacity: 1; }
+.toast.success { border-left: 4px solid #52c41a; }
+.toast.warning { border-left: 4px solid #faad14; }
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .page-content { padding: 16px; }
+  .task-row { grid-template-columns: 1fr; }
+  .filter-grid { flex-direction: column; align-items: flex-start; }
+  .filter-actions { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<div class="top-nav">
+  <div class="top-logo">📋 幸运礼物数据</div>
+</div>
+
+<!-- 页面内容 -->
+<div class="page-content">
+
+  <div class="container">
+
+    <!-- 总览卡片 -->
+    <div class="overview-section" id="overviewCards"></div>
+
+    <!-- 筛选 -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-body" style="padding:16px 24px;">
+        <div class="filter-grid">
+          <div class="filter-item">
+            <span class="filter-label">主播ID</span>
+            <input class="filter-input" id="filterHostId" placeholder="请输入主播ID" oninput="onFilterChange()" style="width:160px;">
+          </div>
+          <div class="filter-item">
+            <span class="filter-label">日期</span>
+            <input class="date-input" type="date" id="filterDate" value="2026-06-25" onchange="onFilterChange()">
+          </div>
+          <div class="filter-item">
+            <span class="filter-label">达标分类</span>
+            <select class="filter-select" id="filterTask" onchange="onFilterChange()" style="width:140px;">
+              <option value="-1">全部</option>
+              <option value="-2">未达标</option>
+              <option value="0">Task 1</option>
+              <option value="1">Task 2</option>
+              <option value="2">Task 3</option>
+              <option value="3">Task 4</option>
+            </select>
+          </div>
+          <div class="filter-actions">
+            <button class="btn btn-primary btn-sm" onclick="onFilterChange()">查询</button>
+            <button class="btn btn-default btn-sm" onclick="resetFilters()">重置</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>主播</th>
+              <th>幸运礼物流水（金币）</th>
+              <th>直播时长（分钟）</th>
+              <th>达标档位</th>
+            </tr>
+          </thead>
+          <tbody id="hostTableBody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== 默认配置 =====
+const DEFAULT_CONFIG = {
+  name: '幸运礼物数据',
+  startDate: '2026-06-23',
+  endDate: '2026-06-29',
+  minStreamMinutes: 60,
+  rewardType: 'auto',
+  enabled: true,
+  tasks: [
+    { threshold: 3500,   giftName: '星光花束', giftIcon: '🌸' },
+    { threshold: 35000,  giftName: '星光皇冠', giftIcon: '👑' },
+    { threshold: 100000, giftName: '星光火箭', giftIcon: '🚀' },
+    { threshold: 245000, giftName: '星光城堡', giftIcon: '🏰' },
+  ]
+};
+
+// ===== 配置读写 =====
+function loadConfig() {
+  const raw = localStorage.getItem('live_gift_activity_config');
+  return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+}
+
+let config = loadConfig();
+
+// ===== 模拟主播数据 =====
+const MOCK_HOSTS = [
+  '星光小美','歌手阿杰','舞蹈室丸子','游戏达人Leo','音乐人小雨','户外探险家',
+  '星座占卜师','美食探店','手工艺人','宠物直播间','二次元coser','健身教练大鹏',
+  '旅行日记','深夜电台','街舞少年','绘画教室','篮球解说','搞笑达人小胖',
+  '古风歌手','电竞选手','茶艺师','书法家','魔术师','时尚博主','读书分享',
+  '瑜伽教练','摄影老张','吃货主播','赛车手','配音演员','武术教练'
+];
+
+function generateMockDayData(dayOffset) {
+  const hosts = [];
+  const baseCount = Math.max(10, MOCK_HOSTS.length - dayOffset * 3);
+  for (let i = 0; i < baseCount; i++) {
+    const streamMin = 30 + Math.floor(Math.random() * 210);
+    const baseGold = 500 + Math.floor(Math.random() * 350000);
+    const factor = Math.max(0.3, 1 - dayOffset * 0.12);
+    const gold = Math.floor(baseGold * factor * (0.6 + Math.random() * 0.8));
+    const hostId = 'H' + (10001 + i);
+
+    let highestTask = -1;
+    for (let t = 0; t < config.tasks.length; t++) {
+      if (streamMin >= config.minStreamMinutes && gold >= config.tasks[t].threshold) {
+        highestTask = t;
+      }
+    }
+
+    const d = 25 - dayOffset;
+    const achievedDate = highestTask >= 0 ? `2026-06-${String(d).padStart(2,'0')}` : '—';
+
+    hosts.push({ id: hostId, name: MOCK_HOSTS[i], streamMin, gold, highestTask, achievedDate });
+  }
+  hosts.sort((a, b) => b.gold - a.gold);
+  return hosts;
+}
+
+let todayHosts = generateMockDayData(0);
+
+// ===== 数据页渲染 =====
+let hostPage = 1;
+const PAGE_SIZE = 10;
+
+function renderDataPage() {
+  renderOverviewCards();
+  renderHostTable();
+}
+
+function renderOverviewCards() {
+  const hosts = todayHosts;
+  const totalGold = hosts.reduce((s, x) => s + x.gold, 0);
+  const participantCount = hosts.filter(x => x.gold > 0).length;
+  const unqualifiedCount = hosts.filter(x => x.highestTask === -1).length;
+  const taskCounts = config.tasks.map((t, i) => hosts.filter(h => h.highestTask >= i).length);
+
+  const colors = ['blue', 'green', 'orange', 'purple'];
+  let html = `
+    <div class="overview-card">
+      <div class="ov-label">幸运礼物流水（金币）</div>
+      <div class="ov-value blue">${totalGold.toLocaleString()}</div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-label">参与主播数（人）</div>
+      <div class="ov-value green">${participantCount}</div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-label">未达标（人）</div>
+      <div class="ov-value" style="color:#ff4d4f;">${unqualifiedCount}</div>
+    </div>`;
+
+  config.tasks.forEach((t, i) => {
+    html += `
+    <div class="overview-card">
+      <div class="ov-label">Task ${i + 1} 达标（人）</div>
+      <div class="ov-value ${colors[i]}">${taskCounts[i]}</div>
+    </div>`;
+  });
+
+  document.getElementById('overviewCards').innerHTML = html;
+}
+
+function onFilterChange() {
+  hostPage = 1;
+  renderHostTable();
+}
+
+function resetFilters() {
+  document.getElementById('filterHostId').value = '';
+  document.getElementById('filterDate').value = '2026-06-25';
+  document.getElementById('filterTask').value = '-1';
+  onFilterChange();
+}
+
+function getFilteredHosts() {
+  const hostId = (document.getElementById('filterHostId')?.value || '').trim().toLowerCase();
+  const taskFilter = parseInt(document.getElementById('filterTask')?.value || '-1');
+  let filtered = todayHosts;
+
+  if (hostId) filtered = filtered.filter(h => h.id.toLowerCase().includes(hostId));
+  if (taskFilter === -2) {
+    filtered = filtered.filter(h => h.highestTask === -1);
+  } else if (taskFilter >= 0) {
+    filtered = filtered.filter(h => h.highestTask >= taskFilter);
+  }
+  return filtered;
+}
+
+function renderHostTable() {
+  const filtered = getFilteredHosts();
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
+  if (hostPage > totalPages) hostPage = totalPages;
+
+  const start = (hostPage - 1) * PAGE_SIZE;
+  const page = filtered.slice(start, start + PAGE_SIZE);
+
+  const badgeClsMap = ['tag-blue', 'tag-green', 'tag-purple', 'tag-gold'];
+
+  document.getElementById('hostTableBody').innerHTML = page.map(h => {
+    const badgeCls = h.highestTask === -1 ? 'tag-gray' : badgeClsMap[h.highestTask];
+    const taskLabel = h.highestTask === -1 ? '未达标' : `Task ${h.highestTask + 1}`;
+    const initial = h.name.charAt(0);
+    return `
+      <tr>
+        <td>
+          <div class="host-info">
+            <div class="host-avatar">${initial}</div>
+            <div class="host-text">
+              <span class="host-name">${h.name}</span>
+              <span class="host-id">${h.id}</span>
+            </div>
+          </div>
+        </td>
+        <td>${h.gold.toLocaleString()}</td>
+        <td>${h.streamMin}</td>
+        <td><span class="tag ${badgeCls}">${taskLabel}</span></td>
+      </tr>`;
+  }).join('');
+
+  if (filtered.length === 0) {
+    document.getElementById('hostTableBody').innerHTML = '<tr><td colspan="4" style="text-align:center;padding:48px;color:#bbb;">暂无匹配数据</td></tr>';
+  }
+
+  // Pagination
+  let pgHTML = `<div class="pagination-info">共 ${filtered.length} 条记录</div>`;
+  pgHTML += `<button class="page-btn" onclick="hostPage=1;renderHostTable()" ${hostPage <= 1 ? 'disabled' : ''}>«</button>`;
+  pgHTML += `<button class="page-btn" onclick="if(hostPage>1){hostPage--;renderHostTable()}" ${hostPage <= 1 ? 'disabled' : ''}>‹</button>`;
+
+  for (let p = Math.max(1, hostPage - 2); p <= Math.min(totalPages, hostPage + 2); p++) {
+    pgHTML += `<button class="page-btn ${p === hostPage ? 'active' : ''}" onclick="hostPage=${p};renderHostTable()">${p}</button>`;
+  }
+
+  pgHTML += `<button class="page-btn" onclick="if(hostPage<totalPages){hostPage++;renderHostTable()}" ${hostPage >= totalPages ? 'disabled' : ''}>›</button>`;
+  pgHTML += `<button class="page-btn" onclick="hostPage=${totalPages};renderHostTable()" ${hostPage >= totalPages ? 'disabled' : ''}>»</button>`;
+  document.getElementById('pagination').innerHTML = pgHTML;
+}
+
+// ===== Toast =====
+function showToast(type, msg) {
+  const el = document.getElementById('toast');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => { el.classList.remove('show'); }, 2000);
+}
+
+// ===== 初始化 =====
+renderDataPage();
+</script>
+</body>
+</html>
