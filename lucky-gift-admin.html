@@ -151,6 +151,35 @@ tr:hover td { background: #f9fbff; }
 .tag-gray { background: #f5f5f5; color: #999; }
 .tag-red { background: #fff1f0; color: #ff4d4f; }
 
+/* 可排序列 */
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 24px !important;
+}
+.sortable:hover { background: #f0f0f0; }
+.sort-icons {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 0;
+}
+.sort-icons span {
+  font-size: 10px;
+  color: #ccc;
+  display: block;
+  height: 10px;
+  line-height: 10px;
+  transition: color 0.15s;
+}
+.sort-icons span.active { color: #1890ff; }
+.sort-icons span.inactive { color: #ccc; }
+
 /* 分页 */
 .pagination {
   display: flex; justify-content: flex-end; align-items: center;
@@ -242,9 +271,9 @@ tr:hover td { background: #f9fbff; }
           <thead>
             <tr>
               <th>主播</th>
-              <th>幸运礼物流水（金币）</th>
-              <th>直播时长（分钟）</th>
-              <th>达标档位</th>
+              <th class="sortable" onclick="handleSort('gold')">幸运礼物流水（金币）<span class="sort-icons"><span id="sortGoldUp">▲</span><span id="sortGoldDown">▼</span></span></th>
+              <th class="sortable" onclick="handleSort('streamMin')">直播时长（分钟）<span class="sort-icons"><span id="sortStreamUp">▲</span><span id="sortStreamDown">▼</span></span></th>
+              <th class="sortable" onclick="handleSort('highestTask')">达标档位<span class="sort-icons"><span id="sortTaskUp">▲</span><span id="sortTaskDown">▼</span></span></th>
             </tr>
           </thead>
           <tbody id="hostTableBody"></tbody>
@@ -325,6 +354,36 @@ let todayHosts = generateMockDayData(0);
 // ===== 数据页渲染 =====
 let hostPage = 1;
 const PAGE_SIZE = 10;
+let sortColumn = 'gold';
+let sortDirection = 'desc';
+
+function handleSort(column) {
+  if (sortColumn === column) {
+    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn = column;
+    sortDirection = 'desc';
+  }
+  updateSortIcons();
+  hostPage = 1;
+  renderHostTable();
+}
+
+function updateSortIcons() {
+  const columns = ['gold', 'streamMin', 'highestTask'];
+  columns.forEach(col => {
+    const up = document.getElementById('sort' + col.charAt(0).toUpperCase() + col.slice(1) + 'Up');
+    const down = document.getElementById('sort' + col.charAt(0).toUpperCase() + col.slice(1) + 'Down');
+    if (!up || !down) return;
+    if (sortColumn === col) {
+      up.className = sortDirection === 'asc' ? 'active' : 'inactive';
+      down.className = sortDirection === 'desc' ? 'active' : 'inactive';
+    } else {
+      up.className = 'inactive';
+      down.className = 'inactive';
+    }
+  });
+}
 
 function renderDataPage() {
   renderOverviewCards();
@@ -387,6 +446,20 @@ function getFilteredHosts() {
   } else if (taskFilter >= 0) {
     filtered = filtered.filter(h => h.highestTask === taskFilter);
   }
+
+  // 排序
+  filtered.sort((a, b) => {
+    let va = a[sortColumn];
+    let vb = b[sortColumn];
+    if (sortColumn === 'highestTask') {
+      // 未达标(-1)排最后
+      va = va === -1 ? 999 : va;
+      vb = vb === -1 ? 999 : vb;
+    }
+    if (sortDirection === 'asc') return va > vb ? 1 : va < vb ? -1 : 0;
+    return va < vb ? 1 : va > vb ? -1 : 0;
+  });
+
   return filtered;
 }
 
@@ -450,6 +523,7 @@ function showToast(type, msg) {
 }
 
 // ===== 初始化 =====
+updateSortIcons();
 renderDataPage();
 </script>
 </body>
