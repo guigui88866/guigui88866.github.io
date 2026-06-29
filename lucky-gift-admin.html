@@ -336,7 +336,7 @@ function renderOverviewCards() {
   const totalGold = hosts.reduce((s, x) => s + x.gold, 0);
   const participantCount = hosts.filter(x => x.gold > 0).length;
   const unqualifiedCount = hosts.filter(x => x.highestTask === -1).length;
-  const taskCounts = config.tasks.map((t, i) => hosts.filter(h => h.highestTask >= i).length);
+  const taskCounts = config.tasks.map((t, i) => hosts.filter(h => h.highestTask === i).length);
 
   const colors = ['blue', 'green', 'orange', 'purple'];
   let html = `
@@ -385,7 +385,7 @@ function getFilteredHosts() {
   if (taskFilter === -2) {
     filtered = filtered.filter(h => h.highestTask === -1);
   } else if (taskFilter >= 0) {
-    filtered = filtered.filter(h => h.highestTask >= taskFilter);
+    filtered = filtered.filter(h => h.highestTask === taskFilter);
   }
   return filtered;
 }
