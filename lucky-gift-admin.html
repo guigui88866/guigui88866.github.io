@@ -390,7 +390,7 @@ function renderOverviewCards() {
   const totalGold = hosts.reduce((s, x) => s + x.gold, 0);
   const participantCount = hosts.filter(x => x.gold > 0).length;
   const unqualifiedCount = hosts.filter(x => x.highestTask === -1).length;
-  const taskCounts = config.tasks.map((t, i) => hosts.filter(h => h.highestTask === i).length);
+  const taskCounts = config.tasks.map((t, i) => hosts.filter(h => h.highestTask >= i).length);
 
   const colors = ['blue', 'green', 'orange', 'purple'];
   let html = `
