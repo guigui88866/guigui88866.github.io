@@ -37,7 +37,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .search-bar input, .search-bar select { height: 32px; border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; font-size: 14px; outline: none; }
 .search-bar input:focus, .search-bar select:focus { border-color: var(--primary); }
 .search-bar input { width: 200px; }
-.search-bar select { width: 140px; }
+.search-bar select { width: 240px; }
 .btn { height: 32px; padding: 4px 16px; border-radius: 4px; font-size: 14px; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text); }
 .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
 .btn-primary:hover { background: #40a9ff; }
@@ -165,7 +165,7 @@ tr:hover { background: #e6f7ff; }
   <div class="nav">
     <a class="active">主播排位数据</a>
   </div>
-  <div class="season-tag" id="header-season-tag">当前赛季：26S7 · 进行中</div>
+  <div class="season-tag" id="header-season-tag">当前赛季：S7 · 进行中</div>
 </div>
 
 <!-- 内容 -->
@@ -334,18 +334,21 @@ function getBigTierKey(bigName) {
 function generateSeasons() {
   const seasons = [];
   for (let s = 7; s >= 1; s--) {
-    seasons.push({ label: `26S${s}`, month: s });
+    const startDate = `2026.0${s}.01`;
+    const endDay = new Date(2026, s, 0).getDate();
+    const endDate = `2026.0${s}.${endDay}`;
+    seasons.push({ label: `S${s}`, month: s, dateRange: `(${startDate}-${endDate})` });
   }
   return seasons;
 }
 
 const SEASONS = generateSeasons();
-const CURRENT_SEASON = '26S7';
+const CURRENT_SEASON = 'S7';
 
 function initSeasonFilter() {
   const select = document.getElementById('season-filter');
   select.innerHTML = SEASONS.map(s => 
-    `<option value="${s.label}" ${s.label === CURRENT_SEASON ? 'selected' : ''}>${s.label}</option>`
+    `<option value="${s.label}" ${s.label === CURRENT_SEASON ? 'selected' : ''}>${s.label}${s.dateRange}</option>`
   ).join('');
 }
 
@@ -601,6 +604,8 @@ function goToDetail(uid) {
   document.getElementById('detail-breadcrumb-name').textContent = `${anchor.name} · 段位分详情`;
 
   const seasonLabel = document.getElementById('season-filter').value;
+  const seasonInfo = SEASONS.find(s => s.label === seasonLabel);
+  const seasonDisplay = seasonInfo ? `${seasonLabel}${seasonInfo.dateRange}` : seasonLabel;
   document.getElementById('detail-header').innerHTML = `
     <div class="title-row">
       <div class="anchor-title">
@@ -610,7 +615,7 @@ function goToDetail(uid) {
       <button class="btn btn-primary" onclick="backToList()">返回列表</button>
     </div>
     <div class="anchor-meta">
-      <span class="meta-item"><span class="meta-label">赛季：</span><span class="meta-value">${seasonLabel}</span></span>
+      <span class="meta-item"><span class="meta-label">赛季：</span><span class="meta-value">${seasonDisplay}</span></span>
       <span class="meta-item"><span class="meta-label">排名：</span><span class="meta-value">第${anchor.rank}名</span></span>
       <span class="meta-item"><span class="meta-label">赛季段位：</span><span class="meta-value">${tier.name}</span></span>
     </div>
