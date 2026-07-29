@@ -701,10 +701,15 @@
       grid-template-columns: 1fr 78px;
       gap: 8px;
     }
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
     .input {
       width: 100%;
       height: 45px;
-      padding: 0 14px;
+      padding: 0 36px 0 14px;
       outline: none;
       border: 1px solid var(--line);
       border-radius: 13px;
@@ -716,6 +721,26 @@
       border-color: #b48cf7;
       box-shadow: 0 0 0 3px rgba(140,69,255,.08);
     }
+    .clear-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 0;
+      background: #ccc;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+    .clear-btn.show { display: flex; }
     .search-button {
       border-radius: 13px;
       background: #f0e7ff;
@@ -1374,7 +1399,10 @@
             </div>
             <label class="field-label" for="vipUserId">Recipient ID</label>
             <div class="search-row">
-              <input class="input" id="vipUserId" inputmode="numeric" placeholder="Please enter the user ID">
+              <div class="input-wrap">
+                <input class="input" id="vipUserId" inputmode="numeric" placeholder="Please enter the user ID">
+                <button class="clear-btn" type="button" data-clear="vip">&times;</button>
+              </div>
               <button class="search-button" data-search="vip">Search</button>
             </div>
             <p class="error" id="vipError">Enter a valid user ID.</p>
@@ -1409,7 +1437,10 @@
             </div>
             <label class="field-label" for="outfitUserId">Recipient ID</label>
             <div class="search-row">
-              <input class="input" id="outfitUserId" inputmode="numeric" placeholder="Please enter the user ID">
+              <div class="input-wrap">
+                <input class="input" id="outfitUserId" inputmode="numeric" placeholder="Please enter the user ID">
+                <button class="clear-btn" type="button" data-clear="outfit">&times;</button>
+              </div>
               <button class="search-button" data-search="outfit">Search</button>
             </div>
             <p class="error" id="outfitError">Enter a valid user ID.</p>
@@ -1698,6 +1729,24 @@
     $$("[data-search]").forEach(button => button.addEventListener("click", () => lookupUser(button.dataset.search)));
     ["vip", "outfit"].forEach(type => {
       $(`#${type}UserId`).addEventListener("keydown", event => { if (event.key === "Enter") lookupUser(type); });
+    });
+
+    // Clear button: show/hide on input, clear on click
+    ["vip", "outfit"].forEach(type => {
+      const input = $(`#${type}UserId`);
+      const clearBtn = input.parentElement.querySelector(".clear-btn");
+      input.addEventListener("input", () => {
+        clearBtn.classList.toggle("show", input.value.length > 0);
+      });
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.classList.remove("show");
+        $(`#${type}Error`).classList.remove("show");
+        $(`#${type}UserCard`).classList.remove("show");
+        state[`${type}User`] = null;
+        updateButtons();
+        input.focus();
+      });
     });
 
     const categoryMeta = {
