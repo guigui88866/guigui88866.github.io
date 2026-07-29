@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>经理发放特效管理</title>
+  <style>
+    :root {
+      --purple: #8c45ff;
+      --purple-2: #c02dff;
+      --ink: #23212a;
+      --muted: #9b98a6;
+      --line: #eceaf2;
+      --bg: #f6f6fb;
+      --surface: #fff;
+      --success: #22bd83;
+      --danger: #f26f82;
+      --warn: #f5a623;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+    }
+    button, input, select { font: inherit; }
+    button { border: 0; cursor: pointer; }
+
+    /* layout */
+    .admin { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .admin-header h1 { font-size: 22px; font-weight: 800; }
+    .admin-header .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--line);
+    }
+    .tab {
+      padding: 10px 20px;
+      background: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: .15s;
+    }
+    .tab.active { color: var(--purple); border-color: var(--purple); }
+    .tab:hover:not(.active) { color: var(--ink); }
+
+    .panel { display: block; animation: fade .2s ease; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    /* toolbar */
+    .panel-top {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 12px;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .toolbar .spacer { flex: 1; }
+    .filter-input {
+      height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+      transition: .15s;
+    }
+    .filter-input:focus { border-color: #b48cf7; box-shadow: 0 0 0 3px rgba(140,69,255,.08); }
+    .filter-select {
+      height: 36px;
+      padding: 0 28px 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239b98a6' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: .15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary { background: var(--purple); color: #fff; }
+    .btn-primary:hover { background: #7838d8; }
+    .btn-ghost { background: #f0e7ff; color: #7a3fdf; }
+    .btn-ghost:hover { background: #e6d8ff; }
+    .btn-danger { background: #fff0f2; color: #e54b62; }
+    .btn-danger:hover { background: #ffe0e4; }
+    .btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
+    .btn-icon {
+      width: 30px; height: 30px; padding: 0;
+      border-radius: 7px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: #f4f3f7; color: var(--muted);
+      transition: .15s;
+    }
+    .btn-icon:hover { background: #eceaf2; color: var(--ink); }
+
+    /* table */
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      background: #faf9fc;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #faf9ff; }
+
+    /* badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-vip { background: #fff3e0; color: #e8830c; }
+    .badge-outfit { background: #f0e7ff; color: #7a3fdf; }
+    .badge-on { background: #e6f9f1; color: var(--success); }
+    .badge-off { background: #f4f3f7; color: var(--muted); }
+
+    /* switch */
+    .switch {
+      position: relative;
+      width: 38px; height: 22px;
+      background: #ddd6e8;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: .2s;
+      flex-shrink: 0;
+    }
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 18px; height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    }
+    .switch.on { background: var(--purple); }
+    .switch.on::after { left: 18px; }
+
+    .row-actions { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+    .row-actions .btn-link { white-space: nowrap; }
+    .selection-cell { width: 52px; text-align: center; }
+    .selection-cell input { width: 14px; height: 14px; accent-color: var(--purple); cursor: pointer; }
+    .filter-group { display: flex; align-items: center; gap: 8px; }
+    .filter-label { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+    .btn-link {
+      background: none;
+      color: var(--purple);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 2px 6px;
+      transition: .15s;
+    }
+    .btn-link:hover { opacity: .7; }
+    .btn-link.danger { color: #e54b62; }
+    .action-divider { color: var(--line); font-size: 13px; }
+
+    /* modal */
+    .modal-layer {
+      position: fixed; inset: 0;
+      background: rgba(35,33,42,.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-layer.show { display: flex; }
+    .modal {
+      width: 440px;
+      max-width: calc(100% - 32px);
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 28px;
+      animation: pop .2s ease;
+    }
+    @keyframes pop { from { transform: scale(.96); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .modal h3 { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #faf9fc;
+      outline: none;
+      transition: .15s;
+    }
+    .field input:focus, .field select:focus { border-color: #b48cf7; box-shadow: 0 0 0 3px rgba(140,69,255,.08); }
+    .field-row { display: flex; gap: 12px; }
+    .field-row .field { flex: 1; }
+    .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      top: 24px; left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s;
+      z-index: 200;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* stepper */
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .stepper-btn {
+      width: 36px; height: 40px;
+      background: #f4f3f7;
+      color: var(--ink);
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      transition: .15s;
+    }
+    .stepper-btn:hover { background: #eceaf2; }
+    .stepper input {
+      width: 56px; height: 40px;
+      text-align: center;
+      border: none;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      background: #faf9fc;
+      outline: none;
+      font-weight: 600;
+      -moz-appearance: textfield;
+    }
+    .stepper input::-webkit-inner-spin-button,
+    .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .field-hint { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+    .required { color: #e54b62; margin-right: 2px; }
+
+    /* multi-row reward modal */
+    .modal.modal-wide { width: 780px; max-width: calc(100% - 32px); }
+    .modal.modal-sync { width: 720px; max-width: calc(100% - 32px); }
+    .sync-title { text-align: center; margin-bottom: 18px !important; font-size: 16px !important; }
+    .sync-table-wrap { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); max-height: 360px; overflow: auto; }
+    .sync-table { width: 100%; border-collapse: collapse; }
+    .sync-table th { padding: 12px 8px; background: #faf9fc; color: var(--muted); font-size: 12px; text-align: left; white-space: nowrap; }
+    .sync-table td { padding: 14px 8px; border-top: 1px solid var(--line); font-size: 13px; }
+    .sync-thumb { width: 56px; height: 44px; border-radius: 8px; background: linear-gradient(135deg,#f5e9ff,#ead7ff); color: var(--purple); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+    .sync-status { display: inline-flex; padding: 3px 8px; border-radius: 5px; background: #eaf8df; color: #62b53c; font-size: 12px; }
+    .sync-info { color: #777; }
+    .sync-empty { text-align: center; color: var(--muted); padding: 36px 12px !important; }
+    .sync-modal-footer { margin-top: 24px; }
+    .reward-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      padding: 16px;
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: #faf9fc;
+    }
+    .row-index {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-bottom: 8px;
+    }
+    .row-fields {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 140px 1fr 120px 110px;
+      gap: 12px;
+    }
+    .reward-row .field { margin-bottom: 0; }
+    .reward-row .field label { font-size: 12px; margin-bottom: 5px; }
+    .reward-row .field input,
+    .reward-row .field select {
+      height: 36px;
+      padding: 0 10px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .reward-row .stepper { border-radius: 8px; }
+    .reward-row .stepper-btn { width: 32px; height: 36px; font-size: 16px; }
+    .reward-row .stepper input { width: 48px; height: 36px; }
+    .btn-delete-row {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: #fff0f1;
+      color: #e54b62;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 2px;
+      transition: .15s;
+      flex-shrink: 0;
+    }
+    .btn-delete-row:hover { background: #ffe0e3; }
+    .btn-delete-row:disabled { opacity: .4; cursor: default; background: #f4f3f7; }
+    .add-row-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+      margin-top: 4px;
+    }
+    .btn-add-row {
+      height: 36px;
+      padding: 0 16px;
+      border: 1px dashed var(--purple);
+      border-radius: 8px;
+      background: #f6f1ff;
+      color: var(--purple);
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: .15s;
+    }
+    .btn-add-row:hover { background: #efe5ff; }
+    .row-count { font-size: 13px; color: var(--muted); }
+    .row-id option:disabled { color: #aaa; }
+    .thumb {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600;
+      background: #f4f3f7;
+    }
+
+    .empty { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px; }
+    .pagination { display: flex; gap: 6px; justify-content: center; margin-top: 16px; }
+    .page-btn {
+      min-width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: .15s;
+    }
+    .page-btn:hover { border-color: #b48cf7; }
+    .page-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+    .page-btn:disabled { opacity: .4; cursor: default; }
+  </style>
+</head>
+<body>
+
+<div class="admin">
+  <div class="admin-header">
+    <div>
+      <h1>经理发放特效管理</h1>
+      <div class="sub"></div>
+    </div>
+  </div>
+
+  <!-- ========== Item Management ========== -->
+  <div class="panel" id="itemsPanel">
+    <div class="panel-top">
+      <div class="toolbar-actions">
+        <button class="btn btn-primary" id="addEffBtn">+ 新增特效</button>
+        <button class="btn btn-ghost" id="syncProdBtn">⇄ 同步正式服</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="filter-group">
+        <span class="filter-label">特效ID</span>
+        <input class="filter-input" id="effIdSearch" placeholder="请输入特效ID" style="width:130px">
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">名称</span>
+        <input class="filter-input" id="effNameSearch" placeholder="请输入名称" style="width:130px">
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">特效类型</span>
+        <select class="filter-select" id="effTypeFilter">
+          <option value="">请选择特效类型</option>
+          <option value="frame">头像框</option>
+          <option value="bubble">聊天气泡</option>
+          <option value="entrance">进场特效</option>
+          <option value="mic">麦克风特效</option>
+          <option value="badge">勋章</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">状态</span>
+        <select class="filter-select" id="effStatusFilter">
+          <option value="">请选择状态类型</option>
+          <option value="on">启用</option>
+          <option value="off">停用</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="effSearchBtn">搜索</button>
+      <button class="btn btn-ghost" id="effResetBtn">重置</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="selection-cell"><input type="checkbox" id="selectAllEffects" aria-label="全选特效"></th>
+            <th>特效ID</th>
+            <th>特效类型</th>
+            <th>名称</th>
+            <th>简体缩略图</th>
+            <th>繁体缩略图</th>
+            <th>英文缩略图</th>
+            <th>有效期</th>
+            <th>状态</th>
+            <th style="width:100px">操作</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Add/Edit Effect Modal ========== -->
+<div class="modal-layer" id="effModalLayer">
+  <div class="modal modal-wide">
+    <h3 id="effModalTitle">新增特效</h3>
+    <div id="rewardRows"></div>
+    <div class="add-row-bar" id="addRowBar">
+      <button class="btn-add-row" id="addRowBtn">+ 添加一行奖励</button>
+      <span class="row-count">当前共 <span id="rowCount">1</span> 行</span>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="effCancelBtn">取消</button>
+      <button class="btn btn-primary" id="effSaveBtn">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Sync Production Modal ========== -->
+<div class="modal-layer" id="syncModalLayer">
+  <div class="modal modal-sync">
+    <h3 class="sync-title">同步至正式服</h3>
+    <div class="sync-table-wrap">
+      <table class="sync-table">
+        <thead><tr><th>特效ID</th><th>特效名称</th><th>缩略图</th><th>特效类型</th><th>是否可同步</th><th>同步信息</th></tr></thead>
+        <tbody id="syncBody"></tbody>
+      </table>
+    </div>
+    <div class="modal-footer sync-modal-footer">
+      <button class="btn btn-ghost" id="syncCancelBtn">取消</button>
+      <button class="btn btn-primary" id="syncConfirmBtn">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Toast ========== -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+
+  // ---- data ----
+  const effectTypes = {
+    frame: "头像框",
+    bubble: "聊天气泡",
+    entrance: "进场特效",
+    mic: "麦克风特效",
+    badge: "勋章"
+  };
+
+  // 后台特效主数据池（奖励ID下拉选项来源）
+  const sourceEffects = [
+    { eid: "EFF001", type: "frame",    name: "星光头像框", defaultDays: 7 },
+    { eid: "EFF002", type: "bubble",   name: "水晶气泡",   defaultDays: 7 },
+    { eid: "EFF003", type: "entrance", name: "金色聚光灯", defaultDays: 30 },
+    { eid: "EFF004", type: "badge",    name: "钻石勋章",   defaultDays: 0 },
+    { eid: "EFF005", type: "mic",      name: "流光麦克风", defaultDays: 7 },
+    { eid: "EFF006", type: "frame",    name: "月光边框",   defaultDays: 7 },
+    { eid: "EFF007", type: "bubble",   name: "火焰气泡",   defaultDays: 7 },
+    { eid: "EFF008", type: "entrance", name: "彩虹通道",   defaultDays: 14 },
+    { eid: "EFF009", type: "badge",    name: "皇冠勋章",   defaultDays: 0 },
+    { eid: "EFF010", type: "mic",      name: "电音麦克风", defaultDays: 7 },
+  ];
+
+  let items = [
+    { id: 1, eid: "EFF001", type: "frame",    name: "星光头像框", days: 7,  status: "on" },
+    { id: 2, eid: "EFF002", type: "bubble",   name: "水晶气泡",   days: 7,  status: "on" },
+    { id: 3, eid: "EFF003", type: "entrance", name: "金色聚光灯", days: 30, status: "on" },
+    { id: 4, eid: "EFF004", type: "badge",    name: "钻石勋章",   days: 0,  status: "off" },
+    { id: 5, eid: "EFF005", type: "mic",      name: "流光麦克风", days: 7,  status: "on" },
+  ];
+  let nextItemId = 6;
+
+  const typeBadge = { frame: "badge-vip", bubble: "badge-outfit", entrance: "badge-vip", mic: "badge-outfit", badge: "badge-vip" };
+
+  // ---- init ----
+  renderItems();
+
+  // ---- toast ----
+  function toast(msg) {
+    const el = $("#toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove("show"), 1800);
+  }
+
+  // ---- effect management ----
+  let editingItemId = null;
+  let modalRows = [];
+
+  function renderItems() {
+    const idQ = $("#effIdSearch").value.toLowerCase().trim();
+    const nameQ = $("#effNameSearch").value.toLowerCase().trim();
+    const typeF = $("#effTypeFilter").value;
+    const statusF = $("#effStatusFilter").value;
+    const body = $("#itemsBody");
+    const filtered = items.filter(it =>
+      (!idQ || it.eid.toLowerCase().includes(idQ)) &&
+      (!nameQ || it.name.toLowerCase().includes(nameQ)) &&
+      (!typeF || it.type === typeF) &&
+      (!statusF || it.status === statusF)
+    );
+    if (!filtered.length) {
+      body.innerHTML = '<tr><td colspan="10" class="empty">暂无特效</td></tr>';
+      return;
+    }
+    body.innerHTML = filtered.map(it => `
+      <tr>
+        <td class="selection-cell"><input type="checkbox" class="effect-select" data-select="${it.id}" aria-label="选择${esc(it.name)}"></td>
+        <td>${esc(it.eid)}</td>
+        <td>${effectTypes[it.type] || it.type}</td>
+        <td><strong>${esc(it.name)}</strong></td>
+        <td><div class="thumb" style="background:#f0e7ff;color:#7a3fdf">简</div></td>
+        <td><div class="thumb" style="background:#e0f0ff;color:#1a7fc4">繁</div></td>
+        <td><div class="thumb" style="background:#e6f9f1;color:#22bd83">EN</div></td>
+        <td>${it.days === 0 ? "永久" : it.days + " 天"}</td>
+        <td><div class="switch ${it.status === "on" ? "on" : ""}" data-toggle="${it.id}"></div></td>
+        <td>
+          <div class="row-actions">
+            <button class="btn-link" data-edit="${it.id}">编辑</button>
+            <span class="action-divider">|</span>
+            <button class="btn-link danger" data-del="${it.id}">删除</button>
+          </div>
+        </td>
+      </tr>
+    `).join("");
+
+    $$("#itemsBody [data-select]").forEach(el => el.addEventListener("change", updateSelectAllState));
+    updateSelectAllState();
+    $$("#itemsBody [data-toggle]").forEach(el => el.addEventListener("click", () => {
+      const item = items.find(x => x.id === +el.dataset.toggle);
+      item.status = item.status === "on" ? "off" : "on";
+      renderItems();
+      toast(`${item.name} 已${item.status === "on" ? "启用" : "停用"}`);
+    }));
+    $$("#itemsBody [data-edit]").forEach(el => el.addEventListener("click", () => openEffModal(+el.dataset.edit)));
+    $$("#itemsBody [data-del]").forEach(el => el.addEventListener("click", () => {
+      const id = +el.dataset.del;
+      const item = items.find(x => x.id === id);
+      if (confirm(`确认删除"${item.name}"？`)) {
+        items = items.filter(x => x.id !== id);
+        renderItems();
+        toast("特效已删除");
+      }
+    }));
+  }
+
+  function updateSelectAllState() {
+    const all = $$("#itemsBody .effect-select");
+    const checked = $$("#itemsBody .effect-select:checked");
+    const selectAll = $("#selectAllEffects");
+    if (!selectAll) return;
+    selectAll.checked = all.length > 0 && checked.length === all.length;
+    selectAll.indeterminate = checked.length > 0 && checked.length < all.length;
+  }
+
+  $("#selectAllEffects").addEventListener("change", e => {
+    $$("#itemsBody .effect-select").forEach(el => { el.checked = e.target.checked; });
+    updateSelectAllState();
+  });
+
+  function openSyncModal() {
+    const selectedIds = [...$$("#itemsBody .effect-select:checked")].map(el => +el.dataset.select);
+    if (!selectedIds.length) {
+      toast("请先选择要同步的特效");
+      return;
+    }
+    const selectedItems = items.filter(item => selectedIds.includes(item.id));
+    $("#syncBody").innerHTML = selectedItems.map(item => `
+      <tr>
+        <td>${esc(item.eid)}</td>
+        <td>${esc(item.name)}</td>
+        <td><div class="sync-thumb">${esc(effectTypes[item.type] || "特效")}</div></td>
+        <td>${esc(effectTypes[item.type] || item.type)}</td>
+        <td><span class="sync-status">可同步</span></td>
+        <td class="sync-info">可以同步</td>
+      </tr>
+    `).join("");
+    $("#syncModalLayer").classList.add("show");
+  }
+
+  function closeSyncModal() { $("#syncModalLayer").classList.remove("show"); }
+
+  $("#syncProdBtn").addEventListener("click", openSyncModal);
+  $("#syncCancelBtn").addEventListener("click", closeSyncModal);
+  $("#syncModalLayer").addEventListener("click", e => { if (e.target === $("#syncModalLayer")) closeSyncModal(); });
+  $("#syncConfirmBtn").addEventListener("click", () => {
+    closeSyncModal();
+    toast("已提交同步正式服");
+  });
+
+  // ---- modal rows ----
+  function createEmptyRow() {
+    return { type: "", eid: "", days: 7, status: "on" };
+  }
+
+  function openEffModal(id) {
+    editingItemId = id;
+    const m = $("#effModalLayer");
+    if (id) {
+      const it = items.find(x => x.id === id);
+      $("#effModalTitle").textContent = "编辑特效";
+      modalRows = [{ type: it.type, eid: it.eid, days: it.days, status: it.status }];
+    } else {
+      $("#effModalTitle").textContent = "新增特效";
+      modalRows = [createEmptyRow()];
+    }
+    $("#addRowBar").style.display = id ? "none" : "flex";
+    m.classList.add("show");
+    renderModalRows();
+  }
+
+  function closeEffModal() {
+    $("#effModalLayer").classList.remove("show");
+    editingItemId = null;
+    modalRows = [];
+  }
+
+  function renderModalRows() {
+    const container = $("#rewardRows");
+    $("#rowCount").textContent = modalRows.length;
+    if (!modalRows.length) {
+      container.innerHTML = "";
+      return;
+    }
+    container.innerHTML = modalRows.map((row, idx) => `
+      <div class="reward-row" data-row-index="${idx}">
+        <div class="row-index">${idx + 1}</div>
+        <div class="row-fields">
+          <div class="field">
+            <label><span class="required">*</span> 奖励类型</label>
+            <select class="row-type" data-row="${idx}">
+              <option value="">请选择奖励类型</option>
+              ${Object.entries(effectTypes).map(([k, v]) => `<option value="${k}" ${row.type === k ? "selected" : ""}>${v}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label><span class="required">*</span> 奖励ID</label>
+            <select class="row-id" data-row="${idx}" ${row.type ? "" : "disabled"}>
+              ${renderIdOptions(row.type, row.eid)}
+            </select>
+          </div>
+          <div class="field">
+            <label><span class="required">*</span> 有效期</label>
+            <div class="stepper">
+              <button class="stepper-btn row-days-minus" data-row="${idx}" type="button">−</button>
+              <input class="row-days" data-row="${idx}" type="number" min="0" value="${row.days}">
+              <button class="stepper-btn row-days-plus" data-row="${idx}" type="button">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label><span class="required">*</span> 状态</label>
+            <select class="row-status" data-row="${idx}">
+              <option value="on" ${row.status === "on" ? "selected" : ""}>启用</option>
+              <option value="off" ${row.status === "off" ? "selected" : ""}>停用</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-delete-row" data-delete-row="${idx}" title="删除" ${editingItemId || modalRows.length === 1 ? "disabled" : ""}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
+      </div>
+    `).join("");
+
+    // bind events
+    $$(".row-type").forEach(el => el.addEventListener("change", e => {
+      const idx = +e.target.dataset.row;
+      modalRows[idx].type = e.target.value;
+      modalRows[idx].eid = "";
+      modalRows[idx].days = 7;
+      renderModalRows();
+    }));
+    $$(".row-id").forEach(el => el.addEventListener("change", e => {
+      const idx = +e.target.dataset.row;
+      modalRows[idx].eid = e.target.value;
+      const src = sourceEffects.find(x => x.eid === e.target.value);
+      if (src) modalRows[idx].days = src.defaultDays;
+      renderModalRows();
+    }));
+    $$(".row-status").forEach(el => el.addEventListener("change", e => {
+      const idx = +e.target.dataset.row;
+      modalRows[idx].status = e.target.value;
+    }));
+    $$(".row-days").forEach(el => el.addEventListener("change", e => {
+      const idx = +e.target.dataset.row;
+      let v = parseInt(e.target.value) || 0;
+      if (v < 0) v = 0;
+      modalRows[idx].days = v;
+      e.target.value = v;
+    }));
+    $$(".row-days-minus").forEach(el => el.addEventListener("click", e => {
+      const idx = +e.target.dataset.row;
+      if (modalRows[idx].days > 0) {
+        modalRows[idx].days--;
+        renderModalRows();
+      }
+    }));
+    $$(".row-days-plus").forEach(el => el.addEventListener("click", e => {
+      const idx = +e.target.dataset.row;
+      modalRows[idx].days++;
+      renderModalRows();
+    }));
+    $$("[data-delete-row]").forEach(el => el.addEventListener("click", e => {
+      const idx = +e.currentTarget.dataset.deleteRow;
+      modalRows.splice(idx, 1);
+      if (!modalRows.length && !editingItemId) modalRows.push(createEmptyRow());
+      renderModalRows();
+    }));
+  }
+
+  function renderIdOptions(type, selectedEid) {
+    if (!type) return '<option value="">请先选择奖励类型</option>';
+    const list = sourceEffects.filter(x => x.type === type);
+    if (!list.length) return '<option value="">暂无配置项</option>';
+    return [
+      '<option value="">请选择奖励ID</option>',
+      ...list.map(x => {
+        const daysText = x.defaultDays === 0 ? "永久" : `${x.defaultDays}天`;
+        const selected = x.eid === selectedEid ? "selected" : "";
+        return `<option value="${esc(x.eid)}" ${selected}>${esc(x.name)}（ID:${esc(x.eid)} / 有效期:${daysText}）</option>`;
+      })
+    ].join("");
+  }
+
+  $("#addEffBtn").addEventListener("click", () => openEffModal(null));
+  $("#effCancelBtn").addEventListener("click", closeEffModal);
+  $("#effModalLayer").addEventListener("click", e => { if (e.target === $("#effModalLayer")) closeEffModal(); });
+
+  $("#addRowBtn").addEventListener("click", () => {
+    modalRows.push(createEmptyRow());
+    renderModalRows();
+  });
+
+  $("#effSaveBtn").addEventListener("click", () => {
+    // validate
+    for (let i = 0; i < modalRows.length; i++) {
+      const row = modalRows[i];
+      if (!row.type) { toast(`第 ${i + 1} 行请选择奖励类型`); return; }
+      if (!row.eid) { toast(`第 ${i + 1} 行请选择奖励ID`); return; }
+      if (row.days < 0) { toast(`第 ${i + 1} 行有效期不能小于0`); return; }
+    }
+
+    if (editingItemId) {
+      const row = modalRows[0];
+      const src = sourceEffects.find(x => x.eid === row.eid);
+      Object.assign(items.find(x => x.id === editingItemId), {
+        eid: row.eid,
+        type: row.type,
+        name: src ? src.name : row.eid,
+        days: row.days,
+        status: row.status
+      });
+      toast("特效已更新");
+    } else {
+      let added = 0;
+      modalRows.forEach(row => {
+        const src = sourceEffects.find(x => x.eid === row.eid);
+        items.push({
+          id: nextItemId++,
+          eid: row.eid,
+          type: row.type,
+          name: src ? src.name : row.eid,
+          days: row.days,
+          status: row.status
+        });
+        added++;
+      });
+      toast(`已新增 ${added} 个特效`);
+    }
+    closeEffModal();
+    renderItems();
+  });
+
+  $("#effSearchBtn").addEventListener("click", renderItems);
+  $("#effResetBtn").addEventListener("click", () => {
+    $("#effIdSearch").value = "";
+    $("#effNameSearch").value = "";
+    $("#effTypeFilter").value = "";
+    $("#effStatusFilter").value = "";
+    renderItems();
+  });
+  $("#effIdSearch").addEventListener("input", renderItems);
+  $("#effNameSearch").addEventListener("input", renderItems);
+  $("#effTypeFilter").addEventListener("change", renderItems);
+  $("#effStatusFilter").addEventListener("change", renderItems);
+
+  function esc(s) {
+    const d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+</script>
+</body>
+</html>
