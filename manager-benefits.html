@@ -1,0 +1,1897 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Manager Benefits</title>
+  <style>
+    :root {
+      --purple: #8c45ff;
+      --purple-2: #c02dff;
+      --pink: #f04bdc;
+      --ink: #23212a;
+      --muted: #9b98a6;
+      --line: #eceaf2;
+      --surface: rgba(255,255,255,.94);
+      --bg: #f6f6fb;
+      --success: #22bd83;
+      --danger: #f26f82;
+      --warn: #f5a623;
+      --shadow: 0 12px 32px rgba(97, 73, 148, .10);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 50% -5%, #e8dcff 0 11%, transparent 35%),
+        #ececf2;
+      color: var(--ink);
+      font-family: Inter, ui-rounded, "SF Pro Display", -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input { font: inherit; }
+    button { border: 0; cursor: pointer; }
+
+    .phone {
+      position: relative;
+      width: min(100%, 430px);
+      min-height: 100dvh;
+      margin: 0 auto;
+      overflow: hidden;
+      background: var(--bg);
+      box-shadow: 0 0 50px rgba(55, 38, 84, .12);
+    }
+
+    .view {
+      display: none;
+      min-height: 100dvh;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom));
+      animation: enter .22s ease both;
+    }
+    .view.active { display: block; }
+    @keyframes enter {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .home-hero {
+      position: relative;
+      height: 365px;
+      padding: max(22px, env(safe-area-inset-top)) 24px 0;
+      color: white;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(255,255,255,.22), transparent 22%),
+        radial-gradient(circle at 77% 41%, rgba(255,255,255,.2), transparent 28%),
+        linear-gradient(150deg, #6d33ed 0%, #a24dff 49%, #d7b5ff 100%);
+    }
+    .home-hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 122px;
+      background: linear-gradient(to bottom, transparent, var(--bg));
+    }
+
+    .nav {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+      align-items: center;
+      height: 52px;
+    }
+    .nav-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 650;
+      letter-spacing: -.3px;
+    }
+    .icon-button {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 14px;
+      color: inherit;
+      background: rgba(66, 29, 130, .28);
+    }
+    .icon-button svg { width: 24px; height: 24px; }
+    .back { justify-self: start; background: transparent; }
+
+    .profile {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 27px;
+    }
+    .avatar {
+      position: relative;
+      display: grid;
+      flex: 0 0 auto;
+      width: 72px;
+      height: 72px;
+      place-items: center;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,.7);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 37%, #fff 0 20%, transparent 21%),
+        radial-gradient(circle at 50% 61%, #fff 0 30%, transparent 31%),
+        linear-gradient(145deg, #f7a6db, #ffe1c9);
+      box-shadow: 0 8px 22px rgba(93, 36, 147, .2);
+    }
+    .avatar::after {
+      content: "M";
+      color: #7f3bed;
+      font-size: 25px;
+      font-weight: 850;
+    }
+    .profile-name {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-size: 19px;
+      font-weight: 750;
+    }
+    .manager-tag {
+      padding: 4px 9px;
+      border: 1px solid rgba(255,248,177,.55);
+      border-radius: 7px;
+      background: linear-gradient(180deg, #144c35, #0c2c22);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
+      color: #ffefad;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .5px;
+    }
+    .profile-id {
+      margin-top: 8px;
+      color: rgba(255,255,255,.68);
+      font-size: 15px;
+    }
+
+    .team-card {
+      position: absolute;
+      z-index: 3;
+      top: 199px;
+      left: 20px;
+      right: 20px;
+      overflow: hidden;
+      border-radius: 19px;
+      box-shadow: var(--shadow);
+      background: white;
+    }
+    .team-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 54px;
+      padding: 0 19px;
+      color: white;
+      background: linear-gradient(100deg, #d52bd9, #811df2);
+    }
+    .team-head strong { font-size: 18px; }
+    .team-link {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: white;
+      background: transparent;
+      font-size: 13px;
+    }
+    .arrow-pill {
+      display: grid;
+      width: 27px;
+      height: 27px;
+      place-items: center;
+      border-radius: 14px;
+      background: white;
+      color: var(--purple);
+      font-size: 19px;
+    }
+    .team-body { padding: 17px 18px 18px; }
+    .updated { margin-bottom: 12px; color: #77737f; font-size: 12px; }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+    }
+    .team-stat {
+      min-width: 0;
+      padding: 12px 11px;
+      border: 1px solid #e9e4f2;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #f9f3ff, #fff);
+    }
+    .team-stat span { color: #aa83d1; font-size: 12px; }
+    .team-stat b { display: block; margin: 11px 0; font-size: 20px; }
+    .mini-add {
+      padding: 6px 13px;
+      border-radius: 17px;
+      background: linear-gradient(100deg, #b044ff, #e852e2);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .home-content {
+      position: relative;
+      z-index: 4;
+      margin-top: 19px;
+      padding: 0 20px;
+    }
+    .period-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 5px;
+      border-radius: 30px;
+      background: white;
+      box-shadow: 0 5px 22px rgba(84, 72, 106, .05);
+    }
+    .period-switch button {
+      height: 43px;
+      border-radius: 23px;
+      background: transparent;
+      color: #807c86;
+    }
+    .period-switch .selected {
+      color: white;
+      background: linear-gradient(100deg, #9447ff, #f14fd7);
+      box-shadow: 0 5px 14px rgba(179, 56, 229, .2);
+    }
+
+    .revenue-card {
+      margin-top: 14px;
+      padding: 19px;
+      border-radius: 17px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+    .rev-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 0;
+      color: #8e8a96;
+      font-size: 13px;
+    }
+    .rev-row.total {
+      padding-bottom: 15px;
+      border-bottom: 1px dashed #ddd9e2;
+    }
+    .coin-value {
+      color: #25222a;
+      font-size: 23px;
+      font-weight: 750;
+    }
+    .tier-badge-inline {
+      padding: 5px 10px;
+      border-radius: 7px;
+      background: linear-gradient(100deg, #9447ff, #f14fd7);
+      color: white;
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .date-chip {
+      padding: 6px 9px;
+      border-radius: 6px;
+      background: linear-gradient(100deg, #22b873, #50e296);
+      color: white;
+      font-size: 11px;
+    }
+
+    .section-title {
+      margin: 25px 1px 14px;
+      font-size: 18px;
+      font-weight: 760;
+    }
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .tool {
+      position: relative;
+      display: flex;
+      min-width: 0;
+      min-height: 112px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 17px;
+      background: white;
+      box-shadow: var(--shadow);
+      color: #2c2931;
+      transition: .18s ease;
+    }
+    .tool:active { transform: scale(.97); }
+    .tool svg { width: 39px; height: 39px; }
+    .tool span { font-size: 12px; font-weight: 670; }
+    .tool.benefits {
+      border-color: #ebdbff;
+      background:
+        radial-gradient(circle at 50% 27%, rgba(162,87,255,.13), transparent 34%),
+        white;
+    }
+    .new-badge {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      padding: 3px 7px;
+      border-radius: 9px;
+      background: #f04bdc;
+      color: white;
+      font-size: 8px;
+      font-weight: 850;
+      letter-spacing: .5px;
+    }
+
+    /* Benefits page */
+    .benefit-view {
+      background:
+        radial-gradient(circle at 50% -10%, #d6b7ff, transparent 30%),
+        var(--bg);
+    }
+    .benefit-nav {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      padding: max(13px, env(safe-area-inset-top)) 18px 8px;
+      background: rgba(246,246,251,.82);
+      backdrop-filter: blur(16px);
+    }
+    .benefit-nav .nav { color: #25212d; grid-template-columns: 48px 1fr auto; }
+    .benefit-nav .back { color: #4b4554; }
+    .benefit-nav .icon-button { background: rgba(255,255,255,.62); }
+    .record-btn {
+      justify-self: end;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 16px;
+      background: linear-gradient(100deg, #8042e6, #be4cdd);
+      color: white;
+      font-size: 12px;
+      font-weight: 720;
+      box-shadow: 0 4px 12px rgba(139,65,216,.2);
+      transition: .17s;
+    }
+    .record-btn:active { transform: scale(.95); }
+
+    .benefit-content { padding: 8px 18px 0; }
+
+    /* banned banner */
+    .ban-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: linear-gradient(100deg, #fff0f0, #ffe8e8);
+      border: 1px solid #ffd0d0;
+      color: #c0392b;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+    .ban-banner.show { display: flex; }
+    .ban-banner svg { flex: 0 0 auto; width: 22px; height: 22px; }
+
+    /* demo status switcher */
+    .demo-switch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #fff7e6;
+      border: 1px dashed #f0c674;
+      font-size: 11px;
+      color: #8a6d1f;
+    }
+    .demo-switch strong { font-weight: 750; }
+    .demo-toggle {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      border-radius: 13px;
+      background: #22bd83;
+      transition: .2s;
+    }
+    .demo-toggle.banned { background: #d9534f; }
+    .demo-toggle::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 21px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      transition: .2s;
+    }
+    .demo-toggle.banned::after { left: 3px; }
+
+    .weekly-card {
+      position: relative;
+      overflow: hidden;
+      padding: 21px;
+      border-radius: 23px;
+      color: white;
+      background:
+        radial-gradient(circle at 88% 20%, rgba(255,255,255,.22), transparent 23%),
+        linear-gradient(135deg, #7031e9 0%, #a83cfa 55%, #e450d1 100%);
+      box-shadow: 0 18px 40px rgba(125, 51, 211, .24);
+    }
+    .weekly-card::after {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -61px;
+      bottom: -99px;
+      border: 28px solid rgba(255,255,255,.09);
+      border-radius: 50%;
+    }
+    .weekly-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .eyebrow-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .eyebrow {
+      color: rgba(255,255,255,.7);
+      font-size: 11px;
+      font-weight: 760;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+    .info-btn {
+      display: grid;
+      width: 17px;
+      height: 17px;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.4);
+      background: rgba(255,255,255,.16);
+      color: rgba(255,255,255,.9);
+      font-size: 10px;
+      font-weight: 800;
+      font-style: italic;
+      line-height: 1;
+    }
+    .info-btn:active { transform: scale(.9); }
+    .tier {
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 820;
+    }
+    .tier-pill {
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,.27);
+      border-radius: 20px;
+      background: rgba(255,255,255,.14);
+      font-size: 11px;
+      font-weight: 730;
+      white-space: nowrap;
+    }
+    .quota-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 21px;
+    }
+    .quota {
+      padding: 13px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 15px;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(6px);
+    }
+    .quota-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255,255,255,.72);
+      font-size: 11px;
+    }
+    .quota strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 24px;
+      line-height: 1;
+    }
+    .quota strong small {
+      color: rgba(255,255,255,.58);
+      font-size: 12px;
+      font-weight: 550;
+    }
+    .reset {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      color: rgba(255,255,255,.65);
+      font-size: 10px;
+    }
+
+    /* Reward tiers breakdown */
+    .tiers-section {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+    .tiers-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .tiers-head h2 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: -.2px;
+    }
+    .tiers-note {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    .tier-row {
+      position: relative;
+      padding: 14px;
+      border-radius: 15px;
+      border: 1px solid var(--line);
+      background: #faf9fc;
+      transition: .2s;
+    }
+    .tier-row + .tier-row { margin-top: 10px; }
+    .tier-row.current {
+      border-color: #a87bf0;
+      background: linear-gradient(135deg, #f7f0ff, #fff8fc);
+      box-shadow: 0 0 0 2px rgba(140,69,255,.08);
+    }
+    .tier-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 11px;
+    }
+    .tier-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 780;
+    }
+    .tier-name .dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #c9c4d2;
+    }
+    .tier-row.current .tier-name .dot { background: var(--purple); }
+    .tier-threshold {
+      font-size: 12px;
+      font-weight: 700;
+      color: #6e6977;
+    }
+    .tier-row.current .tier-threshold { color: var(--purple); }
+    .current-tag {
+      padding: 3px 8px;
+      border-radius: 7px;
+      background: var(--purple);
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+    .reward-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .reward-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 9px;
+      border-radius: 9px;
+      background: white;
+      border: 1px solid #ece8f3;
+      font-size: 10px;
+      font-weight: 650;
+      color: #5a5563;
+    }
+    .reward-tag.highlight {
+      background: linear-gradient(100deg, #f3ebff, #fce8f7);
+      border-color: #d9c5f5;
+      color: var(--purple);
+    }
+    .reward-tag .num {
+      font-weight: 850;
+      color: var(--purple-2);
+    }
+    .tier-row:not(.current) .reward-tag.highlight .num { color: #9b98a6; }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: 20px;
+      padding: 4px;
+      border-radius: 15px;
+      background: #ebe9f0;
+    }
+    .tab {
+      height: 39px;
+      border-radius: 12px;
+      background: transparent;
+      color: #918d99;
+      font-size: 12px;
+      font-weight: 720;
+    }
+    .tab.active {
+      background: white;
+      color: #7140d3;
+      box-shadow: 0 4px 13px rgba(77, 60, 112, .10);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fade .2s ease both; }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+    .form-card, .records-card {
+      margin-top: 14px;
+      padding: 19px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: var(--shadow);
+    }
+    .form-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-heading h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: -.2px;
+    }
+    .duration {
+      padding: 5px 9px;
+      border-radius: 12px;
+      background: #f3ebff;
+      color: #7c43dc;
+      font-size: 10px;
+      font-weight: 720;
+    }
+    .form-note {
+      margin: 7px 0 17px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .field-label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 7px;
+      color: #6e6977;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr 78px;
+      gap: 8px;
+    }
+    .input {
+      width: 100%;
+      height: 45px;
+      padding: 0 14px;
+      outline: none;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #faf9fc;
+      color: #2b2830;
+      transition: .18s;
+    }
+    .input:focus {
+      border-color: #b48cf7;
+      box-shadow: 0 0 0 3px rgba(140,69,255,.08);
+    }
+    .search-button {
+      border-radius: 13px;
+      background: #f0e7ff;
+      color: #7a3fdf;
+      font-size: 11px;
+      font-weight: 780;
+    }
+    .error {
+      display: none;
+      margin: 7px 0 0;
+      color: var(--danger);
+      font-size: 10px;
+    }
+    .error.show { display: block; }
+
+    .user-card {
+      display: none;
+      align-items: center;
+      gap: 11px;
+      margin-top: 13px;
+      padding: 12px;
+      border: 1px solid #eee7f8;
+      border-radius: 14px;
+      background: #fcfaff;
+    }
+    .user-card.show { display: flex; }
+    .user-avatar {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #f6c5ff, #a96df6);
+      color: white;
+      font-size: 14px;
+      font-weight: 850;
+    }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 13px; font-weight: 760; }
+    .user-id { margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .verified {
+      display: grid;
+      width: 20px;
+      height: 20px;
+      place-items: center;
+      border-radius: 50%;
+      background: #e3f9f1;
+      color: var(--success);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .benefit-preview {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 17px;
+      padding: 14px;
+      border-radius: 15px;
+      border: 2px solid var(--line);
+      background: linear-gradient(135deg, #f7f1ff, #fff8fc);
+      transition: .17s;
+    }
+    .benefit-preview.selected {
+      border-color: var(--purple);
+      background: #fbf7ff;
+    }
+    .benefit-icon {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 14px;
+      color: white;
+      background: linear-gradient(145deg, #713be3, #d34ddb);
+      box-shadow: 0 7px 17px rgba(137, 59, 207, .22);
+    }
+    .benefit-icon svg { width: 25px; height: 25px; }
+    .benefit-icon-text { font-size: 14px; font-weight: 850; letter-spacing: .5px; }
+    .benefit-copy { flex: 1; }
+    .benefit-name { font-size: 13px; font-weight: 800; }
+    .benefit-meta { margin-top: 4px; color: var(--muted); font-size: 10px; }
+
+    .primary {
+      width: 100%;
+      height: 48px;
+      margin-top: 17px;
+      border-radius: 15px;
+      background: linear-gradient(100deg, #7e3eea, #d946d4);
+      box-shadow: 0 10px 20px rgba(152, 58, 213, .22);
+      color: white;
+      font-size: 13px;
+      font-weight: 790;
+    }
+    .primary:disabled {
+      cursor: not-allowed;
+      background: #d8d5dd;
+      box-shadow: none;
+      color: #f8f7f9;
+    }
+
+    .category-strip {
+      display: flex;
+      gap: 8px;
+      margin: 8px -19px 0;
+      padding: 0 19px 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .category-strip::-webkit-scrollbar { display: none; }
+    .category-chip {
+      display: flex;
+      height: 34px;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      border: 1px solid #ebe7f0;
+      border-radius: 18px;
+      background: #faf9fc;
+      color: #7e7986;
+      font-size: 10px;
+      font-weight: 720;
+      transition: .17s ease;
+    }
+    .category-chip span {
+      display: grid;
+      min-width: 17px;
+      height: 17px;
+      padding: 0 4px;
+      place-items: center;
+      border-radius: 9px;
+      background: #eeeaf3;
+      color: #9993a1;
+      font-size: 8px;
+    }
+    .category-chip.active {
+      border-color: #9253e8;
+      background: linear-gradient(100deg, #8042e6, #be4cdd);
+      box-shadow: 0 5px 12px rgba(139,65,216,.19);
+      color: white;
+    }
+    .category-chip.active span {
+      background: rgba(255,255,255,.2);
+      color: white;
+    }
+    .outfit-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 10px;
+    }
+    .outfit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 12px 6px;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: white;
+      text-align: center;
+      transition: .17s;
+    }
+    .outfit.selected {
+      border-color: var(--purple);
+      background: #fbf7ff;
+    }
+    .outfit[hidden] { display: none; }
+    .outfit-art {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #f3eaff, #e8d5ff);
+      color: var(--purple);
+      font-size: 10px;
+      font-weight: 750;
+    }
+    .outfit-name {
+      font-size: 11px;
+      font-weight: 760;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .outfit-validity {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .records-modal .modal {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .records-modal h3 { margin: 0; text-align: center; font-size: 18px; }
+    .records-desc {
+      margin: 10px 2px 16px;
+      color: #6e6977;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .records-table th {
+      padding: 8px 6px;
+      text-align: left;
+      color: #9b98a6;
+      font-size: 10px;
+      font-weight: 700;
+      border-bottom: 1.5px solid #eceaf2;
+      white-space: nowrap;
+    }
+    .records-table td {
+      padding: 10px 6px;
+      vertical-align: top;
+      border-bottom: 1px solid #f0eef3;
+      color: #5a5563;
+      font-weight: 650;
+      font-size: 10px;
+    }
+    .records-table tr:last-child td { border-bottom: 0; }
+    .empty-records {
+      padding: 34px 10px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .modal-layer {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(26, 20, 36, .47);
+      backdrop-filter: blur(3px);
+    }
+    .modal-layer.show { display: flex; animation: fade .18s ease both; }
+    .modal {
+      width: min(100%, 394px);
+      padding: 22px;
+      border-radius: 23px;
+      background: white;
+      box-shadow: 0 20px 55px rgba(35, 20, 56, .25);
+      animation: up .22s ease both;
+    }
+    @keyframes up {
+      from { transform: translateY(25px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal-icon {
+      display: grid;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 13px;
+      place-items: center;
+      border-radius: 17px;
+      background: linear-gradient(145deg, #813fe8, #e04bd2);
+      color: white;
+      font-size: 23px;
+    }
+    .modal-icon.ban {
+      background: linear-gradient(145deg, #e8533d, #f5786b);
+    }
+    .modal h3 { margin: 0; text-align: center; font-size: 18px; }
+    .modal p {
+      margin: 9px 5px 18px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .summary {
+      display: grid;
+      gap: 8px;
+      padding: 13px;
+      border-radius: 14px;
+      background: #f7f5fa;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 11px;
+    }
+    .summary-row span { color: var(--muted); }
+    .modal-actions {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 9px;
+      margin-top: 16px;
+    }
+    .secondary, .confirm {
+      height: 47px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 760;
+    }
+    .secondary { background: #f0eef3; color: #736f79; }
+    .confirm {
+      background: linear-gradient(100deg, #7e3eea, #d946d4);
+      color: white;
+    }
+    .confirm.ban-confirm {
+      grid-column: 1 / -1;
+      background: linear-gradient(100deg, #e8533d, #f5786b);
+    }
+
+    /* tiers info modal */
+    .tiers-modal .modal {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .tiers-modal h3 { margin: 0; text-align: center; font-size: 18px; }
+    .tiers-modal .tiers-desc {
+      margin: 10px 2px 16px;
+      color: #6e6977;
+      text-align: center;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .tiers-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .tiers-table th {
+      padding: 8px 6px;
+      text-align: left;
+      color: #9b98a6;
+      font-size: 10px;
+      font-weight: 700;
+      border-bottom: 1.5px solid #eceaf2;
+    }
+    .tiers-table td {
+      padding: 10px 6px;
+      vertical-align: top;
+      border-bottom: 1px solid #f0eef3;
+      color: #5a5563;
+      font-weight: 650;
+    }
+    .tiers-table td.lv { font-weight: 800; color: #2c2931; }
+    .tiers-table td.rev { color: #7c43dc; font-weight: 700; white-space: nowrap; }
+    .tiers-table td.ben ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .tiers-table td.ben li {
+      margin-bottom: 3px;
+      font-size: 10px;
+      font-weight: 600;
+      color: #5a5563;
+    }
+    .tiers-table tr:last-child td { border-bottom: 0; }
+    .tiers-notes {
+      margin-top: 16px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      background: #f7f5fa;
+    }
+    .tiers-notes-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #5a5563;
+      margin-bottom: 7px;
+    }
+    .tiers-notes ol {
+      margin: 0;
+      padding-left: 16px;
+    }
+    .tiers-notes li {
+      font-size: 10px;
+      line-height: 1.55;
+      color: #6e6977;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .tiers-notes li:last-child { margin-bottom: 0; }
+
+    /* reward issued notification modal */
+    .notify-body {
+      text-align: center;
+    }
+    .notify-body .check-circle {
+      display: grid;
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 14px;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #22bd83, #1aa06e);
+      color: white;
+      font-size: 28px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(34, 189, 131, .3);
+    }
+    .notify-text {
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-weight: 740;
+      color: var(--ink);
+    }
+    .notify-sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .notify-rewards {
+      display: grid;
+      gap: 7px;
+      padding: 13px;
+      border-radius: 14px;
+      background: #f7f5fa;
+      margin-bottom: 16px;
+    }
+    .notify-reward {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 11px;
+      color: #4a4552;
+    }
+    .notify-reward .ricon {
+      display: grid;
+      width: 26px; height: 26px;
+      place-items: center;
+      border-radius: 8px;
+      background: #ece3fb;
+      color: var(--purple);
+      font-size: 13px;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 200;
+      left: 50%;
+      bottom: calc(26px + env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: max-content;
+      max-width: calc(100% - 40px);
+      padding: 12px 16px;
+      border-radius: 15px;
+      background: rgba(33, 29, 39, .92);
+      box-shadow: 0 12px 28px rgba(0,0,0,.2);
+      color: white;
+      font-size: 11px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s ease;
+    }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .toast-check {
+      display: grid;
+      width: 19px;
+      height: 19px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--success);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .hint {
+      margin: 12px 2px 0;
+      color: #aaa6b1;
+      text-align: center;
+      font-size: 9px;
+    }
+
+    @media (min-width: 700px) {
+      body { padding: 30px 0; }
+      .phone {
+        min-height: 860px;
+        border: 8px solid #25222a;
+        border-radius: 38px;
+      }
+      .view { min-height: 844px; }
+      .modal-layer { align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <section class="view active" id="homeView">
+      <div class="home-hero">
+        <header class="nav">
+          <button class="icon-button back" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          </button>
+          <div class="nav-title">Manager Center</div>
+          <button class="icon-button" aria-label="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.05.05-2.12 2.12-.05-.05a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-3v-.08A1.7 1.7 0 0 0 10.68 18.36a1.7 1.7 0 0 0-1.88.34l-.05.05-2.12-2.12.05-.05A1.7 1.7 0 0 0 7.02 15a1.7 1.7 0 0 0-1.56-1.03H5v-3h.46A1.7 1.7 0 0 0 7.02 9.94a1.7 1.7 0 0 0-.34-1.88l-.05-.05L8.75 5.9l.05.05a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 11.71 4.7V4h3v.7a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.05-.05 2.12 2.12-.05.05a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.56 1.03H21v3h-.04A1.7 1.7 0 0 0 19.4 15Z"/>
+            </svg>
+          </button>
+        </header>
+
+        <div class="profile">
+          <div class="avatar"></div>
+          <div>
+            <div class="profile-name">
+              Melody
+              <span class="manager-tag">✦ MANAGER</span>
+            </div>
+            <div class="profile-id">ID: 8587</div>
+          </div>
+        </div>
+
+        <article class="team-card">
+          <div class="team-head">
+            <strong>My Team</strong>
+            <button class="team-link">
+              View details <span class="arrow-pill">›</span>
+            </button>
+          </div>
+          <div class="team-body">
+            <div class="updated">Updated: 2026-07-29 09:50:00</div>
+            <div class="team-grid">
+              <div class="team-stat"><span>BD</span><b>1</b><button class="mini-add">Add</button></div>
+              <div class="team-stat"><span>Agency</span><b>2</b><button class="mini-add">Add</button></div>
+              <div class="team-stat"><span>Host</span><b>2</b><button class="mini-add">Add</button></div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="home-content">
+        <div class="period-switch">
+          <button data-period="today">Today</button>
+          <button class="selected" data-period="week">This Week</button>
+        </div>
+
+        <article class="revenue-card">
+          <div class="rev-row total">
+            <span>Team Revenue (Last Week)</span>
+            <span class="date-chip">Jul 21 – Jul 27</span>
+          </div>
+          <div class="rev-row">
+            <span class="coin-value">🪙 420,000</span>
+            <span class="tier-badge-inline" id="homeTierBadge">Lv.1</span>
+          </div>
+          <div class="rev-row"><span>Regular Revenue</span><strong>🪙 380,000</strong></div>
+          <div class="rev-row"><span>Lucky Revenue</span><strong>🪙 40,000</strong></div>
+          <div class="rev-row" style="font-size:11px;color:#aaa6b1;padding-top:10px">
+            <span>Counted every Monday 00:10 · coins</span>
+          </div>
+        </article>
+
+        <h2 class="section-title">My Tools</h2>
+        <div class="tools">
+          <button class="tool" aria-label="Management">
+            <svg viewBox="0 0 48 48" fill="none">
+              <defs><linearGradient id="mg" x1="7" y1="7" x2="42" y2="42"><stop stop-color="#c0a7ff"/><stop offset="1" stop-color="#7846e8"/></linearGradient></defs>
+              <circle cx="21" cy="17" r="9" fill="url(#mg)"/>
+              <path d="M6 41c0-9 6.7-15 15-15 4 0 7.6 1.4 10.3 4" fill="url(#mg)"/>
+              <path d="M38 28l1.4 3.1 3.4.4-2.5 2.4.7 3.4-3-1.7-3 1.7.7-3.4-2.5-2.4 3.4-.4L38 28Z" fill="#6536ce"/>
+            </svg>
+            <span>Management</span>
+          </button>
+
+          <button class="tool benefits" id="benefitsEntry" aria-label="Benefits">
+            <svg viewBox="0 0 48 48" fill="none">
+              <defs><linearGradient id="bg" x1="5" y1="4" x2="43" y2="46"><stop stop-color="#e16df0"/><stop offset="1" stop-color="#7045e6"/></linearGradient></defs>
+              <rect x="8" y="17" width="32" height="25" rx="6" fill="url(#bg)"/>
+              <path d="M5 15.5A4.5 4.5 0 0 1 9.5 11h29a4.5 4.5 0 0 1 0 9h-29A4.5 4.5 0 0 1 5 15.5Z" fill="#b355ed"/>
+              <path d="M24 11v31M24 11c-7.5 0-11.5-2.1-11.5-5.3 0-2.5 2.1-3.7 4.2-3.7C20.8 2 24 11 24 11Zm0 0s3.2-9 7.3-9c2.1 0 4.2 1.2 4.2 3.7C35.5 8.9 31.5 11 24 11Z" stroke="#f5d7ff" stroke-width="2.3" stroke-linejoin="round"/>
+            </svg>
+            <span>Benefits</span>
+          </button>
+
+          <button class="tool" aria-label="Bank">
+            <svg viewBox="0 0 48 48" fill="none">
+              <defs><linearGradient id="bank" x1="8" y1="5" x2="42" y2="44"><stop stop-color="#c7adff"/><stop offset="1" stop-color="#7752df"/></linearGradient></defs>
+              <path d="m24 4 19 10v5H5v-5L24 4Z" fill="url(#bank)"/>
+              <path d="M9 22h6v17H9V22Zm12 0h6v17h-6V22Zm12 0h6v17h-6V22ZM5 41h38v4H5v-4Z" fill="url(#bank)"/>
+              <circle cx="24" cy="13" r="3" fill="#f4eaff"/>
+            </svg>
+            <span>Bank</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view benefit-view" id="benefitView">
+      <div class="benefit-nav">
+        <header class="nav">
+          <button class="icon-button back" id="benefitBack" aria-label="Back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+              <path d="m15 18-6-6 6-6"/>
+            </svg>
+          </button>
+          <div class="nav-title">Benefits</div>
+          <button class="record-btn" id="recordsShortcut">Record</button>
+        </header>
+      </div>
+
+      <div class="benefit-content">
+        <!-- banned banner -->
+        <div class="ban-banner" id="banBanner">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M4.9 4.9l14.2 14.2"/>
+          </svg>
+          <span>You have been banned and cannot use grant privileges. Please contact customer service for details.</span>
+        </div>
+
+        <article class="weekly-card">
+          <div class="weekly-top">
+            <div>
+              <div class="eyebrow-row">
+                <span class="eyebrow">Weekly benefits</span>
+                <button class="info-btn" id="tiersInfoBtn" aria-label="How reward tiers work">?</button>
+              </div>
+              <div class="tier" id="weeklyTier">Lv.1</div>
+            </div>
+          </div>
+          <div class="quota-grid">
+            <div class="quota">
+              <div class="quota-label"><span>VIP quota</span><span>7 days</span></div>
+              <strong><span id="vipTotal">1</span><small> / <span id="vipMax">5</span> left</small></strong>
+            </div>
+            <div class="quota">
+              <div class="quota-label"><span>Outfit quota</span><span>7 days</span></div>
+              <strong><span id="outfitTotal">2</span><small> / <span id="outfitMax">5</span> left</small></strong>
+            </div>
+          </div>
+          <div class="reset">Quotas valid 7 days, non-cumulative. Unused quota cleared next Monday.</div>
+        </article>
+
+        <nav class="tabs" aria-label="Benefit types">
+          <button class="tab active" data-tab="vipPanel">VIP</button>
+          <button class="tab" data-tab="outfitPanel">Outfits</button>
+        </nav>
+
+        <section class="tab-panel active" id="vipPanel">
+          <article class="form-card">
+            <div class="form-heading">
+              <h2>Grant VIP</h2>
+            </div>
+            <label class="field-label" for="vipUserId">Recipient ID</label>
+            <div class="search-row">
+              <input class="input" id="vipUserId" inputmode="numeric" placeholder="Please enter the user ID">
+              <button class="search-button" data-search="vip">Search</button>
+            </div>
+            <p class="error" id="vipError">Enter a valid user ID.</p>
+
+            <div class="user-card" id="vipUserCard">
+              <div class="user-avatar">L</div>
+              <div class="user-info">
+                <div class="user-name">Luna</div>
+                <div class="user-id">ID: <span>102488</span></div>
+              </div>
+              <span class="verified">✓</span>
+            </div>
+
+            <div class="benefit-preview selected">
+              <div class="benefit-icon">
+                <span class="benefit-icon-text">VIP</span>
+              </div>
+              <div class="benefit-copy">
+                <div class="benefit-name">Regular VIP</div>
+                <div class="benefit-meta">Validity: 7 Days</div>
+              </div>
+            </div>
+
+            <button class="primary" id="vipGrant" disabled>Confirm Grant</button>
+          </article>
+        </section>
+
+        <section class="tab-panel" id="outfitPanel">
+          <article class="form-card">
+            <div class="form-heading">
+              <h2>Grant Outfit</h2>
+            </div>
+            <label class="field-label" for="outfitUserId">Recipient ID</label>
+            <div class="search-row">
+              <input class="input" id="outfitUserId" inputmode="numeric" placeholder="Please enter the user ID">
+              <button class="search-button" data-search="outfit">Search</button>
+            </div>
+            <p class="error" id="outfitError">Enter a valid user ID.</p>
+
+            <div class="user-card" id="outfitUserCard">
+              <div class="user-avatar">L</div>
+              <div class="user-info">
+                <div class="user-name">Luna</div>
+                <div class="user-id">ID: <span>102488</span></div>
+              </div>
+              <span class="verified">✓</span>
+            </div>
+
+            <label class="field-label" style="margin-top:17px">Outfit category</label>
+            <div class="category-strip" aria-label="Outfit categories">
+              <button class="category-chip active" data-category="frame">Avatar Frames <span>4</span></button>
+              <button class="category-chip" data-category="bubble">Chat Bubbles <span>3</span></button>
+              <button class="category-chip" data-category="entrance">Entrance Effects <span>3</span></button>
+              <button class="category-chip" data-category="badge">Badges <span>2</span></button>
+            </div>
+
+            <div class="outfit-list">
+              <button class="outfit selected" data-category-item="frame" data-outfit="Starry Halo">
+                <div class="outfit-art">Frame</div>
+                <div class="outfit-name">Starry Halo</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="frame" data-outfit="Moonlight Crown">
+                <div class="outfit-art">Frame</div>
+                <div class="outfit-name">Moonlight Crown</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="frame" data-outfit="Peach Blossom">
+                <div class="outfit-art">Frame</div>
+                <div class="outfit-name">Peach Blossom</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="frame" data-outfit="Emerald Leaf">
+                <div class="outfit-art">Frame</div>
+                <div class="outfit-name">Emerald Leaf</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+
+              <button class="outfit" data-category-item="bubble" data-outfit="Crystal Bubble" hidden>
+                <div class="outfit-art">Bubble</div>
+                <div class="outfit-name">Crystal Bubble</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="bubble" data-outfit="Sweet Whisper" hidden>
+                <div class="outfit-art">Bubble</div>
+                <div class="outfit-name">Sweet Whisper</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="bubble" data-outfit="Neon Message" hidden>
+                <div class="outfit-art">Bubble</div>
+                <div class="outfit-name">Neon Message</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+
+              <button class="outfit" data-category-item="entrance" data-outfit="Sunset Entrance" hidden>
+                <div class="outfit-art">Entrance</div>
+                <div class="outfit-name">Sunset Entrance</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="entrance" data-outfit="Galaxy Arrival" hidden>
+                <div class="outfit-art">Entrance</div>
+                <div class="outfit-name">Galaxy Arrival</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="entrance" data-outfit="Golden Spotlight" hidden>
+                <div class="outfit-art">Entrance</div>
+                <div class="outfit-name">Golden Spotlight</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+
+              <button class="outfit" data-category-item="badge" data-outfit="Manager's Choice" hidden>
+                <div class="outfit-art">Badge</div>
+                <div class="outfit-name">Manager's Choice</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+              <button class="outfit" data-category-item="badge" data-outfit="Rising Star" hidden>
+                <div class="outfit-art">Badge</div>
+                <div class="outfit-name">Rising Star</div>
+                <div class="outfit-validity">7 days</div>
+              </button>
+            </div>
+
+            <button class="primary" id="outfitGrant" disabled>Confirm Grant</button>
+          </article>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- Confirm grant modal -->
+  <div class="modal-layer" id="modalLayer" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-icon" id="modalIcon">✦</div>
+      <h3 id="modalTitle">Confirm Grant</h3>
+      <p>Once granted, this benefit cannot be withdrawn by the manager.</p>
+      <div class="summary">
+        <div class="summary-row"><span>Recipient</span><strong id="summaryUser">Luna (102488)</strong></div>
+        <div class="summary-row"><span>Benefit</span><strong id="summaryBenefit">Regular VIP</strong></div>
+        <div class="summary-row"><span>Validity</span><strong>7 days</strong></div>
+      </div>
+      <div class="modal-actions">
+        <button class="secondary" id="modalCancel">Cancel</button>
+        <button class="confirm" id="modalConfirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banned interception modal -->
+  <div class="modal-layer" id="banModalLayer" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-icon ban">⛔</div>
+      <h3>Permission Restricted</h3>
+      <p id="banText">You have been banned and cannot use this privilege. Please contact customer service for details.</p>
+      <div class="modal-actions">
+        <button class="confirm ban-confirm" id="banConfirm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reward issued notification modal -->
+  <div class="modal-layer" id="notifyModalLayer" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="notify-body">
+        <div class="check-circle">✓</div>
+        <p class="notify-text" id="notifyTitle">Rewards Issued</p>
+        <p class="notify-sub" id="notifySub">Congratulations on hitting the revenue target for Manager! Rewards have been successfully issued.</p>
+      </div>
+      <div class="notify-rewards" id="notifyRewards"></div>
+      <div class="modal-actions">
+        <button class="confirm" id="notifyConfirm" style="grid-column:1/-1">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reward tiers info modal -->
+  <div class="modal-layer tiers-modal" id="tiersModalLayer" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3>Benefit Rules</h3>
+      <p class="tiers-desc">This week's level benefits will be distributed based on your team's total coin revenue from last week.</p>
+      <div id="tiersModalBody"></div>
+      <div class="tiers-notes">
+        <div class="tiers-notes-title">Notes:</div>
+        <ol>
+          <li>Benefit and VIP benefits will be automatically issued after the requirements are met.</li>
+          <li>Please use the issued VIP and costume benefits within the validity period. Please confirm the recipient ID is correct, as successful issuance cannot be withdrawn.</li>
+        </ol>
+      </div>
+      <div class="modal-actions">
+        <button class="confirm" id="tiersModalConfirm" style="grid-column:1/-1">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grant records modal -->
+  <div class="modal-layer records-modal" id="recordsModalLayer" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3>Grant Records</h3>
+      <p class="records-desc">Only the latest 90 records are displayed.</p>
+      <div id="recordsModalBody"></div>
+      <div class="modal-actions">
+        <button class="confirm" id="recordsModalConfirm" style="grid-column:1/-1">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-check">✓</span>
+    <span id="toastText">VIP granted successfully.</span>
+  </div>
+
+  <script>
+    // ---- Tier config aligned with requirements ----
+    // Manager: team revenue (coins) thresholds
+    // base(0): VIP7d, VIP quota 3, decoration quota 3
+    // lv1(350000): wreath, badge, VIP7d, VIP quota 5, decoration quota 5
+    // lv2(700000): wreath, badge, VIP7d, VIP quota 10, decoration quota 10
+    const TIERS = {
+      base: { name: "Base", threshold: 0, vipQuota: 3, outfitQuota: 3, label: "Base" },
+      lv1:  { name: "Lv.1", threshold: 350000, vipQuota: 5, outfitQuota: 5, label: "Lv.1" },
+      lv2:  { name: "Lv.2", threshold: 700000, vipQuota: 10, outfitQuota: 10, label: "Lv.2" }
+    };
+
+    // demo: current revenue reached Lv.1 (420,000 coins)
+    let currentTierKey = "lv1";
+    let isBanned = false;
+
+    const state = {
+      vipRemaining: TIERS[currentTierKey].vipQuota - 4,
+      outfitRemaining: TIERS[currentTierKey].outfitQuota - 3,
+      vipUser: null,
+      outfitUser: null,
+      selectedCategory: "frame",
+      selectedOutfit: "Starry Halo",
+      pendingType: null,
+      records: [
+        { type: "vip",    benefit: "Regular VIP",     user: { name: "Luna",   id: "102488" }, time: "2026-07-29 10:32:15", days: 7 },
+        { type: "outfit", benefit: "Starry Halo",      user: { name: "Luna",   id: "102488" }, time: "2026-07-29 10:30:08", days: 7 },
+        { type: "vip",    benefit: "Regular VIP",     user: { name: "Mira",   id: "205671" }, time: "2026-07-28 18:45:33", days: 7 },
+        { type: "outfit", benefit: "Crystal Bubble",   user: { name: "Kai",    id: "309124" }, time: "2026-07-28 15:12:50", days: 7 },
+        { type: "vip",    benefit: "Regular VIP",     user: { name: "Zoe",    id: "417890" }, time: "2026-07-27 21:05:22", days: 7 },
+        { type: "outfit", benefit: "Golden Spotlight", user: { name: "Mira",   id: "205671" }, time: "2026-07-27 14:38:41", days: 7 },
+        { type: "vip",    benefit: "Regular VIP",     user: { name: "Kai",    id: "309124" }, time: "2026-07-26 19:20:17", days: 7 }
+      ]
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+    function applyTier(key) {
+      currentTierKey = key;
+      const t = TIERS[key];
+      state.vipRemaining = t.vipQuota;
+      state.outfitRemaining = t.outfitQuota;
+      $("#weeklyTier").textContent = t.label;
+      $("#vipMax").textContent = t.vipQuota;
+      $("#outfitMax").textContent = t.outfitQuota;
+      $("#homeTierBadge").textContent = t.label;
+      $$(".tier-row").forEach(row => row.classList.toggle("current", row.dataset.tier === key));
+      const cur = $(`.tier-row[data-tier="${key}"]`);
+      if (cur && !cur.querySelector(".current-tag")) {
+        $$(".current-tag").forEach(t => t.remove());
+        const tag = document.createElement("span");
+        tag.className = "current-tag";
+        tag.textContent = "CURRENT";
+        cur.querySelector(".tier-name").appendChild(tag);
+      }
+      updateButtons();
+    }
+
+    function setView(name) {
+      $$(".view").forEach(view => view.classList.remove("active"));
+      $(name).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    $("#benefitsEntry").addEventListener("click", () => setView("#benefitView"));
+    $("#benefitBack").addEventListener("click", () => setView("#homeView"));
+
+    // period switch
+    $$(".period-switch button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$(".period-switch button").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+      });
+    });
+
+    function activateTab(panelId) {
+      $$(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === panelId));
+      $$(".tab-panel").forEach(panel => panel.classList.toggle("active", panel.id === panelId));
+    }
+    $$(".tab").forEach(tab => tab.addEventListener("click", () => activateTab(tab.dataset.tab)));
+    $("#recordsShortcut").addEventListener("click", () => {
+      renderRecords();
+      $("#recordsModalLayer").classList.add("show");
+    });
+    $("#recordsModalConfirm").addEventListener("click", () => $("#recordsModalLayer").classList.remove("show"));
+    $("#recordsModalLayer").addEventListener("click", event => {
+      if (event.target === $("#recordsModalLayer")) $("#recordsModalLayer").classList.remove("show");
+    });
+
+    $("#banConfirm").addEventListener("click", () => $("#banModalLayer").classList.remove("show"));
+
+    function lookupUser(type) {
+      const input = $(`#${type}UserId`);
+      const error = $(`#${type}Error`);
+      const card = $(`#${type}UserCard`);
+      const id = input.value.trim();
+      if (!/^\d{4,12}$/.test(id)) {
+        error.classList.add("show");
+        card.classList.remove("show");
+        state[`${type}User`] = null;
+        updateButtons();
+        return;
+      }
+      error.classList.remove("show");
+      card.querySelector(".user-id span").textContent = id;
+      card.classList.add("show");
+      state[`${type}User`] = { name: "Luna", id };
+      updateButtons();
+    }
+    $$("[data-search]").forEach(button => button.addEventListener("click", () => lookupUser(button.dataset.search)));
+    ["vip", "outfit"].forEach(type => {
+      $(`#${type}UserId`).addEventListener("keydown", event => { if (event.key === "Enter") lookupUser(type); });
+    });
+
+    const categoryMeta = {
+      frame: { label: "Avatar Frames", count: 4 },
+      bubble: { label: "Chat Bubbles", count: 3 },
+      entrance: { label: "Entrance Effects", count: 3 },
+      badge: { label: "Badges", count: 2 }
+    };
+    $$(".category-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const category = chip.dataset.category;
+        state.selectedCategory = category;
+        $$(".category-chip").forEach(item => item.classList.toggle("active", item === chip));
+        $$(".outfit").forEach(item => {
+          item.hidden = item.dataset.categoryItem !== category;
+          item.classList.remove("selected");
+        });
+        // auto-select first visible outfit
+        const firstVisible = $$(".outfit").find(item => !item.hidden);
+        if (firstVisible) {
+          firstVisible.classList.add("selected");
+          state.selectedOutfit = firstVisible.dataset.outfit;
+        } else {
+          state.selectedOutfit = null;
+        }
+        updateButtons();
+      });
+    });
+    $$(".outfit").forEach(item => {
+      item.addEventListener("click", () => {
+        $$(".outfit").forEach(option => option.classList.remove("selected"));
+        item.classList.add("selected");
+        state.selectedOutfit = item.dataset.outfit;
+        updateButtons();
+      });
+    });
+
+    function updateButtons() {
+      const vipDisabled = !state.vipUser || state.vipRemaining <= 0 || isBanned;
+      const outfitDisabled = !state.outfitUser || !state.selectedOutfit || state.outfitRemaining <= 0 || isBanned;
+      $("#vipGrant").disabled = vipDisabled;
+      $("#outfitGrant").disabled = outfitDisabled;
+      $("#vipTotal").textContent = state.vipRemaining;
+      $("#outfitTotal").textContent = state.outfitRemaining;
+    }
+
+    function openConfirm(type) {
+      // banned interception
+      if (isBanned) {
+        $("#banModalLayer").classList.add("show");
+        return;
+      }
+      state.pendingType = type;
+      const user = state[`${type}User`];
+      const benefit = type === "vip" ? "Regular VIP" : state.selectedOutfit;
+      $("#modalIcon").textContent = type === "vip" ? "✦" : "◈";
+      $("#summaryUser").textContent = `${user.name} (${user.id})`;
+      $("#summaryBenefit").textContent = benefit;
+      $("#modalLayer").classList.add("show");
+    }
+
+    $("#vipGrant").addEventListener("click", () => openConfirm("vip"));
+    $("#outfitGrant").addEventListener("click", () => openConfirm("outfit"));
+    $("#modalCancel").addEventListener("click", () => $("#modalLayer").classList.remove("show"));
+    $("#modalLayer").addEventListener("click", event => { if (event.target === $("#modalLayer")) $("#modalLayer").classList.remove("show"); });
+
+    $("#modalConfirm").addEventListener("click", () => {
+      const type = state.pendingType;
+      if (!type) return;
+      const user = state[`${type}User`];
+      const benefit = type === "vip" ? "Regular VIP" : state.selectedOutfit;
+      if (type === "vip") state.vipRemaining -= 1;
+      else state.outfitRemaining -= 1;
+      state.records.unshift({
+        type, benefit, user,
+        time: new Date().toLocaleString("sv-SE", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }).replace("T", " "),
+        days: 7
+      });
+      $("#modalLayer").classList.remove("show");
+      updateButtons();
+      renderRecords();
+      showToast(`${type === "vip" ? "VIP" : "Outfit"} granted successfully.`);
+    });
+
+    // notify modal close
+    $("#notifyConfirm").addEventListener("click", () => $("#notifyModalLayer").classList.remove("show"));
+
+    // ---- Tiers info modal ----
+    const TIER_DETAILS = [
+      { lv: "Lv.1", rev: "≥ 0",            ben: ["VIP × 7d", "VIP quota × 3", "Outfit quota × 3"] },
+      { lv: "Lv.2", rev: "≥ 350,000",     ben: ["Lv.2 Level Badge", "VIP × 7d", "VIP quota × 5", "Outfit quota × 5"] },
+      { lv: "Lv.3", rev: "≥ 700,000",     ben: ["Lv.3 Level Badge", "VIP × 7d", "VIP quota × 10", "Outfit quota × 10"] }
+    ];
+
+    function renderTiersModal() {
+      const html = `
+        <table class="tiers-table">
+          <thead>
+            <tr><th>Level</th><th>Revenue</th><th>Benefits</th></tr>
+          </thead>
+          <tbody>
+            ${TIER_DETAILS.map(t => `
+              <tr>
+                <td class="lv">${t.lv}</td>
+                <td class="rev">${t.rev}</td>
+                <td class="ben"><ul>${t.ben.map(b => `<li>${b}</li>`).join("")}</ul></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+      $("#tiersModalBody").innerHTML = html;
+    }
+
+    $("#tiersInfoBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      renderTiersModal();
+      $("#tiersModalLayer").classList.add("show");
+    });
+    $("#tiersModalConfirm").addEventListener("click", () => $("#tiersModalLayer").classList.remove("show"));
+    $("#tiersModalLayer").addEventListener("click", event => {
+      if (event.target === $("#tiersModalLayer")) $("#tiersModalLayer").classList.remove("show");
+    });
+
+    function showToast(message) {
+      $("#toastText").textContent = message;
+      $("#toast").classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => $("#toast").classList.remove("show"), 2200);
+    }
+
+    function renderRecords() {
+      const body = $("#recordsModalBody");
+      if (!state.records.length) {
+        body.innerHTML = `
+          <div class="empty-records">
+            No benefits granted yet.<br>
+            Successful grants will appear here.
+          </div>
+        `;
+        return;
+      }
+      body.innerHTML = `
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Grant Time</th>
+              <th>Recipient ID</th>
+              <th>Grant Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${state.records.map(r => `
+              <tr>
+                <td>${r.time}</td>
+                <td>${r.user.id}</td>
+                <td>${r.benefit} X ${r.days}Days</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // ---- Reward issued notification (trilingual) ----
+    function showRewardNotify() {
+      const t = TIERS[currentTierKey];
+      const trilingual = [
+        { lang: "简体", text: `恭喜你达成经理流水目标，奖励已发放成功~` },
+        { lang: "繁體", text: `恭喜你達成經理流水目標，獎勵已發放成功~` },
+        { lang: "EN", text: `Congratulations on hitting the revenue target for Manager! Rewards have been successfully issued.` }
+      ];
+      $("#notifySub").textContent = trilingual[2].text;
+      const rewards = [];
+      if (currentTierKey !== "base") {
+        rewards.push({ icon: "💐", text: `${t.label} Wreath` });
+        rewards.push({ icon: "🏅", text: `${t.label} Identity Badge` });
+      }
+      rewards.push({ icon: "🪙", text: `VIP × 7 days` });
+      rewards.push({ icon: "🎟️", text: `VIP grant quota × ${t.vipQuota}` });
+      rewards.push({ icon: "🎨", text: `Outfit grant quota × ${t.outfitQuota}` });
+      $("#notifyRewards").innerHTML = rewards.map(r =>
+        `<div class="notify-reward"><span class="ricon">${r.icon}</span>${r.text}</div>`
+      ).join("");
+      $("#notifyModalLayer").classList.add("show");
+    }
+
+    // expose demo hook on tier rows: click a tier row to preview that tier
+    $$(".tier-row").forEach(row => {
+      row.addEventListener("click", () => applyTier(row.dataset.tier));
+    });
+
+    // init
+    applyTier("lv1");
+  </script>
+</body>
+</html>
