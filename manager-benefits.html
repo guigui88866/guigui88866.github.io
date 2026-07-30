@@ -1595,13 +1595,11 @@
   <!-- Confirm grant modal -->
   <div class="modal-layer" id="modalLayer" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
-      <div class="modal-icon" id="modalIcon">✦</div>
       <h3 id="modalTitle">Confirm Grant</h3>
-      <p>Once granted, this benefit cannot be withdrawn by the manager.</p>
+      <p>Once executed, the operation cannot be revoked.</p>
       <div class="summary">
         <div class="summary-row"><span>Recipient</span><strong id="summaryUser">Luna (102488)</strong></div>
-        <div class="summary-row"><span>Benefit</span><strong id="summaryBenefit">Regular VIP</strong></div>
-        <div class="summary-row"><span>Validity</span><strong>7 days</strong></div>
+        <div class="summary-row"><span>Benefit</span><strong id="summaryBenefit">Regular VIP X 7 days</strong></div>
       </div>
       <div class="modal-actions">
         <button class="secondary" id="modalCancel">Cancel</button>
@@ -1670,7 +1668,7 @@
 
   <div class="toast" id="toast">
     <span class="toast-check">✓</span>
-    <span id="toastText">VIP granted successfully.</span>
+    <span id="toastText">Grant Successful</span>
   </div>
 
   <script>
@@ -1881,9 +1879,8 @@
       state.pendingType = type;
       const user = state[`${type}User`];
       const benefit = type === "vip" ? "Regular VIP" : state.selectedOutfit;
-      $("#modalIcon").textContent = type === "vip" ? "✦" : "◈";
-      $("#summaryUser").textContent = `${user.name} (${user.id})`;
-      $("#summaryBenefit").textContent = benefit;
+      $("#summaryUser").textContent = `${user.name} (ID:${user.id})`;
+      $("#summaryBenefit").textContent = `${benefit} X 7 days`;
       $("#modalLayer").classList.add("show");
     }
 
@@ -1907,7 +1904,7 @@
       $("#modalLayer").classList.remove("show");
       updateButtons();
       renderRecords();
-      showToast(`${type === "vip" ? "VIP" : "Outfit"} granted successfully.`);
+      showToast("Grant Successful");
     });
 
     // notify modal close
