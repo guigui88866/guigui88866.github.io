@@ -489,36 +489,38 @@
       z-index: 1;
       margin-top: 17px;
     }
-    .progress-label { color: rgba(255,255,255,.7); font-size: 11px; margin-bottom: 7px; }
+    .progress-info {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .progress-info .current { color: #fff; font-size: 13px; font-weight: 800; }
+    .progress-info .current small { color: rgba(255,255,255,.55); font-size: 11px; font-weight: 600; }
+    .progress-info .gap { color: rgba(255,255,255,.65); font-size: 11px; font-weight: 600; }
     .progress-track {
       position: relative;
-      height: 26px;
+      height: 8px;
       overflow: hidden;
       border-radius: 99px;
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
     }
     .progress-value {
       position: absolute;
       top: 0; left: 0; bottom: 0;
       width: 60%;
       border-radius: inherit;
-      background: linear-gradient(90deg, rgba(244,210,255,.45), rgba(255,255,255,.25));
-      transition: width .5s ease;
+      background: linear-gradient(90deg, #c084fc, #e9d5ff, #fff, #e9d5ff, #c084fc);
+      background-size: 200% 100%;
+      animation: shimmer 2.5s linear infinite;
+      box-shadow: 0 0 10px rgba(192,132,252,.5);
+      transition: width .6s ease;
     }
-    .progress-text {
-      position: relative;
-      z-index: 1;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-      font-size: 11px;
-      font-weight: 650;
-      color: rgba(255,255,255,.92);
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
-    .progress-text .gap { color: rgba(255,255,255,.65); }
     .quota-grid {
       position: relative;
       z-index: 1;
@@ -1420,13 +1422,15 @@
             <button class="tier-pill" id="viewTierBtn" type="button">View</button>
           </div>
           <div class="level-progress">
-            <div class="progress-label">This Week's Revenue Progress</div>
+            <div class="progress-info">
+              <span class="current"><small>This Week's Revenue Progress</small></span>
+              <span class="gap" id="nextLevelGap">280,000 to Reach Lv.2</span>
+            </div>
             <div class="progress-track">
               <div class="progress-value" id="progressValue"></div>
-              <div class="progress-text">
-                <span id="weeklyProgress">420,000 / 700,000</span>
-                <span class="gap" id="nextLevelGap">280,000 to Reach Lv.2</span>
-              </div>
+            </div>
+            <div class="progress-info" style="margin-top:6px; margin-bottom:0;">
+              <span class="current"><span id="weeklyProgress">420,000</span> <small>/ <span id="weeklyTarget">700,000</span></small></span>
             </div>
           </div>
           <div class="quota-grid">
@@ -1737,7 +1741,8 @@
       const nextTier = key === "base" ? TIERS.lv1 : key === "lv1" ? TIERS.lv2 : null;
       const target = nextTier ? nextTier.threshold : t.threshold;
       const gap = nextTier ? Math.max(0, target - weeklyRevenue) : 0;
-      $("#weeklyProgress").textContent = `${weeklyRevenue.toLocaleString()} / ${target.toLocaleString()}`;
+      $("#weeklyProgress").textContent = weeklyRevenue.toLocaleString();
+      $("#weeklyTarget").textContent = target.toLocaleString();
       $("#nextLevelGap").textContent = nextTier ? `${gap.toLocaleString()} to Reach ${nextTier.label}` : "Highest level reached";
       $("#progressValue").style.width = `${Math.min(100, (weeklyRevenue / target) * 100)}%`;
       $("#vipMax").textContent = t.vipQuota;
