@@ -511,15 +511,9 @@
       top: 0; left: 0; bottom: 0;
       width: 60%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #c084fc, #e9d5ff, #fff, #e9d5ff, #c084fc);
-      background-size: 200% 100%;
-      animation: shimmer 2.5s linear infinite;
+      background: linear-gradient(90deg, #c084fc, #e9d5ff);
       box-shadow: 0 0 10px rgba(192,132,252,.5);
       transition: width .6s ease;
-    }
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
     }
     .quota-grid {
       position: relative;
@@ -1424,13 +1418,13 @@
           <div class="level-progress">
             <div class="progress-info">
               <span class="current"><small>This Week's Revenue Progress</small></span>
-              <span class="gap" id="nextLevelGap">280,000 to Reach Lv.2</span>
             </div>
             <div class="progress-track">
               <div class="progress-value" id="progressValue"></div>
             </div>
             <div class="progress-info" style="margin-top:6px; margin-bottom:0;">
               <span class="current"><span id="weeklyProgress">420,000</span> <small>/ <span id="weeklyTarget">700,000</span></small></span>
+              <span class="gap" id="nextLevelGap">280,000 to Reach Lv.2</span>
             </div>
           </div>
           <div class="quota-grid">
