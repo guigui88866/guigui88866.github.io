@@ -469,39 +469,6 @@
       font-size: 22px;
       font-weight: 820;
     }
-    .tier-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0;
-      background: transparent;
-      box-shadow: none;
-    }
-    .tier-badge-img {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #1c5246 0%, #2d7a5e 35%, #d9b06a 70%, #8a5a1c 100%);
-      clip-path: polygon(
-        50% 0%, 61% 12%, 76% 8%, 82% 22%, 96% 28%, 90% 42%,
-        100% 50%, 90% 58%, 96% 72%, 82% 78%, 76% 92%, 61% 88%,
-        50% 100%, 39% 88%, 24% 92%, 18% 78%, 4% 72%, 10% 58%,
-        0% 50%, 10% 42%, 4% 28%, 18% 22%, 24% 8%, 39% 12%
-      );
-      display: grid;
-      place-items: center;
-      color: #ffe4a8;
-      font-size: 10px;
-      font-weight: 800;
-      text-shadow: 0 1px 2px rgba(0,0,0,.6);
-      position: relative;
-      filter: drop-shadow(0 2px 4px rgba(20,50,40,.4));
-    }
-    .tier-badge-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      clip-path: inherit;
-    }
     .tier-pill {
       padding: 7px 18px;
       border: 1px solid rgba(255, 220, 140, .55);
@@ -1418,11 +1385,11 @@
 
         <article class="weekly-card">
           <div class="weekly-top">
-            <div class="eyebrow-row">
-              <span class="eyebrow">Weekly benefits</span>
-              <div class="tier-badge">
-                <div class="tier-badge-img" id="weeklyTier"><img src="Manager3.png" alt="Lv.3" onerror="this.style.display='none'; this.parentNode.textContent='3';"></div>
+            <div>
+              <div class="eyebrow-row">
+                <span class="eyebrow">Weekly benefits</span>
               </div>
+              <div class="tier" id="weeklyTier">Lv.1</div>
             </div>
             <button class="tier-pill" id="viewTierBtn" type="button">View</button>
           </div>
@@ -1734,15 +1701,7 @@
       const t = TIERS[key];
       state.vipRemaining = t.vipQuota;
       state.outfitRemaining = t.outfitQuota;
-      const tierImg = $("#weeklyTier img");
-      const levelNum = (t.label.match(/\d+/) || [""])[0];
-      if (tierImg) {
-        tierImg.alt = t.label;
-        tierImg.src = `Manager${levelNum || 1}.png`;
-        tierImg.onerror = function(){ this.style.display='none'; this.parentNode.textContent = levelNum || '?'; };
-      } else {
-        $("#weeklyTier").textContent = levelNum || '?';
-      }
+      $("#weeklyTier").textContent = t.label;
       const nextTier = key === "base" ? TIERS.lv1 : key === "lv1" ? TIERS.lv2 : null;
       const target = nextTier ? nextTier.threshold : t.threshold;
       const gap = nextTier ? Math.max(0, target - weeklyRevenue) : 0;
