@@ -1418,13 +1418,13 @@
           <div class="level-progress">
             <div class="progress-info">
               <span class="current"><small>This Week's Revenue Progress</small></span>
+              <span class="current"><span id="weeklyProgress">420,000</span> <small>/ <span id="weeklyTarget">700,000</span></small></span>
             </div>
             <div class="progress-track">
               <div class="progress-value" id="progressValue"></div>
             </div>
             <div class="progress-info" style="margin-top:6px; margin-bottom:0;">
-              <span class="current"><span id="weeklyProgress">420,000</span> <small>/ <span id="weeklyTarget">700,000</span></small></span>
-              <span class="gap" id="nextLevelGap">280,000 to Reach Lv.2</span>
+              <span class="gap" id="nextLevelGap">Need 280,000 to reach Lv.2 next week</span>
             </div>
           </div>
           <div class="quota-grid">
@@ -1737,7 +1737,7 @@
       const gap = nextTier ? Math.max(0, target - weeklyRevenue) : 0;
       $("#weeklyProgress").textContent = weeklyRevenue.toLocaleString();
       $("#weeklyTarget").textContent = target.toLocaleString();
-      $("#nextLevelGap").textContent = nextTier ? `${gap.toLocaleString()} to Reach ${nextTier.label}` : "Highest level reached";
+      $("#nextLevelGap").textContent = nextTier ? `Need ${gap.toLocaleString()} to reach ${nextTier.label} next week` : "Highest level reached";
       $("#progressValue").style.width = `${Math.min(100, (weeklyRevenue / target) * 100)}%`;
       $("#vipMax").textContent = t.vipQuota;
       $("#outfitMax").textContent = t.outfitQuota;
