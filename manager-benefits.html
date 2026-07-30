@@ -463,35 +463,53 @@
       letter-spacing: 1.2px;
       text-transform: uppercase;
     }
-    .info-btn {
-      display: grid;
-      width: 17px;
-      height: 17px;
-      place-items: center;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,.4);
-      background: rgba(255,255,255,.16);
-      color: rgba(255,255,255,.9);
-      font-size: 10px;
-      font-weight: 800;
-      font-style: italic;
-      line-height: 1;
-    }
-    .info-btn:active { transform: scale(.9); }
     .tier {
       margin-top: 6px;
       font-size: 22px;
       font-weight: 820;
     }
+    .tier-badge {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #713be3, #d34ddb);
+      box-shadow: 0 2px 10px rgba(147,51,234,.35);
+      font-size: 16px;
+      font-weight: 820;
+      color: #fff;
+    }
+    .tier-badge::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      background: rgba(255,255,255,.25);
+      border-radius: 50%;
+    }
     .tier-pill {
-      padding: 6px 10px;
+      padding: 6px 14px;
       border: 1px solid rgba(255,255,255,.27);
       border-radius: 20px;
       background: rgba(255,255,255,.14);
       font-size: 11px;
       font-weight: 730;
       white-space: nowrap;
+      cursor: pointer;
+      transition: background .2s;
     }
+    .tier-pill:hover { background: rgba(255,255,255,.22); }
+    .tier-pill:active { transform: scale(.95); }
+    .level-progress {
+      position: relative;
+      z-index: 1;
+      margin-top: 17px;
+    }
+    .progress-copy { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(255,255,255,.76); font-size: 11px; }
+    .progress-copy strong { color: #fff; font-size: 12px; }
+    .progress-track { height: 7px; margin-top: 8px; overflow: hidden; border-radius: 99px; background: rgba(255,255,255,.2); }
+    .progress-value { height: 100%; width: 60%; border-radius: inherit; background: linear-gradient(90deg, #f4d2ff, #fff); box-shadow: 0 0 12px rgba(255,255,255,.4); }
     .quota-grid {
       position: relative;
       z-index: 1;
@@ -549,6 +567,7 @@
       color: rgba(255,255,255,.65);
       font-size: 10px;
     }
+    .quota-countdown { color: #f3bdff; font-weight: 750; }
 
     /* Reward tiers breakdown */
     .tiers-section {
@@ -1386,10 +1405,14 @@
             <div>
               <div class="eyebrow-row">
                 <span class="eyebrow">Weekly benefits</span>
-                <button class="info-btn" id="tiersInfoBtn" aria-label="How reward tiers work">?</button>
               </div>
-              <div class="tier" id="weeklyTier">Lv.1</div>
+              <div class="tier-badge" id="weeklyTier">Lv.1</div>
             </div>
+            <button class="tier-pill" id="viewTierBtn" type="button">View</button>
+          </div>
+          <div class="level-progress">
+            <div class="progress-copy"><span>This week's progress <strong id="weeklyProgress">420,000 / 700,000</strong></span><span id="nextLevelGap">280,000 to next level</span></div>
+            <div class="progress-track"><div class="progress-value" id="progressValue"></div></div>
           </div>
           <div class="quota-grid">
             <div class="quota">
@@ -1407,7 +1430,7 @@
               </div>
             </div>
           </div>
-          <div class="reset">Quotas valid for 7 days. Unused quotas reset next Monday.</div>
+          <div class="reset">Quota valid for 7 days, remaining time: <span class="quota-countdown" id="quotaCountdown">6d 23:59:59</span></div>
         </article>
 
         <nav class="tabs" aria-label="Benefit types">
@@ -1436,7 +1459,6 @@
                 <div class="user-name">Luna</div>
                 <div class="user-id">ID: <span>102488</span></div>
               </div>
-              <span class="verified">✓</span>
             </div>
 
             <div class="benefit-preview selected">
@@ -1474,7 +1496,6 @@
                 <div class="user-name">Luna</div>
                 <div class="user-id">ID: <span>102488</span></div>
               </div>
-              <span class="verified">✓</span>
             </div>
 
             <label class="field-label" style="margin-top:17px">Outfit category</label>
@@ -1651,7 +1672,8 @@
       lv2:  { name: "Lv.2", threshold: 700000, vipQuota: 10, outfitQuota: 10, label: "Lv.2" }
     };
 
-    // demo: current revenue reached Lv.1 (420,000 coins)
+    // demo: current week's revenue is 420,000 coins
+    const weeklyRevenue = 420000;
     let currentTierKey = "lv1";
     let isBanned = false;
 
@@ -1677,12 +1699,32 @@
     const $ = (selector) => document.querySelector(selector);
     const $$ = (selector) => [...document.querySelectorAll(selector)];
 
+    const quotaExpiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000);
+    function updateQuotaCountdown() {
+      const remaining = Math.max(0, quotaExpiresAt - Date.now());
+      const totalSeconds = Math.floor(remaining / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      const el = $("#quotaCountdown");
+      if (el) el.textContent = `${days}d ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+    updateQuotaCountdown();
+    setInterval(updateQuotaCountdown, 1000);
+
     function applyTier(key) {
       currentTierKey = key;
       const t = TIERS[key];
       state.vipRemaining = t.vipQuota;
       state.outfitRemaining = t.outfitQuota;
       $("#weeklyTier").textContent = t.label;
+      const nextTier = key === "base" ? TIERS.lv1 : key === "lv1" ? TIERS.lv2 : null;
+      const target = nextTier ? nextTier.threshold : t.threshold;
+      const gap = nextTier ? Math.max(0, target - weeklyRevenue) : 0;
+      $("#weeklyProgress").textContent = `${weeklyRevenue.toLocaleString()} / ${target.toLocaleString()}`;
+      $("#nextLevelGap").textContent = nextTier ? `${gap.toLocaleString()} to next level` : "Highest level reached";
+      $("#progressValue").style.width = `${Math.min(100, (weeklyRevenue / target) * 100)}%`;
       $("#vipMax").textContent = t.vipQuota;
       $("#outfitMax").textContent = t.outfitQuota;
       $("#homeTierBadge").textContent = t.label;
@@ -1884,8 +1926,7 @@
       $("#tiersModalBody").innerHTML = html;
     }
 
-    $("#tiersInfoBtn").addEventListener("click", (e) => {
-      e.stopPropagation();
+    $("#viewTierBtn").addEventListener("click", () => {
       renderTiersModal();
       $("#tiersModalLayer").classList.add("show");
     });
