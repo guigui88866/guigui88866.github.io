@@ -1279,110 +1279,7 @@
 </head>
 <body>
   <main class="phone">
-    <section class="view active" id="homeView">
-      <div class="home-hero">
-        <header class="nav">
-          <button class="icon-button back" aria-label="Back">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-              <path d="m15 18-6-6 6-6"/>
-            </svg>
-          </button>
-          <div class="nav-title">Manager Center</div>
-          <button class="icon-button" aria-label="Settings">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.05.05-2.12 2.12-.05-.05a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-3v-.08A1.7 1.7 0 0 0 10.68 18.36a1.7 1.7 0 0 0-1.88.34l-.05.05-2.12-2.12.05-.05A1.7 1.7 0 0 0 7.02 15a1.7 1.7 0 0 0-1.56-1.03H5v-3h.46A1.7 1.7 0 0 0 7.02 9.94a1.7 1.7 0 0 0-.34-1.88l-.05-.05L8.75 5.9l.05.05a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 11.71 4.7V4h3v.7a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.05-.05 2.12 2.12-.05.05a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.56 1.03H21v3h-.04A1.7 1.7 0 0 0 19.4 15Z"/>
-            </svg>
-          </button>
-        </header>
-
-        <div class="profile">
-          <div class="avatar"></div>
-          <div>
-            <div class="profile-name">
-              Melody
-              <span class="manager-tag">✦ MANAGER</span>
-            </div>
-            <div class="profile-id">ID: 8587</div>
-          </div>
-        </div>
-
-        <article class="team-card">
-          <div class="team-head">
-            <strong>My Team</strong>
-            <button class="team-link">
-              View details <span class="arrow-pill">›</span>
-            </button>
-          </div>
-          <div class="team-body">
-            <div class="updated">Updated: 2026-07-29 09:50:00</div>
-            <div class="team-grid">
-              <div class="team-stat"><span>BD</span><b>1</b><button class="mini-add">Add</button></div>
-              <div class="team-stat"><span>Agency</span><b>2</b><button class="mini-add">Add</button></div>
-              <div class="team-stat"><span>Host</span><b>2</b><button class="mini-add">Add</button></div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="home-content">
-        <div class="period-switch">
-          <button data-period="today">Today</button>
-          <button class="selected" data-period="week">This Week</button>
-        </div>
-
-        <article class="revenue-card">
-          <div class="rev-row total">
-            <span>Team Revenue (Last Week)</span>
-            <span class="date-chip">Jul 21 – Jul 27</span>
-          </div>
-          <div class="rev-row">
-            <span class="coin-value">🪙 420,000</span>
-            <span class="tier-badge-inline" id="homeTierBadge">Lv.1</span>
-          </div>
-          <div class="rev-row"><span>Regular Revenue</span><strong>🪙 380,000</strong></div>
-          <div class="rev-row"><span>Lucky Revenue</span><strong>🪙 40,000</strong></div>
-          <div class="rev-row" style="font-size:11px;color:#aaa6b1;padding-top:10px">
-            <span>Counted every Monday 00:10 · coins</span>
-          </div>
-        </article>
-
-        <h2 class="section-title">My Tools</h2>
-        <div class="tools">
-          <button class="tool" aria-label="Management">
-            <svg viewBox="0 0 48 48" fill="none">
-              <defs><linearGradient id="mg" x1="7" y1="7" x2="42" y2="42"><stop stop-color="#c0a7ff"/><stop offset="1" stop-color="#7846e8"/></linearGradient></defs>
-              <circle cx="21" cy="17" r="9" fill="url(#mg)"/>
-              <path d="M6 41c0-9 6.7-15 15-15 4 0 7.6 1.4 10.3 4" fill="url(#mg)"/>
-              <path d="M38 28l1.4 3.1 3.4.4-2.5 2.4.7 3.4-3-1.7-3 1.7.7-3.4-2.5-2.4 3.4-.4L38 28Z" fill="#6536ce"/>
-            </svg>
-            <span>Management</span>
-          </button>
-
-          <button class="tool benefits" id="benefitsEntry" aria-label="Benefits">
-            <svg viewBox="0 0 48 48" fill="none">
-              <defs><linearGradient id="bg" x1="5" y1="4" x2="43" y2="46"><stop stop-color="#e16df0"/><stop offset="1" stop-color="#7045e6"/></linearGradient></defs>
-              <rect x="8" y="17" width="32" height="25" rx="6" fill="url(#bg)"/>
-              <path d="M5 15.5A4.5 4.5 0 0 1 9.5 11h29a4.5 4.5 0 0 1 0 9h-29A4.5 4.5 0 0 1 5 15.5Z" fill="#b355ed"/>
-              <path d="M24 11v31M24 11c-7.5 0-11.5-2.1-11.5-5.3 0-2.5 2.1-3.7 4.2-3.7C20.8 2 24 11 24 11Zm0 0s3.2-9 7.3-9c2.1 0 4.2 1.2 4.2 3.7C35.5 8.9 31.5 11 24 11Z" stroke="#f5d7ff" stroke-width="2.3" stroke-linejoin="round"/>
-            </svg>
-            <span>Benefits</span>
-          </button>
-
-          <button class="tool" aria-label="Bank">
-            <svg viewBox="0 0 48 48" fill="none">
-              <defs><linearGradient id="bank" x1="8" y1="5" x2="42" y2="44"><stop stop-color="#c7adff"/><stop offset="1" stop-color="#7752df"/></linearGradient></defs>
-              <path d="m24 4 19 10v5H5v-5L24 4Z" fill="url(#bank)"/>
-              <path d="M9 22h6v17H9V22Zm12 0h6v17h-6V22Zm12 0h6v17h-6V22ZM5 41h38v4H5v-4Z" fill="url(#bank)"/>
-              <circle cx="24" cy="13" r="3" fill="#f4eaff"/>
-            </svg>
-            <span>Bank</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="view benefit-view" id="benefitView">
+    <section class="view benefit-view active" id="benefitView">
       <div class="benefit-nav">
         <header class="nav">
           <button class="icon-button back" id="benefitBack" aria-label="Back">
@@ -1739,7 +1636,6 @@
       $("#progressValue").style.width = `${Math.min(100, (weeklyRevenue / target) * 100)}%`;
       $("#vipMax").textContent = t.vipQuota;
       $("#outfitMax").textContent = t.outfitQuota;
-      $("#homeTierBadge").textContent = t.label;
       $$(".tier-row").forEach(row => row.classList.toggle("current", row.dataset.tier === key));
       const cur = $(`.tier-row[data-tier="${key}"]`);
       if (cur && !cur.querySelector(".current-tag")) {
@@ -1752,22 +1648,10 @@
       updateButtons();
     }
 
-    function setView(name) {
-      $$(".view").forEach(view => view.classList.remove("active"));
-      $(name).classList.add("active");
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
+    $("#benefitBack").addEventListener("click", () => history.back());
 
-    $("#benefitsEntry").addEventListener("click", () => setView("#benefitView"));
-    $("#benefitBack").addEventListener("click", () => setView("#homeView"));
+    // period switch (reserved for future use)
 
-    // period switch
-    $$(".period-switch button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        $$(".period-switch button").forEach(b => b.classList.remove("selected"));
-        btn.classList.add("selected");
-      });
-    });
 
     function activateTab(panelId) {
       $$(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.tab === panelId));
