@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="黄靖芸｜小项目 Demo 展示" />
+  <title>小项目 Demo ｜ 黄靖芸</title>
+  <style>
+    :root { --navy:#e2e8f0; --slate:#cbd5e1; --muted:#94a3b8; --line:#26354f; --bg:#0b1120; --card:#111b31; --teal:#5eead4; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:radial-gradient(circle at 15% 7%, #14213d 0, #0b1120 38%, #080d18 100%); color:var(--slate); font-family:Inter,"PingFang SC","Microsoft YaHei",Arial,sans-serif; font-size:15px; line-height:1.8; }
+    body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; background:radial-gradient(600px at var(--mx,50%) var(--my,50%), rgba(94,234,212,.07), transparent 80%); transition:background .15s ease-out; }
+    a { color:inherit; text-decoration:none; }
+    .page { width:min(800px, calc(100% - 48px)); margin:0 auto; padding:64px 0 100px; }
+    .back { display:inline-flex; align-items:center; gap:8px; margin-bottom:36px; color:#71819a; font-size:13px; font-weight:750; transition:.2s; }
+    .back:hover { color:var(--teal); }
+    .back svg { width:16px; height:16px; }
+    h1 { margin:0 0 36px; color:var(--navy); font-size:36px; letter-spacing:-.04em; }
+
+    .demo-card { padding:28px; margin-bottom:28px; border-radius:12px; background:var(--card); border:1px solid var(--line); transition:.2s; }
+    .demo-card:hover { border-color:#2a504b; box-shadow:0 12px 36px rgba(0,0,0,.25); }
+    .demo-card:last-child { margin-bottom:0; }
+
+    .demo-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .demo-header h2 { margin:0; color:var(--navy); font-size:20px; letter-spacing:-.02em; }
+    .demo-header .badge { padding:2px 8px; border-radius:4px; font-size:10px; font-weight:800; letter-spacing:.08em; }
+    .demo-header .badge.proto { background:#14353d; color:#6ee7c7; }
+    .demo-header .badge.frontend { background:#2a2010; color:#fcd68a; }
+
+    .demo-meta { margin:0 0 20px; padding:14px 18px; border-radius:8px; background:rgba(94,234,212,.04); border-left:2px solid var(--teal); }
+    .demo-meta p { margin:0; color:var(--muted); font-size:13px; line-height:1.75; }
+    .demo-meta p + p { margin-top:10px; }
+    .demo-meta strong { color:var(--teal); font-weight:750; }
+
+    .demo-actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .demo-btn { display:inline-flex; align-items:center; gap:7px; padding:9px 18px; border-radius:7px; font-size:13px; font-weight:750; transition:.2s; }
+    .demo-btn svg { width:16px; height:16px; }
+    .demo-btn.proto { color:var(--teal); border:1px solid #26646a; background:#102a30; }
+    .demo-btn.proto:hover { background:#1a3f47; border-color:var(--teal); }
+    .demo-btn.live { color:#fcd68a; border:1px solid #5c451b; background:#2a2010; }
+    .demo-btn.live:hover { background:#3d3018; border-color:#fcd68a; }
+
+    @media (max-width:560px) { body{font-size:14px} .page { padding:38px 0 65px; } h1 { font-size:28px; } .demo-card { padding:20px; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a class="back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      返回简历
+    </a>
+    <h1>小项目 Demo</h1>
+
+    <div class="demo-card">
+      <div class="demo-header">
+        <h2>Lucky Gifts 活动后台</h2>
+        <span class="badge proto">原型</span>
+      </div>
+      <div class="demo-meta">
+        <p><strong>项目目的：</strong>为海外社交产品 LiveMe 的活动运营团队设计一套完整的管理后台，覆盖主播筛选、档位配置、数据总览等核心路径，降低运营人工操作成本，解决原有 Excel 手动管理效率低、易出错的问题。</p>
+        <p><strong>项目内容：</strong>主播列表筛选与批量操作、档位阶梯配置（按流水/时长等多维度）、活动数据总览看板、奖励发放记录与对账。共 20+ 页面，覆盖运营日常配置到数据复盘的全流程。</p>
+      </div>
+      <div class="demo-actions">
+        <a class="demo-btn proto" href="https://modao.cc/proto/EpwaTGKtj6p4yBKLHo5hc/sharing?view_mode=read_only&amp;screen=rbpVFPREI7lfKqHxg" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h6v6H3V5m0 8h6v6H3v-6m8-8h6v6h-6V5m0 8h6v6h-6v-6Z"/></svg>原型内容
+        </a>
+        <a class="demo-btn live" href="javascript:;" title="制作中">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>交互体验（制作中）
+        </a>
+      </div>
+    </div>
+
+    <div class="demo-card">
+      <div class="demo-header">
+        <h2>Manager Benefits 收益管理</h2>
+        <span class="badge frontend">前端 Demo</span>
+      </div>
+      <div class="demo-meta">
+        <p><strong>项目目的：</strong>针对经理角色设计团队收益管理页面，展示周收益统计、额度进度、团队排行及奖励发放确认等功能模块。练手项目，独立完成前端实现并部署至 GitHub Pages，验证从设计到上线的完整链路能力。</p>
+        <p><strong>项目内容：</strong>本周收益概览卡片、额度使用进度条、团队成员收益排行表、奖励发放确认弹窗、历史收益趋势。纯前端实现，数据通过 JSON 模拟，页面响应式适配桌面与移动端。</p>
+      </div>
+      <div class="demo-actions">
+        <a class="demo-btn proto" href="javascript:;" title="制作中">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h6v6H3V5m0 8h6v6H3v-6m8-8h6v6h-6V5m0 8h6v6h-6v-6Z"/></svg>原型内容（制作中）
+        </a>
+        <a class="demo-btn live" href="https://guigui88866.github.io/manager-benefits.html" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>交互体验
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('mousemove', function(e) {
+      document.body.style.setProperty('--mx', e.clientX + 'px');
+      document.body.style.setProperty('--my', e.clientY + 'px');
+    });
+  </script>
+</body>
+</html>
