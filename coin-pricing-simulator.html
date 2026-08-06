@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金币充值定价模拟器</title>
+<style>
+*,::before,::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f5f5f7;--card:#fff;--border:#e5e5e7;--text:#1d1d1f;--text2:#86868b;--text3:#aeaeb2;
+  --blue:#0071e3;--blue-bg:#e8f2ff;--green:#34c759;--green-bg:#e8f9ed;--red:#ff3b30;--red-bg:#ffe9e8;
+  --amber:#ff9500;--amber-bg:#fff5e6;--purple:#af52de;--purple-bg:#f3e8ff;
+  --radius:12px;--radius-sm:8px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:20px}
+.container{max-width:1200px;margin:0 auto}
+
+.header{text-align:center;margin-bottom:24px}
+.header h1{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.header p{font-size:13px;color:var(--text2);margin-top:4px}
+
+.params-panel{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.params-panel h2{font-size:14px;font-weight:600;margin-bottom:16px}
+.params-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.param-item{display:flex;flex-direction:column;gap:4px}
+.param-item label{font-size:12px;color:var(--text2);font-weight:500}
+.param-item input,.param-item select{height:36px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 10px;font-size:14px;outline:none;transition:border .2s}
+.param-item input:focus,.param-item select:focus{border-color:var(--blue)}
+.param-item .hint{font-size:11px;color:var(--text3)}
+
+.currency-bar{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.currency-bar>span{font-size:13px;font-weight:500;color:var(--text2);white-space:nowrap}
+.currency-btns{display:flex;flex-wrap:wrap;gap:6px}
+.currency-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;color:var(--text)}
+.currency-btn:hover{border-color:var(--blue);color:var(--blue)}
+.currency-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+.current-currency-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px}
+.current-currency-card .label{font-size:12px;color:var(--text2)}
+.current-currency-card .value{font-size:20px;font-weight:600;color:var(--blue)}
+.current-currency-card .sub{font-size:12px;color:var(--text3);margin-top:2px}
+.current-currency-card .divider{width:1px;height:36px;background:var(--border);margin:0 8px}
+
+.tier-section{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-bottom:16px}
+.tier-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.tier-header h2{font-size:14px;font-weight:600}
+.btn-add{padding:6px 14px;border-radius:var(--radius-sm);border:1px solid var(--blue);background:var(--blue-bg);color:var(--blue);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-add:hover{background:var(--blue);color:#fff}
+
+.tier-table{width:100%;border-collapse:collapse}
+.tier-table thead th{padding:8px 12px;font-size:11px;font-weight:500;color:var(--text2);text-align:left;background:var(--bg);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0}
+.tier-table thead th.center{text-align:center}
+.tier-table thead th.right{text-align:right}
+.tier-table tbody td{padding:8px 12px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tier-table tbody tr:last-child td{border-bottom:none}
+.tier-table tbody tr:hover{background:#fafafa}
+.tier-table .coin-input{width:90px;height:30px;border:1px solid var(--border);border-radius:6px;padding:0 8px;font-size:14px;text-align:right;outline:none;transition:border .2s}
+.tier-table .coin-input:focus{border-color:var(--blue)}
+
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace}
+.tier-table .price-theory{color:var(--text2);font-size:12px}
+.tier-table .price-final{font-weight:600;font-size:14px;color:var(--text)}
+.tier-table .profit-pos{color:var(--green);font-weight:500;font-size:12px}
+.tier-table .profit-neg{color:var(--text3);font-size:12px}
+.tier-table .channel-cut{color:var(--amber);font-size:12px}
+.tier-table .settled{color:var(--blue);font-size:12px;font-weight:500}
+
+.btn-del{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card);font-size:12px;cursor:pointer;color:var(--text3);transition:all .15s}
+.btn-del:hover{border-color:var(--red);color:var(--red);background:var(--red-bg)}
+
+.btn-export{padding:8px 20px;border-radius:var(--radius-sm);border:none;background:var(--green);color:#fff;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-export:hover{background:#2db84e}
+
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.top-bar h1{font-size:22px;font-weight:600;letter-spacing:-.02em}
+
+.footer{text-align:center;padding:16px 0;font-size:11px;color:var(--text3);line-height:1.8}
+.empty-state{padding:40px 20px;text-align:center;color:var(--text3);font-size:14px}
+
+.info-tip{display:inline-block;width:14px;height:14px;line-height:14px;text-align:center;border-radius:50%;background:var(--bg);color:var(--text3);font-size:10px;cursor:help;margin-left:4px;font-style:normal;position:relative}
+.info-tip::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);background:#1d1d1f;color:#fff;font-size:11px;font-weight:400;font-style:normal;line-height:1.4;padding:5px 8px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:100}
+.info-tip:hover::after{opacity:1}
+
+.tag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;font-weight:500;vertical-align:middle;margin-left:3px}
+.tag-blue{background:var(--blue-bg);color:var(--blue)}
+.tag-amber{background:var(--amber-bg);color:var(--amber)}
+.tag-green{background:var(--green-bg);color:var(--green)}
+
+/* 导出弹窗 */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:var(--radius);max-width:90vw;max-height:85vh;overflow:hidden;display:flex;flex-direction:column}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-size:15px;font-weight:600}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text2);padding:4px 8px}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:20px;overflow:auto}
+.modal-body pre{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12px;line-height:1.6;white-space:pre;tab-size:4}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.btn-copy{padding:8px 20px;border-radius:var(--radius-sm);border:1px solid var(--blue);background:var(--blue-bg);color:var(--blue);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-copy:hover{background:var(--blue);color:#fff}
+.btn-csv{padding:8px 20px;border-radius:var(--radius-sm);border:none;background:var(--amber);color:#fff;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-csv:hover{background:#e08600}
+
+@media(max-width:768px){
+  .params-grid{grid-template-columns:1fr 1fr}
+  .tier-table thead th,.tier-table tbody td{padding:6px 8px;font-size:11px}
+  .tier-table .coin-input{width:65px;font-size:12px}
+  .top-bar{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="top-bar">
+    <div>
+      <h1>金币充值定价模拟器</h1>
+      <p style="font-size:13px;color:var(--text2);margin-top:4px">1 CNY = 100 平台币 · 自由档位 · 多币种实时计算</p>
+    </div>
+    <button class="btn-export" onclick="exportAll()">导出全部币种配置</button>
+  </div>
+
+  <div class="currency-bar">
+    <span>目标法币</span>
+    <div class="currency-btns" id="currencyBtns"></div>
+  </div>
+
+  <div class="params-panel">
+    <h2>全局参数</h2>
+    <div class="params-grid">
+      <div class="param-item">
+        <label>90天最低汇率 <i class="info-tip" data-tip="过去90天1 CNY可兑换该法币的最低值">?</i></label>
+        <input type="number" id="p90Low" step="any" min="0">
+        <div class="hint" id="lowHint">90天最低</div>
+      </div>
+      <div class="param-item">
+        <label>90天最高汇率 <i class="info-tip" data-tip="过去90天1 CNY可兑换该法币的最高值">?</i></label>
+        <input type="number" id="p90High" step="any" min="0">
+        <div class="hint" id="highHint">90天最高</div>
+      </div>
+      <div class="param-item">
+        <label>P80 汇率 <i class="info-tip" data-tip="= 最低 + 0.8×(最高−最低)，覆盖80%汇率波动，可手动微调">?</i></label>
+        <input type="number" id="p80Rate" step="any" min="0">
+        <div class="hint" id="p80Hint">1 CNY = ? (P80)</div>
+      </div>
+      <div class="param-item">
+        <label>实时汇率 <i class="info-tip" data-tip="当前实时市场汇率，用于计算溢价换算CNY">?</i></label>
+        <input type="number" id="rate" step="any" min="0">
+        <div class="hint" id="rateHint">1 CNY = ? (实时)</div>
+      </div>
+      <div class="param-item">
+        <label>汇率安全垫 % <i class="info-tip" data-tip="额外缓冲，叠加在P80汇率之上，双重风险保护">?</i></label>
+        <input type="number" id="padding" value="0" step="0.5" min="0" max="20">
+        <div class="hint">P80 之上的额外缓冲</div>
+      </div>
+      <div class="param-item">
+        <label>渠道费率 % <i class="info-tip" data-tip="支付通道手续费，÷(1−费率) 转嫁给用户">?</i></label>
+        <input type="number" id="fee" value="3" step="0.5" min="0" max="20">
+        <div class="hint">支付通道手续费</div>
+      </div>
+      <div class="param-item">
+        <label>取整精度单位 <i class="info-tip" data-tip="法币标价向上取整到此单位倍数，1表示不取整">?</i></label>
+        <input type="number" id="precision" value="1" step="any" min="0">
+        <div class="hint" id="precisionHint">标价取整到此单位</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="current-currency-card" id="currentCurrencyCard"></div>
+
+  <div class="tier-section">
+    <div class="tier-header">
+      <h2>档位配置</h2>
+      <button class="btn-add" onclick="addTier()">+ 添加档位</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tier-table">
+        <thead>
+          <tr>
+            <th class="center" style="width:32px">#</th>
+            <th>金币数量</th>
+            <th class="right">目标 CNY</th>
+            <th class="right">风险调整汇率 <span class="tag tag-blue">P80×(1+垫)</span></th>
+            <th class="right">理论标价 <span class="tag tag-amber">含渠道</span></th>
+            <th class="right">最终标价 <span class="tag tag-green">取整后</span></th>
+            <th class="right">渠道扣款</th>
+            <th class="right">预期到账 CNY</th>
+            <th class="right">取整溢价 CNY</th>
+            <th style="width:44px"></th>
+          </tr>
+        </thead>
+        <tbody id="tierBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none">点击上方「添加档位」开始配置</div>
+  </div>
+
+  <div class="footer">
+    计算链: 目标CNY → ×风险调整汇率(P80×(1+安全垫)) → ÷(1−渠道费率) → 理论标价 → CEIL取整 → 最终标价<br>
+    P80 = 90天最低 + 0.8×(90天最高−90天最低) &nbsp;|&nbsp; 预期到账 = 最终标价×(1−渠道费率)÷风险调整汇率 &nbsp;|&nbsp; 取整溢价 = (最终标价−理论标价)÷风险调整汇率
+  </div>
+</div>
+
+<!-- 导出弹窗 -->
+<div class="modal-overlay" id="exportModal">
+  <div class="modal" style="width:700px">
+    <div class="modal-header">
+      <h3>全部币种档位配置</h3>
+      <button class="modal-close" onclick="closeExport()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <pre id="exportContent"></pre>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-copy" onclick="copyExport()">复制文本</button>
+      <button class="btn-csv" onclick="downloadCSV()">下载 CSV</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CURRENCIES = [
+  // 数据来源: XE.com 实时汇率 + 90天历史 (2026-06-08)
+  // P80 = low + 0.8 × (high - low)，代表80%时间汇率不低于此值
+  { code:'AUD', name:'澳元',         symbol:'A$',  rate:0.2093,  p80Rate:0.2096, p90Low:0.2028, p90High:0.2113,  precision:1, padding:0.5, fee:3.5 },
+  { code:'HKD', name:'港币',         symbol:'HK$', rate:1.1549,  p80Rate:1.1530, p90Low:1.1322, p90High:1.1583,  precision:1, padding:0.5, fee:3.5 },
+  { code:'IDR', name:'印尼盾',       symbol:'Rp',  rate:2668.46, p80Rate:2622.63, p90Low:2442.82, p90High:2670.62, precision:1, padding:1.5, fee:3.0 },
+  { code:'JPY', name:'日元',         symbol:'¥',   rate:23.6288, p80Rate:23.5243, p90Low:22.8558, p90High:23.6912, precision:1, padding:1.0, fee:3.5 },
+  { code:'MYR', name:'马来西亚林吉特',symbol:'RM',  rate:0.5996,  p80Rate:0.5901, p90Low:0.5684, p90High:0.5955,  precision:1, padding:1.5, fee:3.5 },
+  { code:'SGD', name:'新加坡元',     symbol:'S$',  rate:0.1902,  p80Rate:0.1892, p90Low:0.1852, p90High:0.1902,  precision:1, padding:0.5, fee:3.5 },
+  { code:'THB', name:'泰铢',         symbol:'฿',   rate:4.8483,  p80Rate:4.7854, p90Low:4.5823, p90High:4.8362,  precision:1, padding:1.5, fee:3.0 },
+  { code:'TWD', name:'新台币',       symbol:'NT$', rate:4.6553,  p80Rate:4.6563, p90Low:4.6033, p90High:4.6695,  precision:1, padding:1.5, fee:3.0 },
+  { code:'VND', name:'越南盾',       symbol:'₫',   rate:3890.32, p80Rate:3874.81, p90Low:3803.95, p90High:3893.52, precision:1, padding:1.5, fee:3.0 },
+  { code:'PHP', name:'菲律宾比索',   symbol:'₱',   rate:9.0984,  p80Rate:9.0203, p90Low:8.5681, p90High:9.1362,  precision:1, padding:1.5, fee:2.5 },
+  { code:'PKR', name:'巴基斯坦卢比', symbol:'Rs',  rate:41.0400, p80Rate:41.0040, p90Low:40.3374, p90High:41.1650, precision:1, padding:2.5, fee:4.0 },
+  { code:'INR', name:'印度卢比',     symbol:'₹',   rate:14.1014, p80Rate:14.0363, p90Low:13.3075, p90High:14.2195, precision:1, padding:1.5, fee:2.0 },
+  { code:'BDT', name:'孟加拉塔卡',   symbol:'৳',   rate:18.0985, p80Rate:18.0787, p90Low:17.7483, p90High:18.1615, precision:1, padding:2.5, fee:4.0 },
+  { code:'EUR', name:'欧元',         symbol:'€',   rate:0.1278,  p80Rate:0.1265, p90Low:0.1196, p90High:0.1282,  precision:1, padding:0.5, fee:3.5 },
+  { code:'GBP', name:'英镑',         symbol:'£',   rate:0.1104,  p80Rate:0.1101, p90Low:0.1076, p90High:0.1107,  precision:1, padding:0.5, fee:3.5 },
+  { code:'SAR', name:'沙特里亚尔',   symbol:'﷼',   rate:0.5531,  p80Rate:0.5535, p90Low:0.5483, p90High:0.5548,  precision:1, padding:0.5, fee:3.5 },
+  { code:'EGP', name:'埃及镑',       symbol:'E£',  rate:7.3172,  p80Rate:7.7214, p90Low:7.1839, p90High:7.8558,  precision:1, padding:2.5, fee:4.0 },
+  // 数据来源: XE.com 实时汇率 + 90天历史 (2026-07-15)
+  { code:'ZAR', name:'南非兰特',     symbol:'R',   rate:2.4166,  p80Rate:2.4441, p90Low:2.3842, p90High:2.4591,  precision:1, padding:1.5, fee:3.5 },
+  { code:'NGN', name:'尼日利亚奈拉', symbol:'₦',   rate:203.6770, p80Rate:202.1980, p90Low:197.1100, p90High:203.4700, precision:1, padding:2.5, fee:4.0 },
+  { code:'KES', name:'肯尼亚先令',   symbol:'KSh', rate:19.0927, p80Rate:19.1055, p90Low:18.8825, p90High:19.1613,  precision:1, padding:1.5, fee:3.0 },
+  { code:'RWF', name:'卢旺达法郎',   symbol:'R₣',  rate:216.6420, p80Rate:217.9400, p90Low:213.5000, p90High:219.0500, precision:1, padding:1.5, fee:3.5 },
+  { code:'TZS', name:'坦桑尼亚先令', symbol:'TSh', rate:389.0160, p80Rate:387.3800, p90Low:379.5400, p90High:389.3400, precision:1, padding:1.5, fee:3.5 },
+  { code:'UGX', name:'乌干达先令',   symbol:'USh', rate:545.8630, p80Rate:553.5220, p90Low:536.8100, p90High:557.7000, precision:1, padding:1.5, fee:3.5 },
+];
+
+let currentCurrency = CURRENCIES[2];
+let tiers = [];
+let tierIdCounter = 0;
+
+// 各币种统一7档金币数量
+const UNIFORM_TIERS = [1500, 3000, 5000, 10000, 30000, 50000, 100000];
+const DEFAULT_TIERS = {
+  AUD:  UNIFORM_TIERS,
+  HKD:  UNIFORM_TIERS,
+  IDR:  UNIFORM_TIERS,
+  JPY:  UNIFORM_TIERS,
+  MYR:  UNIFORM_TIERS,
+  SGD:  UNIFORM_TIERS,
+  THB:  UNIFORM_TIERS,
+  TWD:  UNIFORM_TIERS,
+  VND:  UNIFORM_TIERS,
+  PHP:  UNIFORM_TIERS,
+  PKR:  UNIFORM_TIERS,
+  INR:  UNIFORM_TIERS,
+  BDT:  UNIFORM_TIERS,
+  EUR:  UNIFORM_TIERS,
+  GBP:  UNIFORM_TIERS,
+  SAR:  UNIFORM_TIERS,
+  EGP:  UNIFORM_TIERS,
+  ZAR:  UNIFORM_TIERS,
+  NGN:  UNIFORM_TIERS,
+  KES:  UNIFORM_TIERS,
+  RWF:  UNIFORM_TIERS,
+  TZS:  UNIFORM_TIERS,
+  UGX:  UNIFORM_TIERS,
+};
+
+function init() {
+  renderCurrencyBtns();
+  loadDefaultTiers(currentCurrency.code);
+}
+
+function loadDefaultTiers(code) {
+  tiers = [];
+  tierIdCounter = 0;
+  const defaultCoins = DEFAULT_TIERS[code] || [100, 300, 600, 1000, 3000, 6000];
+  defaultCoins.forEach(c => {
+    const id = ++tierIdCounter;
+    tiers.push({ id, coins: c });
+  });
+  selectCurrency(code);
+}
+
+function renderCurrencyBtns() {
+  const container = document.getElementById('currencyBtns');
+  container.innerHTML = CURRENCIES.map(c =>
+    `<button class="currency-btn${c.code===currentCurrency.code?' active':''}" data-code="${c.code}" onclick="switchCurrency('${c.code}')">${c.code}</button>`
+  ).join('');
+}
+
+function switchCurrency(code) {
+  loadDefaultTiers(code);
+}
+
+function selectCurrency(code) {
+  currentCurrency = CURRENCIES.find(c => c.code === code) || CURRENCIES[0];
+  document.querySelectorAll('.currency-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.code === code);
+  });
+  document.getElementById('p90Low').value = currentCurrency.p90Low;
+  document.getElementById('p90High').value = currentCurrency.p90High;
+  document.getElementById('p80Rate').value = currentCurrency.p80Rate;
+  document.getElementById('rate').value = currentCurrency.rate;
+  document.getElementById('padding').value = currentCurrency.padding;
+  document.getElementById('fee').value = currentCurrency.fee;
+  document.getElementById('precision').value = currentCurrency.precision;
+  updateHints();
+  renderTiers();
+  recalcAll();
+}
+
+function updateHints() {
+  const low = parseFloat(document.getElementById('p90Low').value) || 0;
+  const high = parseFloat(document.getElementById('p90High').value) || 0;
+  const p80 = parseFloat(document.getElementById('p80Rate').value) || 0;
+  const rate = parseFloat(document.getElementById('rate').value) || 0;
+  const cur = currentCurrency;
+  document.getElementById('lowHint').textContent = `1 CNY = ${fmtNum(low)} ${cur.code} (最低)`;
+  document.getElementById('highHint').textContent = `1 CNY = ${fmtNum(high)} ${cur.code} (最高)`;
+  document.getElementById('p80Hint').textContent = `1 CNY = ${fmtNum(p80)} ${cur.code} (P80)`;
+  document.getElementById('rateHint').textContent = `1 CNY = ${fmtNum(rate)} ${cur.code} (实时)`;
+  document.getElementById('precisionHint').textContent = `标价取整到 ${cur.code} ${fmtNum(cur.precision)}`;
+}
+
+function getParams() {
+  return {
+    p90Low: parseFloat(document.getElementById('p90Low').value) || 0,
+    p90High: parseFloat(document.getElementById('p90High').value) || 0,
+    p80Rate: parseFloat(document.getElementById('p80Rate').value) || 0,
+    rate: parseFloat(document.getElementById('rate').value) || 0,
+    padding: (parseFloat(document.getElementById('padding').value) || 0) / 100,
+    fee: (parseFloat(document.getElementById('fee').value) || 0) / 100,
+    precision: parseFloat(document.getElementById('precision').value) || 1,
+    symbol: currentCurrency.symbol,
+    code: currentCurrency.code,
+  };
+}
+
+function calcTier(coins, params) {
+  const targetRMB = coins / 100;
+  const riskAdjustedRate = params.p80Rate * (1 + params.padding);
+  const rawLocalPrice = targetRMB * riskAdjustedRate / (1 - params.fee);
+  const finalDisplayPrice = ceilTo(rawLocalPrice, params.precision);
+  const channelCut = finalDisplayPrice * params.fee;
+  const expectedSettledRMB = (finalDisplayPrice - channelCut) / riskAdjustedRate;
+  const extraProfitRMB = (finalDisplayPrice - rawLocalPrice) / riskAdjustedRate;
+  return { coins, targetRMB, riskAdjustedRate, rawLocalPrice, finalDisplayPrice, channelCut, expectedSettledRMB, extraProfitRMB };
+}
+
+function ceilTo(val, unit) {
+  if (unit <= 0) return val;
+  return Math.ceil(val / unit) * unit;
+}
+
+function fmtNum(n, d) {
+  if (d !== undefined) return n.toFixed(d);
+  if (Number.isInteger(n) && Math.abs(n) >= 100) return n.toLocaleString('en-US');
+  if (Math.abs(n) < 0.01) return '0';
+  return n.toLocaleString('en-US', { maximumFractionDigits: 4 });
+}
+
+function fmtPrice(n, p) {
+  if (p >= 100) return Math.round(n).toLocaleString('en-US');
+  if (p >= 1) return n.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  if (p >= 0.1) return n.toFixed(1);
+  return n.toFixed(2);
+}
+
+function addTier(defaultCoins) {
+  const id = ++tierIdCounter;
+  tiers.push({ id, coins: defaultCoins || 100 });
+  renderTiers();
+  recalcAll();
+}
+
+function removeTier(id) {
+  tiers = tiers.filter(t => t.id !== id);
+  renderTiers();
+  recalcAll();
+}
+
+function updateTierCoins(id, value) {
+  const tier = tiers.find(t => t.id === id);
+  if (tier) { tier.coins = Math.max(0, parseInt(value) || 0); recalcAll(); }
+}
+
+function renderTiers() {
+  const tbody = document.getElementById('tierBody');
+  const empty = document.getElementById('emptyState');
+  if (tiers.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = tiers.map((t, i) =>
+    `<tr data-id="${t.id}">
+      <td class="center" style="color:var(--text3)">${i+1}</td>
+      <td><input class="coin-input" type="number" value="${t.coins}" min="1" onchange="updateTierCoins(${t.id},this.value)" oninput="updateTierCoins(${t.id},this.value)"></td>
+      <td class="right mono">-</td>
+      <td class="right mono" style="font-size:11px">-</td>
+      <td class="right mono">-</td>
+      <td class="right mono" style="font-weight:600">-</td>
+      <td class="right">-</td>
+      <td class="right">-</td>
+      <td class="right">-</td>
+      <td><button class="btn-del" onclick="removeTier(${t.id})">删除</button></td>
+    </tr>`
+  ).join('');
+}
+
+function recalcAll() {
+  const params = getParams();
+  const tbody = document.getElementById('tierBody');
+  let totalExtraProfit = 0;
+  let totalExpectedSettled = 0;
+  let totalTargetRMB = 0;
+  let totalChannelCutLocal = 0;
+
+  tiers.forEach(t => {
+    const row = tbody.querySelector(`tr[data-id="${t.id}"]`);
+    if (!row) return;
+    const r = calcTier(t.coins, params);
+    const cells = row.querySelectorAll('td');
+
+    cells[2].textContent = `¥${fmtNum(r.targetRMB, 2)}`;
+    cells[3].innerHTML = `<span class="mono" style="color:var(--text2)">${fmtNum(r.riskAdjustedRate, 4)}</span>`;
+    cells[4].innerHTML = `<span class="price-theory mono">${params.symbol}${fmtPrice(r.rawLocalPrice, params.precision)}</span>`;
+    cells[5].innerHTML = `<span class="price-final mono">${params.symbol}${fmtPrice(r.finalDisplayPrice, params.precision)}</span>`;
+    cells[6].innerHTML = `<span class="channel-cut mono">-${params.symbol}${fmtPrice(r.channelCut, params.precision)}</span>`;
+    cells[7].innerHTML = `<span class="settled mono">¥${fmtNum(r.expectedSettledRMB, 4)}</span>`;
+    cells[8].innerHTML = r.extraProfitRMB > 0.001
+      ? `<span class="profit-pos mono">+¥${fmtNum(r.extraProfitRMB, 4)}</span>`
+      : `<span class="profit-neg mono">¥0</span>`;
+
+    totalExtraProfit += r.extraProfitRMB;
+    totalExpectedSettled += r.expectedSettledRMB;
+    totalTargetRMB += r.targetRMB;
+    totalChannelCutLocal += r.channelCut;
+  });
+
+  // 当前法币卡片
+  const cur = currentCurrency;
+  const p80 = params.p80Rate;
+  const rate = params.rate;
+  const low = params.p90Low;
+  const high = params.p90High;
+  document.getElementById('currentCurrencyCard').innerHTML = `
+    <div>
+      <div class="label">当前法币</div>
+      <div class="value">${cur.symbol} ${cur.code}</div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="label">P80 汇率</div>
+      <div class="sub">${fmtNum(p80)} <span style="color:var(--text3)">(90天 ${fmtNum(low)} ~ ${fmtNum(high)})</span></div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="label">实时汇率</div>
+      <div class="sub">${fmtNum(rate)}</div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="label">档位</div>
+      <div class="sub">${tiers.length} 档 · 金币 ${tiers.length ? Math.min(...tiers.map(t=>t.coins)) + ' ~ ' + Math.max(...tiers.map(t=>t.coins)) : '-'}</div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="label">目标CNY合计</div>
+      <div class="sub">¥${fmtNum(totalTargetRMB, 2)}</div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="label">预期到账合计</div>
+      <div class="sub" style="color:var(--green)">¥${fmtNum(totalExpectedSettled, 4)}</div>
+    </div>
+  `;
+}
+
+// ====== 导出功能 ======
+
+function exportAll() {
+  let lines = [];
+  // 表头
+  lines.push('目标法币\t支付金额\t发放金币\t汇率安全垫%\t渠道费率%\t汇率(1CNY=?法币)');
+
+  CURRENCIES.forEach(cur => {
+    const p80 = cur.p80Rate;
+    const curPadding = cur.padding;
+    const curFee = cur.fee;
+    const padding = curPadding / 100;
+    const fee = curFee / 100;
+    const riskAdjustedRate = p80 * (1 + padding);
+    const curTiers = DEFAULT_TIERS[cur.code] || [100, 300, 600, 1000, 3000, 6000];
+
+    curTiers.forEach(coins => {
+      const targetRMB = coins / 100;
+      const rawLocalPrice = targetRMB * riskAdjustedRate / (1 - fee);
+      const finalDisplayPrice = ceilTo(rawLocalPrice, cur.precision);
+      // 格式化支付金额
+      let priceStr;
+      if (cur.precision >= 100) {
+        priceStr = Math.round(finalDisplayPrice).toString();
+      } else if (cur.precision >= 1) {
+        priceStr = finalDisplayPrice.toLocaleString('en-US', { maximumFractionDigits: 2 });
+      } else {
+        priceStr = finalDisplayPrice.toFixed(2);
+      }
+      lines.push(`${cur.code}\t${priceStr}\t${coins}\t${curPadding}%\t${curFee}%\t${fmtNum(cur.p80Rate)}`);
+    });
+  });
+
+  document.getElementById('exportContent').textContent = lines.join('\n');
+  document.getElementById('exportModal').classList.add('show');
+}
+
+function closeExport() {
+  document.getElementById('exportModal').classList.remove('show');
+}
+
+function copyExport() {
+  const text = document.getElementById('exportContent').textContent;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.textContent = '已复制';
+      setTimeout(() => btn.textContent = '复制文本', 1500);
+    }).catch(() => {
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '已复制';
+    setTimeout(() => btn.textContent = '复制文本', 1500);
+  } catch(e) {
+    alert('复制失败，请手动选择文本复制');
+  }
+  document.body.removeChild(ta);
+}
+
+function downloadCSV() {
+  let rows = [['目标法币', '支付金额', '发放金币', '汇率安全垫%', '渠道费率%', '汇率(1CNY=?法币)']];
+
+  CURRENCIES.forEach(cur => {
+    const p80 = cur.p80Rate;
+    const curPadding = cur.padding;
+    const curFee = cur.fee;
+    const padding = curPadding / 100;
+    const fee = curFee / 100;
+    const riskAdjustedRate = p80 * (1 + padding);
+    const curTiers = DEFAULT_TIERS[cur.code] || [100, 300, 600, 1000, 3000, 6000];
+
+    curTiers.forEach(coins => {
+      const targetRMB = coins / 100;
+      const rawLocalPrice = targetRMB * riskAdjustedRate / (1 - fee);
+      const finalDisplayPrice = ceilTo(rawLocalPrice, cur.precision);
+      let priceStr;
+      if (cur.precision >= 100) {
+        priceStr = Math.round(finalDisplayPrice).toString();
+      } else if (cur.precision >= 1) {
+        priceStr = finalDisplayPrice.toFixed(2);
+      } else {
+        priceStr = finalDisplayPrice.toFixed(2);
+      }
+      rows.push([cur.code, priceStr, coins.toString(), curPadding + '%', curFee + '%', fmtNum(cur.p80Rate)]);
+    });
+  });
+
+  const csvContent = '\uFEFF' + rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '金币充值档位配置.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+['p90Low','p90High','p80Rate','rate','padding','fee','precision'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    if (id === 'p90Low' || id === 'p90High') {
+      const low = parseFloat(document.getElementById('p90Low').value) || 0;
+      const high = parseFloat(document.getElementById('p90High').value) || 0;
+      if (low > 0 && high > 0 && high >= low) {
+        const autoP80 = low + 0.8 * (high - low);
+        document.getElementById('p80Rate').value = autoP80.toFixed(4);
+      }
+    }
+    updateHints();
+    recalcAll();
+  });
+});
+
+init();
+</script>
+</body>
+</html>
