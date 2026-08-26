@@ -1,151 +1,61 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="黄靖芸｜社交产品经理｜在线简历" />
-  <title>黄靖芸｜社交产品经理</title>
-  <style>
-    :root { --navy:#e2e8f0; --slate:#cbd5e1; --muted:#94a3b8; --line:#26354f; --bg:#0b1120; --card:#111b31; --teal:#5eead4; --teal-soft:#123d43; --tag:#123940; }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { margin:0; background:radial-gradient(circle at 15% 7%, #14213d 0, #0b1120 38%, #080d18 100%); color:var(--slate); font-family:Inter,"PingFang SC","Microsoft YaHei",Arial,sans-serif; font-size:15px; line-height:1.8; }
-    body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; background:radial-gradient(600px at var(--mx,50%) var(--my,50%), rgba(94,234,212,.07), transparent 80%); transition:background .15s ease-out; }
-    a { color:inherit; text-decoration:none; }
-    .page { display:grid; grid-template-columns: 390px minmax(0, 650px); gap:88px; width:min(1170px, calc(100% - 56px)); margin:0 auto; padding:84px 0 100px; }
-    aside { position:sticky; top:84px; height:calc(100vh - 168px); display:flex; flex-direction:column; }
-    h1,h2,h3,p { margin-top:0; }
-    h1 { margin-bottom:6px; color:var(--navy); font-size:52px; line-height:1.05; letter-spacing:-.075em; }
-    .role { margin-bottom:17px; color:#cbd5e1; font-size:20px; font-weight:650; letter-spacing:-.03em; }
-    .profile-block { max-width:350px; margin:0 0 15px; }
-    .profile-title { margin:0 0 7px; color:#7f95b2; font-size:11px; font-weight:850; letter-spacing:.1em; }
-    .profile { display:grid; grid-template-columns:1fr 1fr; gap:7px 14px; margin:0; padding:11px 0; border-top:1px solid var(--line); }
-    .intention-block .profile { border-bottom:1px solid var(--line); }
-    .profile div { display:flex; min-width:0; gap:7px; font-size:12px; line-height:1.6; }
-    .profile dt { flex:0 0 auto; color:#72819a; }
-    .profile dd { min-width:0; margin:0; overflow:hidden; color:#cbd5e1; font-weight:650; text-overflow:ellipsis; white-space:nowrap; }
-    .headline { max-width:325px; margin-bottom:30px; color:var(--muted); font-size:15px; line-height:1.75; }
-    nav { margin:4px 0 0; }
-    nav a { display:flex; align-items:center; gap:14px; width:max-content; padding:8px 0; color:#7e8ea6; font-size:12px; font-weight:800; letter-spacing:.1em; }
-    nav a::before { content:""; width:30px; height:1px; background:#40516b; transition:.2s; }
-    nav a:hover, nav a:focus { color:var(--navy); }
-    nav a:hover::before, nav a:focus::before { width:58px; background:var(--teal); }
-    .side-bottom { margin-top:auto; }
-    .side-links { display:flex; gap:8px; }
-    .modao-link { display:inline-flex; align-items:center; gap:8px; padding:9px 11px; color:#b8c7d9; border:1px solid var(--line); border-radius:8px; background:rgba(17,27,49,.7); font-size:12px; font-weight:750; transition:.2s; }
-    .modao-link svg { width:17px; height:17px; fill:var(--teal); }
-    .modao-link b { color:#71819a; font-size:13px; font-weight:700; }
-    .modao-link:hover { color:var(--teal); border-color:#2a807d; background:#102e38; }
-    .demo-entry svg { fill:#a78bfa; }
-    .demo-entry:hover { color:#a78bfa; border-color:#7c3aed; background:rgba(167,139,250,.08); }
-    main { min-width:0; }
-    section { padding:7px 0 82px; scroll-margin-top:44px; }
-    h2 { margin-bottom:24px; color:var(--navy); font-size:13px; font-weight:850; letter-spacing:.12em; }
-    .about p { margin-bottom:17px; }
-    .about strong { color:var(--teal); font-weight:750; }
-    .highlight { color:var(--teal); font-weight:700; }
-    .experience-list, .project-list { list-style:none; padding:0; margin:0; }
-    .experience, .project { position:relative; display:grid; grid-template-columns:125px 1fr; gap:24px; padding:19px 18px; margin:0 -18px 14px; border-radius:11px; transition:.2s; }
-    .experience:hover, .project:hover { background:rgba(30,41,59,.56); box-shadow:0 12px 30px rgba(0,0,0,.2); }
-    .date { padding-top:4px; color:#71819a; font-size:11px; font-weight:800; letter-spacing:.075em; line-height:1.45; }
-    h3 { margin-bottom:8px; color:var(--navy); font-size:16px; line-height:1.5; letter-spacing:-.02em; }
-    h3 a:hover { color:var(--teal); }
-    .experience p, .project p { margin-bottom:12px; color:var(--muted); font-size:13px; line-height:1.78; }
-    .tags { display:flex; flex-wrap:wrap; gap:6px; list-style:none; padding:0; margin:0; }
-    .tags li { padding:3px 8px; border-radius:999px; color:#8ff4e3; background:var(--tag); border:1px solid #1e5960; font-size:11px; font-weight:750; line-height:1.5; }
-    .project { grid-template-columns:125px 1fr; min-height:130px; border:1px solid transparent; }
-    .project:hover { border-color:#263d55; }
-    .project-index { width:70px; height:70px; display:grid; place-items:center; color:#71ead9; background:linear-gradient(135deg,#123f47,#102f3b); border:1px solid #26646a; border-radius:9px; font-size:20px; font-weight:850; letter-spacing:-.06em; }
-    .project:nth-child(2) .project-index { color:#c4b5fd; background:linear-gradient(135deg,#30235d,#1d183b); border-color:#55458e; }.project:nth-child(3) .project-index { color:#fcd68a; background:linear-gradient(135deg,#513716,#2e210f); border-color:#795526; }
-    .project h3 { display:flex; align-items:center; gap:6px; }.arrow { color:var(--teal); font-size:17px; }.project p { margin-bottom:13px; }
-    .result { margin:15px 0 0; padding:12px 14px; border-left:2px solid var(--teal); background:#102a33; color:#b0d7d4; font-size:12px; line-height:1.7; }.result b { color:#7ce8d8; }
-    .more { display:inline-flex; align-items:center; gap:8px; margin:4px 0 0 125px; color:var(--teal); font-size:13px; font-weight:800; }.more:hover { gap:12px; }
-    footer { padding-top:8px; color:#71819a; font-size:12px; }.footer-line { width:48px; height:1px; margin-bottom:18px; background:#40516b; }
-    @media (max-width:900px) { .page { grid-template-columns:1fr; gap:44px; padding-top:52px; } aside { position:static; height:auto; }.side-bottom { margin-top:25px; }.headline { max-width:580px; } nav { display:flex; gap:18px; flex-wrap:wrap; } nav a::before { display:none; } nav a { padding:0; }.experience,.project { grid-template-columns:100px 1fr; }.more { margin-left:100px; } }
-    @media (max-width:560px) { body{font-size:14px}.page { width:min(100% - 34px, 650px); padding:38px 0 65px; } h1 { font-size:43px; }.role { font-size:18px; } .experience,.project { grid-template-columns:1fr; gap:7px; padding:16px; margin:0 -16px 14px; }.date { padding:0; }.project-index { width:52px; height:52px; font-size:16px; }.more { margin-left:0; } section { padding-bottom:58px; } }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>主播月度激励 - 财务结算</title>
+<style>
+  :root{--bg:#f5f7fb;--panel:#fff;--line:#e7eaf0;--text:#1d2433;--muted:#7b8494;--blue:#326cff;--blue-bg:#edf3ff;--green:#20845a;--green-bg:#eaf7f0;--orange:#bd6d10;--orange-bg:#fff4e6;--gray:#6f7785;--gray-bg:#f1f3f6;--red:#c44343;--red-bg:#fff0f0}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif} button,input,select{font:inherit} button{cursor:pointer}
+  .layout{min-height:100vh}.main{min-width:0}.topbar{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;padding:0 28px}.operator{display:flex;align-items:center;gap:10px;color:#586477}.avatar{width:30px;height:30px;border-radius:50%;background:#dce8ff;color:#3164d6;display:grid;place-items:center;font-weight:700}.content{padding:26px 28px 40px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px}.filter{padding:20px;margin-bottom:18px}.form-grid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr)) auto;gap:16px;align-items:end}.field{display:flex;align-items:center;gap:8px}.field label{flex:none;font-size:13px;color:#4a5566;white-space:nowrap}.field input,.field select{width:100%;height:36px;border:1px solid #dbe0e8;border-radius:6px;padding:0 10px;outline:none;background:#fff;color:#30394a}.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 2px #eaf0ff}.actions{display:flex;gap:10px;white-space:nowrap}.btn{height:36px;border:1px solid #d9dfe8;border-radius:6px;background:#fff;color:#404a5c;padding:0 16px}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn:hover{filter:brightness(.98)}
+  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.metric{padding:15px 18px}.metric .label{font-size:13px;color:var(--muted)}.metric .value{font-size:24px;font-weight:650;margin-top:5px}.metric .money{color:#326cff}.metric .success{color:#20845a}
+  .table-card{overflow:hidden}.table-toolbar{min-height:58px;display:flex;align-items:center;justify-content:flex-start;padding:11px 20px;border-bottom:1px solid var(--line)}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:1330px}th{background:#fafbfc;color:#657084;font-size:12px;font-weight:500;text-align:left;height:44px;padding:0 16px;white-space:nowrap}th.check-col,td.check-col{width:44px;padding:0 0 0 20px}input[type="checkbox"]{width:16px;height:16px;accent-color:var(--blue);cursor:pointer;vertical-align:middle}input[type="checkbox"]:disabled{cursor:not-allowed;opacity:.42}td{padding:13px 16px;border-top:1px solid #edf0f4;vertical-align:middle;color:#30394a}.person{display:flex;align-items:center;gap:9px}.pic{width:32px;height:32px;border-radius:50%;background:#dde8fc;color:#3e63ac;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}.pname{font-weight:600}.sub{font-size:12px;color:var(--muted);margin-top:2px}.task-progress{min-width:72px}.progress-value{font-size:14px;font-weight:600;color:#253247;white-space:nowrap}.progress-value .split{color:#a1a9b6;padding:0 2px}.task-result{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:12px;color:#8b94a2}.task-result:before{content:"";width:6px;height:6px;border-radius:50%;background:#c5cad3}.task-result.ok{color:#20845a}.task-result.ok:before{background:#2aa375}.tag{display:inline-flex;padding:4px 8px;border-radius:4px;font-size:12px;white-space:nowrap}.tag.no{color:var(--gray);background:var(--gray-bg)}.tag.wait{color:var(--orange);background:var(--orange-bg)}.tag.done{color:var(--green);background:var(--green-bg)}.amount{font-weight:650;color:#26344f}.amount.zero{color:#9ba3b1}.link-btn{border:0;background:transparent;color:#326cff;padding:3px 6px;margin-left:-6px;white-space:nowrap}.pagination{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;color:var(--muted);font-size:13px}.pages{display:flex;gap:5px}.page{width:30px;height:28px;border:1px solid #dce1e8;background:#fff;border-radius:5px;color:#596477}.page.current{color:#fff;border-color:var(--blue);background:var(--blue)}
+  .modal-mask{display:none;position:fixed;inset:0;background:rgba(24,35,52,.38);align-items:center;justify-content:center;padding:20px;z-index:2}.modal-mask.show{display:flex}.modal{width:480px;background:#fff;border-radius:10px;overflow:hidden}.modal-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0;font-size:16px}.close{border:0;background:transparent;font-size:22px;color:#7d8797;line-height:1}.modal-body{padding:20px}.info-box{border-radius:7px;background:#f7f9fc;padding:12px 14px;margin-bottom:16px}.info-row{display:flex;justify-content:space-between;margin:5px 0}.info-row span{color:var(--muted)}.modal-form{display:grid;gap:14px}.modal-foot{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+  .toast{display:none;position:fixed;right:28px;top:78px;padding:11px 16px;background:#243147;color:#fff;border-radius:7px;z-index:3;font-size:13px}.toast.show{display:block}
+  @media(max-width:1100px){.form-grid{grid-template-columns:repeat(2,minmax(160px,1fr))}.actions{grid-column:span 2}}@media(max-width:900px){.content{padding:20px 14px}.topbar{padding:0 14px}.form-grid{grid-template-columns:1fr}.actions{grid-column:span 1}.summary{grid-template-columns:repeat(2,1fr)}}
+</style>
 </head>
 <body>
-  <div class="page">
-    <aside>
-      <div>
-        <h1>黄靖芸</h1>
-        <div class="role">社交软件产品经理</div>
-        <div class="profile-block">
-          <p class="profile-title">基础信息</p>
-          <dl class="profile">
-            <div><dt>年龄</dt><dd>25 岁</dd></div>
-            <div><dt>学历</dt><dd>全日制本科</dd></div>
-            <div><dt>经验</dt><dd>2 年产品经验</dd></div>
-            <div><dt>电话</dt><dd>15719777970</dd></div>
-            <div><dt>邮箱</dt><dd>1643324241@qq.com</dd></div>
-            <div><dt>现居</dt><dd>广州</dd></div>
-          </dl>
-        </div>
-        <div class="profile-block intention-block">
-          <p class="profile-title">求职意向</p>
-          <dl class="profile">
-            <div><dt>岗位</dt><dd>产品经理</dd></div>
-            <div><dt>城市</dt><dd>广州 / 深圳</dd></div>
-            <div><dt>薪资</dt><dd>10K - 20K</dd></div>
-            <div><dt>到岗</dt><dd>月内到岗</dd></div>
-          </dl>
-        </div>
-        <nav aria-label="页面导航">
-          <a href="#experience">工作经历</a><a href="#projects">项目经历</a><a href="#education">教育背景</a><a href="#evaluation">个人评价</a><a href="#skills">个人技能</a>
-        </nav>
-      </div>
-      <div class="side-bottom">
-        <div class="side-links">
-          <a class="modao-link" href="https://modao.cc/proto/EpwaTGKtj6p4yBKLHo5hc/sharing?view_mode=read_only&amp;screen=rbpVFPREI7lfKqHxg" target="_blank" rel="noreferrer" aria-label="墨刀作品集：MEME（芸）简历" title="MEME（芸）- 简历">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.8 5.8 12 2l7.2 3.8v8.4L12 18l-7.2-3.8V5.8Zm7.2-.5L8.2 7.3 12 9.3l3.8-2-3.8-2Zm-5 3.6v4.1l4 2.1v-4.1L7 8.9Zm10 0-4 2v4.1l4-2.1V8.9Z"/></svg>
-            <span>墨刀原型作品</span><b>↗</b>
-          </a>
-          <a class="modao-link demo-entry" href="demos.html" target="_blank" aria-label="小项目 Demo 展示" title="小项目 Demo">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2Zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9Z"/></svg>
-            <span>小项目 Demo</span><b>↗</b>
-          </a>
-        </div>
-      </div>
-    </aside>
-    <main>
-      <section id="experience">
-        <h2>工作经历</h2>
-        <ol class="experience-list">
-          <li class="experience"><div class="date">2024.10<br>— 2025.05</div><div><h3>中磊科技（广州）有限公司 ｜ 产品经理</h3><p><strong>工作内容：</strong>负责东西潮玩 APP 的活动策划、用户反馈与版本迭代。通过竞品分析和用户需求调研设计活动方案，结合 ROI 复盘持续优化；快速响应工单与 Bug，协同技术团队完成问题复现、定位和修复。针对 APP 功能与 AI 项目产出原型、PRD，协助开发、UI 推进至验收；统筹版本规划、工时评估、需求优先级与跨部门协作，保障版本按计划上线。</p><div class="result"><b>成果：</b>上线新人三单返利活动，新用户转化率提升 30%；设计东西币召回活动，老用户回归率提升 35%、平台日付费提升 21%；完成新人转盘迭代，用户留存率提升 11%、日活提升 12%；上线会员模块，活动 ROI 达预期、日付费提升 30% 以上；推动宠物系统上线，增加养成、成就及日任务玩法，提升用户粘性与互动。</div><ul class="tags"><li>活动增长</li><li>用户召回</li><li>商业化</li><li>版本规划</li><li>AI 项目</li></ul></div></li>
-          <li class="experience"><div class="date">2024.06<br>— 2024.10</div><div><h3>广州华资软件技术有限公司 ｜ 需求分析工程师</h3><p><strong>工作内容：</strong>承接已开发项目的需求分析与交付支持，整理用户系统规格说明书；绘制需求流程图、思维导图与原型，清晰呈现功能逻辑；完成需求宣讲，统一客户与项目团队理解。在测试阶段监控并记录生产、集成环境缺陷，支持问题修复；实地测试正式运行环境，聚焦数据导入与清洗环节的问题记录和分析，保障数据处理流程稳定运行。</p><div class="result"><b>成果：</b>优化申报端“出口欧盟”模块，用户提报成功率提升 20%；制定并推动药监局审评系统医疗器械审批自动分派功能上线，审批效率提升 30%。</div><ul class="tags"><li>需求分析</li><li>原型设计</li><li>流程梳理</li><li>项目交付</li><li>质量保障</li></ul></div></li>
-        </ol>
-      </section>
-      <section id="projects">
-        <h2>项目经历</h2>
-        <ol class="project-list">
-          <li class="project"><div class="project-index">01</div><div><h3>Lucky Gifts 直播活动体系 <span class="arrow">↗</span></h3><p>为全平台视频主播设计每周常驻的直播激励活动。将每日开播时长、幸运礼物流水、阶梯档位奖励与即时发放串为完整任务闭环，并配套活动后台与主播数据筛选。</p><ul class="tags"><li>活动机制</li><li>任务与激励</li><li>后台配置</li><li>多语言</li></ul><div class="result"><b>我的职责：</b>明确跨天按自然日切分、每日直播 ≥ 60 分钟门槛、列表精准匹配与总览累计统计等核心规则，让运营可直接配置和复盘。</div></div></li>
-          <li class="project"><div class="project-index">02</div><div><h3>首充礼包付费转化设计 <span class="arrow">↗</span></h3><p>围绕新用户首次充值场景，设计金币加赠与限定装扮礼包，覆盖余额不足送礼、离开充值页、游戏余额不足等触发节点，并通过资格过滤和频控控制触达质量。</p><ul class="tags"><li>首充转化</li><li>精准触达</li><li>付费礼包</li><li>多渠道支付</li></ul><div class="result"><b>我的职责：</b>定义注册后 90 天有效期、30 天展示期、单日最多 2 次弹窗，过滤已有充值和 14 天未登录用户，平衡转化目标与用户体验。</div></div></li>
-          <li class="project"><div class="project-index">03</div><div><h3>PK 排位赛 MVP 方案 <span class="arrow">↗</span></h3><p>基于真实 PK 数据 P50 / P90 / P95 / P99 分位规划段位门槛，构建月赛季积分与奖励体系，兼容 1v1 和多人对战，让不同量级主播都有可达成的阶段目标。</p><ul class="tags"><li>MVP 设计</li><li>数据分层</li><li>赛季体系</li><li>游戏化激励</li></ul><div class="result"><b>我的职责：</b>以数据分位替代主观配置，规划青铜至最强王者的分层逻辑，确保玩法既有挑战性，也能覆盖不同量级主播。</div></div></li>
-        </ol>
-        <a class="more" href="https://github.com/guigui88866" target="_blank" rel="noreferrer">更多前端作品与页面实践 <span>→</span></a>
-      </section>
-      <section id="education" class="about">
-        <h2>教育背景</h2>
-        <p><strong>广东白云学院 ｜ 本科 ｜ 软件工程</strong></p>
-        <p>入学时间 — 毕业时间待补充。</p>
-      </section>
-      <section id="evaluation" class="about">
-        <h2>个人评价</h2>
-        <p>擅长在直播社交、增长商业化和运营后台等复杂场景中梳理规则，能够从用户体验、运营效率和研发成本三个维度平衡方案。</p>
-        <p>工作中重视数据口径和落地细节，习惯用最小可用方案验证核心链路；能独立完成高保真页面，让产品方案更直观、更易推进。</p>
-      </section>
-      <section id="skills" class="about">
-        <h2>个人技能</h2>
-        <ul class="tags"><li>产品规划</li><li>需求分析</li><li>活动运营</li><li>增长转化</li><li>数据分析</li><li>Figma / Axure</li><li>HTML / CSS / JavaScript</li></ul>
-      </section>
-    </main>
-  </div>
-  <script>
-    document.addEventListener('mousemove', function(e) {
-      document.body.style.setProperty('--mx', e.clientX + 'px');
-      document.body.style.setProperty('--my', e.clientY + 'px');
-    });
-  </script>
+<div class="layout">
+  <main class="main">
+    <header class="topbar"><div class="operator"><div class="avatar">管</div>运营管理员</div></header>
+    <div class="content">
+      <section class="summary"><div class="card metric"><div class="label">本期主播审核通过数</div><div class="value" id="countAll">6</div></div><div class="card metric"><div class="label">待结算人数</div><div class="value" id="countWait">3</div></div><div class="card metric"><div class="label">待结算金额</div><div class="value money" id="waitMoney">$72.00</div></div><div class="card metric"><div class="label">已结算金额</div><div class="value success" id="doneMoney">$30.00</div></div></section>
+      <section class="card filter"><div class="form-grid"><div class="field"><label>主播</label><input id="anchorId" placeholder="请输入主播ID或昵称" /></div><div class="field"><label>代理</label><input id="agentId" placeholder="请输入代理ID或昵称" /></div><div class="field"><label>结算日期</label><select id="period"><option value="2026-01">第 1 期（2026.01.01 - 2026.01.31）</option><option value="2025-12">第 12 期（2025.12.01 - 2025.12.31）</option><option value="2025-11">第 11 期（2025.11.01 - 2025.11.30）</option></select></div><div class="field"><label>结算状态</label><select id="status"><option value="all">全部</option><option value="不结算">不结算</option><option value="待结算">待结算</option><option value="已结算">已结算</option></select></div><div class="actions"><button class="btn primary" onclick="applyFilter()">搜索</button><button class="btn" onclick="resetFilter()">重置</button><button class="btn" onclick="exportData()">导出</button></div></div></section>
+      <section class="card table-card"><div class="table-toolbar"><button class="btn primary" id="batchSettleBtn" onclick="batchSettlement()">批量更新为已结算</button></div><div class="table-wrap"><table><thead><tr><th class="check-col"><input type="checkbox" id="selectAll" aria-label="全选待结算记录" onchange="toggleAll(this.checked)" /></th><th>结算日期</th><th>主播信息</th><th>所属代理</th><th>时长任务</th><th>邀新任务</th><th>宣传任务</th><th>应结算金额（USD）</th><th>结算状态</th><th>操作</th></tr></thead><tbody id="tableBody"></tbody></table></div><div class="pagination"><span id="pageInfo">显示 1-6 条，共 6 条</span><div class="pages"><button class="page current">1</button></div></div></section>
+    </div>
+  </main>
+</div>
+<div class="modal-mask" id="modalMask"><div class="modal"><div class="modal-head"><h3 id="modalTitle">确认更新为已结算</h3><button class="close" onclick="closeModal()">×</button></div><div class="modal-body"><div class="info-box"><div class="info-row"><span>主播</span><b id="modalAnchor">-</b></div><div class="info-row"><span>应结算金额</span><b id="modalAmount">-</b></div><div class="info-row"><span>结算周期</span><b>第 1 期（2026.01）</b></div></div><div class="modal-form"><div class="field"><label>收款账号</label><input id="payAccount" placeholder="请输入代理收款账号" /></div><div class="field"><label>收款信息备注</label><input id="payNote" placeholder="如：代理名称、账户姓名等" /></div></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" id="confirmBtn" onclick="confirmSettlement()">确认已结算</button></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const data=[
+ {id:'10032658',name:'小鹿',agentId:'8001345',agent:'星耀公会',t1:true,t2:true,t3:true,durationDays:23,inviteCount:6,promoCount:4,amount:30,status:'待结算',period:'2026-01',initial:'鹿'},
+ {id:'10049821',name:'夏夏',agentId:'8001345',agent:'星耀公会',t1:true,t2:true,t3:false,durationDays:21,inviteCount:5,promoCount:3,amount:21,status:'待结算',period:'2026-01',initial:'夏'},
+ {id:'10076542',name:'阿泽',agentId:'8002098',agent:'云起传媒',t1:true,t2:false,t3:true,durationDays:20,inviteCount:3,promoCount:5,amount:21,status:'待结算',period:'2026-01',initial:'泽'},
+ {id:'10088416',name:'甜心',agentId:'8002098',agent:'云起传媒',t1:false,t2:true,t3:true,durationDays:18,inviteCount:7,promoCount:4,amount:0,status:'不结算',period:'2026-01',initial:'甜'},
+ {id:'10102368',name:'Kiki',agentId:'8003176',agent:'光年互娱',t1:false,t2:false,t3:true,durationDays:16,inviteCount:4,promoCount:4,amount:0,status:'不结算',period:'2026-01',initial:'K'},
+ {id:'10118729',name:'南风',agentId:'8003176',agent:'光年互娱',t1:true,t2:true,t3:true,durationDays:25,inviteCount:8,promoCount:6,amount:30,status:'已结算',period:'2026-01',initial:'南'}
+];
+let view=[...data], current=null, selectedIds=new Set();
+function taskProgress(current,target,unit,ok){return `<div class="task-progress"><div class="progress-value">${current}<span class="split">/</span>${target}</div><span class="task-result ${ok?'ok':''}">${ok?'达标':'未达标'}</span></div>`}
+function statusTag(s){let c=s==='已结算'?'done':s==='待结算'?'wait':'no';return `<span class="tag ${c}">${s}</span>`}
+function render(){selectedIds=new Set([...selectedIds].filter(id=>view.some(r=>r.id===id&&r.status==='待结算')));const body=document.getElementById('tableBody');body.innerHTML=view.map((r,i)=>`<tr><td class="check-col"><input type="checkbox" aria-label="选择${r.name}" ${r.status==='待结算'?'':'disabled'} ${selectedIds.has(r.id)?'checked':''} onchange="toggleSelect('${r.id}',this.checked)" /></td><td>第 1 期<br><span class="sub">2026.01.01 - 01.31</span></td><td><div class="person"><div class="pic">${r.initial}</div><div><div class="pname">${r.name}</div><div class="sub">UID：${r.id}</div></div></div></td><td><div class="pname">${r.agent}</div><div class="sub">UID：${r.agentId}</div></td><td>${taskProgress(r.durationDays,20,' 天',r.t1)}</td><td>${taskProgress(r.inviteCount,5,' 人',r.t2)}</td><td>${taskProgress(r.promoCount,4,' 张',r.t3)}</td><td><span class="amount ${r.amount===0?'zero':''}">$${r.amount}</span></td><td>${statusTag(r.status)}</td><td>${r.status==='待结算'?`<button class="link-btn" onclick="openSettlement('${r.id}')">更新为已结算</button><br><button class="link-btn" onclick="openReceipt('${r.id}')">收款信息</button>`:`<button class="link-btn" onclick="openReceipt('${r.id}')">收款信息</button>`}</td></tr>`).join('');
+ document.getElementById('pageInfo').textContent=`显示 ${view.length?1:0}-${view.length} 条，共 ${view.length} 条`;document.getElementById('countAll').textContent=data.length;const wait=data.filter(x=>x.status==='待结算');document.getElementById('countWait').textContent=wait.length;document.getElementById('waitMoney').textContent='$'+wait.reduce((a,b)=>a+b.amount,0).toFixed(2);document.getElementById('doneMoney').textContent='$'+data.filter(x=>x.status==='已结算').reduce((a,b)=>a+b.amount,0).toFixed(2);updateSelectionUI()}
+function updateSelectionUI(){const selectable=view.filter(r=>r.status==='待结算');const all=document.getElementById('selectAll');all.checked=selectable.length>0&&selectable.every(r=>selectedIds.has(r.id));all.indeterminate=selectedIds.size>0&&!all.checked;document.getElementById('batchSettleBtn').disabled=selectedIds.size===0}
+function toggleSelect(id,checked){checked?selectedIds.add(id):selectedIds.delete(id);updateSelectionUI()}
+function toggleAll(checked){view.filter(r=>r.status==='待结算').forEach(r=>checked?selectedIds.add(r.id):selectedIds.delete(r.id));render()}
+function batchSettlement(){if(!selectedIds.size){showToast('请先选择待结算记录');return}const ids=[...selectedIds];data.forEach(r=>{if(ids.includes(r.id)&&r.status==='待结算'){r.status='已结算';r.payAccount=r.payAccount||'代理账号：AGENT-'+r.agentId;r.payNote=r.payNote||r.agent+' 批量线下结算'}});selectedIds.clear();applyFilter();showToast(`已批量更新 ${ids.length} 条记录为已结算`)}
+function applyFilter(){const a=document.getElementById('anchorId').value.trim(),g=document.getElementById('agentId').value.trim(),s=document.getElementById('status').value,p=document.getElementById('period').value;view=data.filter(r=>(!a||r.id.includes(a)||r.name.toLowerCase().includes(a.toLowerCase()))&&(!g||r.agentId.includes(g)||r.agent.toLowerCase().includes(g.toLowerCase()))&&(s==='all'||r.status===s)&&r.period===p);render()}
+function resetFilter(){document.getElementById('anchorId').value='';document.getElementById('agentId').value='';document.getElementById('status').value='all';document.getElementById('period').value='2026-01';view=[...data];selectedIds.clear();render()}
+function openSettlement(id){current=data.find(x=>x.id===id);document.getElementById('modalTitle').textContent='确认更新为已结算';document.getElementById('confirmBtn').style.display='inline-block';fillModal();document.getElementById('modalMask').classList.add('show')}
+function openReceipt(id){current=data.find(x=>x.id===id);document.getElementById('modalTitle').textContent='收款信息';document.getElementById('confirmBtn').style.display='none';fillModal();document.getElementById('payAccount').value=current.payAccount||'代理账号：AGENT-'+current.agentId;document.getElementById('payNote').value=current.payNote||current.agent+' 线下收款账户';document.getElementById('modalMask').classList.add('show')}
+function fillModal(){document.getElementById('modalAnchor').textContent=current.name+'（'+current.id+'）';document.getElementById('modalAmount').textContent='$'+current.amount;document.getElementById('payAccount').value='';document.getElementById('payNote').value=''}
+function closeModal(){document.getElementById('modalMask').classList.remove('show');current=null}
+function confirmSettlement(){if(!document.getElementById('payAccount').value.trim()){showToast('请填写收款账号后再确认');return}current.status='已结算';selectedIds.delete(current.id);current.payAccount=document.getElementById('payAccount').value.trim();current.payNote=document.getElementById('payNote').value.trim();closeModal();applyFilter();showToast('已更新为已结算，并保存收款信息')}
+function exportData(){const cols=['结算日期','主播UID','主播昵称','代理UID','代理昵称','时长任务主播进度','时长任务目标进度','时长任务结果','邀新任务主播进度','邀新任务目标进度','邀新任务结果','宣传任务主播进度','宣传任务目标进度','宣传任务结果','应结算金额USD','结算状态'];const rows=view.map(r=>['第1期（2026.01.01-2026.01.31）',r.id,r.name,r.agentId,r.agent,r.durationDays+'天','20天',r.t1?'达标':'未达标',r.inviteCount+'人','5人',r.t2?'达标':'未达标',r.promoCount+'张','4张',r.t3?'达标':'未达标',r.amount,r.status]);const csv='\ufeff'+[cols,...rows].map(x=>x.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));link.download='主播月度激励结算_2026-01.csv';link.click();URL.revokeObjectURL(link.href);showToast('已导出当前筛选结果')}
+function showToast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2200)}render();
+</script>
 </body>
 </html>
