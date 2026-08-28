@@ -5,11 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Monthly Host Incentive Rules</title>
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--text:#202124;--line:#eceef1}*{box-sizing:border-box}body{margin:0;background:#e9edf1;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif}.page{width:min(100%,430px);min-height:100vh;margin:0 auto;padding-bottom:32px;background:var(--bg)}.content{padding:20px 12px 0}.rules-header{position:relative;display:flex;align-items:center;justify-content:center;min-height:40px;margin-bottom:16px}.back-btn{position:absolute;left:2px;display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid #e3e5e9;border-radius:50%;background:#fff;color:#343840;font-size:27px;line-height:1;cursor:pointer}.immersive-title{margin:0;color:#111827;font-size:28px;font-weight:850;letter-spacing:-.8px;text-align:center}.rule-card{padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--card);box-shadow:0 2px 7px rgba(28,39,52,.025)}.section+.section{margin-top:22px;padding-top:21px;border-top:1px solid #f0f1f3}.section h2{margin:0 0 10px;color:#111827;font-size:15px;font-weight:850}.section h3{margin:13px 0 5px;color:#353941;font-size:13px;font-weight:800}.section p{margin:0;color:#606670;font-size:13px;line-height:1.6}.schedule,.reward-list,.qa{display:grid;gap:8px}.schedule-item,.qa-item{padding:10px 11px;border-radius:10px;background:#f7f8fa}.schedule-item strong,.qa-item strong{color:#323640}.reward-item{padding:10px 11px;border-left:3px solid #d7c5f5;border-radius:0 9px 9px 0;background:#faf8ff}.reward-item strong{color:#69439b}.qa{gap:10px}.qa-answer{margin-top:4px!important;color:#747a83!important}.platform-notice{display:grid;place-items:center;min-height:52px;margin-top:16px;padding:13px 14px;border:1px solid #e8e2f2;border-radius:12px;background:#fbf9fe}.platform-notice h3{margin:0;color:#604181;font-size:12px;font-weight:800}
+  :root { --bg:#f6f7f9; --card:#fff; --text:#202124; --muted:#737982; --line:#eceef1; --purple:#8b5cf6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#e9edf1; color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  .page { width:min(100%,430px); min-height:100vh; margin:0 auto; padding-bottom:32px; background:var(--bg); }
+  .content { padding:20px 12px 0; }
+  .rules-header { position:relative; display:flex; align-items:center; justify-content:center; min-height:40px; margin-bottom:16px; }
+  .back-btn { position:absolute; left:2px; display:grid; place-items:center; width:34px; height:34px; padding:0; border:1px solid #e3e5e9; border-radius:50%; background:#fff; color:#343840; font-size:27px; font-weight:400; line-height:1; cursor:pointer; }
+  .immersive-title { margin:0; color:#111827; font-size:28px; font-weight:850; letter-spacing:-.8px; text-align:center; }
+  .rule-card { padding:16px; border:1px solid var(--line); border-radius:16px; background:var(--card); box-shadow:0 2px 7px rgba(28,39,52,.025); }
+  .section + .section { margin-top:22px; padding-top:21px; border-top:1px solid #f0f1f3; }
+  .section h2 { margin:0 0 10px; color:#111827; font-size:15px; font-weight:850; }
+  .section h3 { margin:13px 0 5px; color:#353941; font-size:13px; font-weight:800; }
+  .section p { margin:0; color:#606670; font-size:13px; line-height:1.6; }
+  .section p + p { margin-top:7px; }
+  .schedule { display:grid; gap:8px; }
+  .schedule-item, .qa-item { padding:10px 11px; border-radius:10px; background:#f7f8fa; }
+  .schedule-item strong, .qa-item strong { color:#323640; }
+  .reward-list { display:grid; gap:8px; margin-top:8px; }
+  .reward-item { padding:10px 11px; border-left:3px solid #d7c5f5; border-radius:0 9px 9px 0; background:#faf8ff; }
+  .reward-item strong { color:#69439b; }
+  .qa { display:grid; gap:10px; }
+  .qa-answer { margin-top:4px !important; color:#747a83 !important; }
+  .platform-notice { display:grid; place-items:center; min-height:52px; margin-top:16px; padding:13px 14px; border:1px solid #e8e2f2; border-radius:12px; background:#fbf9fe; }
+  .platform-notice h3 { margin:0; color:#604181; font-size:12px; font-weight:800; }
 </style>
 </head>
 <body>
-<main class="page"><div class="content"><header class="rules-header"><button class="back-btn" id="backButton" type="button" aria-label="Back">‹</button><h1 class="immersive-title">Event Rules</h1></header><article class="rule-card"><section class="section"><h2>I. Event Overview</h2><p>Apply monthly to unlock an exclusive Room Tag and Room Frame upon approval. Complete monthly tasks to earn up to $30.</p></section><section class="section"><h2>II. Event Schedule</h2><div class="schedule"><div class="schedule-item"><p><strong>Launch Date:</strong> Starts Sept 1, 2026 (UTC+8).</p></div><div class="schedule-item"><p><strong>Registration:</strong> 1st 00:00 – 10th 23:59 monthly (UTC+8).</p></div><div class="schedule-item"><p><strong>Event &amp; Settlement:</strong> 1st 00:00 – Last day 23:59 monthly (UTC+8).</p></div></div></section><section class="section"><h2>III. Tasks</h2><h3>Task 1 | Live Streaming</h3><p>Reach 20 valid streaming days. A valid live day requires ≥ 2 hours of effective streaming time.</p><h3>Task 2 | Invitation</h3><p>Invite ≥ 5 new users via your code/link who spend ≥ 10,000 coins before settlement.</p><h3>Task 3 | Promotion</h3><p>Upload 4 screenshots of your promotional posts about the App from external platforms.</p></section><section class="section"><h2>IV. Rewards &amp; Settlement</h2><h3>Decorations (Tag &amp; Frame)</h3><p>Issued upon approval, valid until the month's end. Re-apply next month to renew.</p><h3>Cash Rewards (Paid to Agency Account)</h3><div class="reward-list"><div class="reward-item"><p><strong>Max Reward ($30):</strong> Complete Task 1 + Task 2 + Task 3.</p></div><div class="reward-item"><p><strong>Base Reward ($21):</strong> Complete Task 1 only.</p></div><div class="reward-item"><p><strong>No Reward ($0):</strong> Fail Task 1 (Task 1 is mandatory).</p></div></div></section><section class="section"><h2>V. Q&amp;A</h2><div class="qa"><div class="qa-item"><p><strong>Q: Will data prior to my approval date count?</strong></p><p class="qa-answer">A: Yes, system automatically backtracks data from the 1st of the month.</p></div><div class="qa-item"><p><strong>Q: Do decorations expire?</strong></p><p class="qa-answer">A: Yes, valid until the last day of the month. Re-apply next month for new ones.</p></div><div class="qa-item"><p><strong>Q: Do I need to re-apply every month?</strong></p><p class="qa-answer">A: Yes, each calendar month is settled independently.</p></div></div></section></article><section class="platform-notice"><h3>声明</h3></section></div></main>
-<script>document.getElementById("backButton").addEventListener("click",()=>{if(document.referrer)history.back();else window.location.href="monthly-host-incentive.html";});</script>
+<main class="page">
+  <div class="content">
+    <header class="rules-header"><button class="back-btn" id="backButton" type="button" aria-label="Back">‹</button><h1 class="immersive-title">Event Rules</h1></header>
+    <article class="rule-card">
+      <section class="section">
+        <h2>I. Event Overview</h2>
+        <p>Apply monthly to unlock an exclusive Room Tag and Room Frame upon approval. Complete monthly tasks to earn up to $30.</p>
+      </section>
+      <section class="section">
+        <h2>II. Event Schedule</h2>
+        <div class="schedule">
+          <div class="schedule-item"><p><strong>Launch Date:</strong> Starts Sept 30, 2026 (UTC+8).</p></div>
+          <div class="schedule-item"><p><strong>Registration Period:</strong> 1st 00:00 – 10th 23:59 monthly (UTC+8).</p></div>
+          <div class="schedule-item"><p><strong>Event &amp; Settlement Period:</strong> 1st 00:00 – Last day 23:59 monthly (UTC+8).</p></div>
+        </div>
+      </section>
+      <section class="section">
+        <h2>III. Task Requirements</h2>
+        <h3>Task 1 | Live Streaming (Mandatory)</h3><p>Reach ≥ 20 valid streaming days (≥ 2 hrs/day).</p>
+        <h3>Task 2 | Invitation</h3><p>Invite ≥ 5 new valid users via your exclusive code/link who spend ≥ 14,000 coins before monthly settlement.</p>
+        <h3>Task 3 | Promotion</h3><p>Upload 4 valid screenshots of your promotional posts about the App on external social media platforms (Subject to admin approval).</p>
+      </section>
+      <section class="section">
+        <h2>IV. Rewards &amp; Settlement Rules</h2>
+        <h3>1. Room Decorations (Tag &amp; Frame)</h3>
+        <p>Issued immediately upon registration approval.</p>
+        <p>Valid until 23:59:59 (UTC+8) on the last day of the current month. Re-apply next month to renew.</p>
+        <h3>2. Cash Rewards (Paid to Agency Account)</h3>
+        <p><strong>Mandatory Threshold:</strong> Task 1 is required for ALL payouts. If you fail to complete Task 1 (&lt; 20 valid days), your total reward will be $0, and all other task bonuses will be forfeited.</p>
+        <p><strong>Payout Structure (Upon completing Task 1):</strong></p>
+        <div class="reward-list">
+          <div class="reward-item"><p><strong>Task 1 Only:</strong> $20</p></div>
+          <div class="reward-item"><p><strong>Task 1 + Task 3 (Promotion):</strong> $22</p></div>
+          <div class="reward-item"><p><strong>Task 1 + Task 2 (Invitation):</strong> $25</p></div>
+          <div class="reward-item"><p><strong>Full Mastery (All Tasks Completed):</strong> $30 <em>(Includes an extra $3 Full Mastery Bonus)</em></p></div>
+        </div>
+      </section>
+      <section class="section">
+        <h2>V. Frequently Asked Questions (Q&amp;A)</h2>
+        <div class="qa">
+          <div class="qa-item"><p><strong>Q: Will streaming and task data prior to my approval date count?</strong></p><p class="qa-answer">A: Yes. Once approved, the system automatically backtracks and calculates all your task data from the 1st 00:00:00 (UTC+8) of the current month.</p></div>
+          <div class="qa-item"><p><strong>Q: What happens if I don't reach 20 valid streaming days?</strong></p><p class="qa-answer">A: Task 1 is a mandatory requirement. If you stream less than 20 valid days, your final payout for the month will be $0, even if you completed the Invitation or Promotion tasks.</p></div>
+          <div class="qa-item"><p><strong>Q: Do room decorations expire?</strong></p><p class="qa-answer">A: Yes. Decorations are valid until the last day of the month. You need to re-apply in the next calendar month to get new decorations.</p></div>
+          <div class="qa-item"><p><strong>Q: Do I need to re-apply every month?</strong></p><p class="qa-answer">A: Yes. Each calendar month operates independently. You must apply between the 1st and 10th of each month to participate.</p></div>
+        </div>
+      </section>
+    </article>
+    <section class="platform-notice"><h3>声明</h3></section>
+  </div>
+</main>
+<script>
+  document.getElementById("backButton").addEventListener("click", () => {
+    if (document.referrer) history.back();
+    else window.location.href = "monthly-host-incentive.html";
+  });
+</script>
 </body>
 </html>

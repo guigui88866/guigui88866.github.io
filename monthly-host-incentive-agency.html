@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>My Agency Streamers</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#202124; --muted:#737982; --line:#eceef1; --purple:#7c3aed; --green:#12a874; --yellow:#f0a020; --red:#e5484d; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#e9edf1; color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  button { font:inherit; cursor:pointer; }
+  .page { width:min(100%,430px); min-height:100vh; margin:0 auto; padding-bottom:calc(28px + env(safe-area-inset-bottom)); background:var(--bg); }
+  .nav-bar { position:sticky; top:0; z-index:5; display:flex; align-items:center; justify-content:center; height:48px; padding:0 12px; background:rgba(255,255,255,.97); border-bottom:1px solid #eceef1; }
+  .nav-back { position:absolute; left:10px; display:grid; place-items:center; width:32px; height:32px; padding:0; border:0; background:transparent; color:#202124; font-size:26px; font-weight:400; line-height:1; }
+  .nav-title { color:#1f2329; font-size:16px; font-weight:700; }
+  .content { padding:12px 12px 0; }
+  .tab-bar { display:flex; gap:6px; margin-bottom:14px; padding:4px; border-radius:12px; background:#eceef1; }
+  .tab { flex:1; padding:9px 0; border:0; border-radius:9px; background:transparent; color:#6b7280; font-size:13px; font-weight:700; }
+  .tab.active { background:#fff; color:#111827; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .stat-bar { display:flex; margin-bottom:14px; padding:14px; border:1px solid #e4dbf2; border-radius:14px; background:linear-gradient(135deg,#faf5ff,#f3edfc); }
+  .stat-item { flex:1; text-align:center; }
+  .stat-item + .stat-item { border-left:1px solid #ddd0ee; }
+  .stat-num { display:block; color:#4c1d95; font-size:20px; font-weight:850; letter-spacing:-.4px; }
+  .stat-label { display:block; margin-top:2px; color:#7c6a8a; font-size:10px; font-weight:700; }
+  .streamer-list { display:grid; gap:11px; }
+  .streamer-card { padding:13px; border:1px solid var(--line); border-radius:14px; background:var(--card); box-shadow:0 2px 6px rgba(28,39,52,.025); }
+  .sc-head { display:flex; align-items:center; gap:10px; }
+  .sc-avatar { flex:0 0 auto; display:grid; place-items:center; width:40px; height:40px; border-radius:50%; color:#fff; font-size:15px; font-weight:800; }
+  .sc-id { flex:1; min-width:0; }
+  .sc-name { color:#1f2329; font-size:14px; font-weight:800; }
+  .sc-uid { color:#9aa0a8; font-size:11px; }
+  .sc-est { flex:0 0 auto; text-align:right; }
+  .sc-est-num { color:#0a8a55; font-size:17px; font-weight:850; letter-spacing:-.3px; }
+  .sc-est-num.locked { color:#9aa0a8; }
+  .sc-est-label { color:#9aa0a8; font-size:10px; }
+  .sc-meta { display:grid; gap:6px; margin-top:11px; padding-top:11px; border-top:1px solid #f2f3f5; }
+  .sc-row { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; }
+  .sc-label { color:#8b919b; font-weight:700; }
+  .sc-val { color:#3e434d; font-weight:700; }
+  .sc-val.done { color:var(--green); }
+  .sc-val.pending { color:#9aa0a8; }
+  .sc-days-warn { color:var(--yellow); font-weight:800; font-size:11px; }
+  .sc-days-done { color:var(--green); font-weight:800; font-size:11px; }
+  .sc-pill { padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; }
+  .sc-pill.ok { background:#e7f8f0; color:#0a8a55; }
+  .sc-pill.warn { background:#fdf3e3; color:#b9791a; }
+  .sc-pill.none { background:#f1f2f4; color:#9aa0a8; }
+  .sc-status { flex:0 0 auto; padding:4px 10px; border-radius:8px; font-size:11px; font-weight:800; }
+  .sc-status.paid { background:#e7f8f0; color:#0a8a55; }
+  .sc-status.invalid { background:#fdecec; color:#c0392b; }
+  .empty-note { padding:30px 10px; text-align:center; color:#9aa0a8; font-size:13px; }
+  .tab-panel { display:none; }.tab-panel.active { display:block; }
+</style>
+</head>
+<body>
+<main class="page">
+  <nav class="nav-bar"><button class="nav-back" id="backButton" type="button" aria-label="Back">‹</button><span class="nav-title">My Agency Streamers</span></nav>
+  <div class="content">
+    <div class="tab-bar"><button class="tab active" type="button" data-tab="thisMonth">This Month</button><button class="tab" type="button" data-tab="lastMonth">Last Month</button></div>
+    <div class="tab-panel active" id="panelThisMonth"></div>
+    <div class="tab-panel" id="panelLastMonth"></div>
+  </div>
+</main>
+<script>
+  const avatarColors = ["#7c3aed","#ec4899","#0ea5e9","#f59e0b","#10b981","#8b5cf6","#ef4444","#06b6d4","#f97316","#6366f1","#14b8a6","#a855f7"];
+  // 每个任务完成组合场景 1 个示例：全部完成 / 任务1+2 / 任务1+3 / 仅任务1 / 都没完成
+  const thisMonth = [
+    { id:"10872654", name:"Luna",  days:20, invites:5, promo:4 },
+    { id:"10398127", name:"Mira",  days:20, invites:5, promo:0 },
+    { id:"10924536", name:"Zoe",   days:20, invites:0, promo:4 },
+    { id:"10712453", name:"Aria",  days:20, invites:0, promo:0 },
+    { id:"10654218", name:"Nova",  days:12, invites:3, promo:2 }
+  ];
+  const lastMonth = [
+    { id:"10872654", name:"Luna",  days:20, invites:5, promo:4, amount:30, status:"paid" },
+    { id:"10398127", name:"Mira",  days:20, invites:5, promo:0, amount:25, status:"paid" },
+    { id:"10924536", name:"Zoe",   days:20, invites:0, promo:4, amount:22, status:"paid" },
+    { id:"10712453", name:"Aria",  days:20, invites:0, promo:0, amount:20, status:"paid" },
+    { id:"10654218", name:"Nova",  days:12, invites:3, promo:2, amount:0,  status:"invalid" }
+  ];
+  function est(s) { const d = Math.min(s.days,20); const i = s.invites >= 5 ? 5 : 0; const p = s.promo >= 4 ? 2 : 0; const b = (i && p) ? 3 : 0; return d + i + p + b; }
+  function taskRow(label, current, goal) {
+    const ok = current >= goal;
+    return `<div class="sc-row"><span class="sc-label">${label}</span><span class="sc-val ${ok ? "done" : "pending"}">${current} / ${goal} ${ok ? "✓" : "✗"}</span></div>`;
+  }
+  function renderThisMonth() {
+    const total = thisMonth.reduce((s,m) => s + est(m), 0);
+    const cards = thisMonth.map((m,i) => {
+      const e = est(m);
+      const locked = m.days < 20;
+      return `<article class="streamer-card"><div class="sc-head"><span class="sc-avatar" style="background:${avatarColors[i % avatarColors.length]}">${m.name.charAt(0)}</span><div class="sc-id"><div class="sc-name">${m.name}</div><div class="sc-uid">ID: ${m.id}</div></div><div class="sc-est"><div class="sc-est-num ${locked ? "locked" : ""}">$${e.toFixed(2)}</div><div class="sc-est-label">Est. Reward</div></div></div><div class="sc-meta">${taskRow("Valid live day", m.days, 20)}${taskRow("Invite", m.invites, 5)}${taskRow("Promo", m.promo, 4)}</div></article>`;
+    }).join("");
+    return `<div class="stat-bar"><div class="stat-item"><span class="stat-num">${thisMonth.length}</span><span class="stat-label">Approved Streamers</span></div><div class="stat-item"><span class="stat-num">$${total.toFixed(2)}</span><span class="stat-label">Estimated Agency Total</span></div></div><div class="streamer-list">${cards}</div>`;
+  }
+  function renderLastMonth() {
+    const paidTotal = lastMonth.filter(m => m.status === "paid").reduce((s,m) => s + m.amount, 0);
+    const rows = lastMonth.map((m,i) => {
+      const st = m.status === "paid" ? `<span class="sc-status paid">Paid ($${m.amount.toFixed(2)})</span>` : `<span class="sc-status invalid">Invalid ($0)</span>`;
+      return `<article class="streamer-card"><div class="sc-head"><span class="sc-avatar" style="background:${avatarColors[i % avatarColors.length]}">${m.name.charAt(0)}</span><div class="sc-id"><div class="sc-name">${m.name}</div><div class="sc-uid">ID: ${m.id}</div></div>${st}</div><div class="sc-meta">${taskRow("Valid live day", m.days, 20)}${taskRow("Invite", m.invites, 5)}${taskRow("Promo", m.promo, 4)}</div></article>`;
+    }).join("");
+    return `<div class="stat-bar"><div class="stat-item"><span class="stat-num">${lastMonth.length}</span><span class="stat-label">Settled Streamers</span></div><div class="stat-item"><span class="stat-num">$${paidTotal.toFixed(2)}</span><span class="stat-label">Total Paid</span></div></div><div class="streamer-list">${rows}</div>`;
+  }
+  document.getElementById("panelThisMonth").innerHTML = renderThisMonth();
+  document.getElementById("panelLastMonth").innerHTML = renderLastMonth();
+  document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    const key = tab.dataset.tab;
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    document.getElementById(key === "thisMonth" ? "panelThisMonth" : "panelLastMonth").classList.add("active");
+  }));
+  document.getElementById("backButton").addEventListener("click", () => { if (document.referrer) history.back(); else window.location.href = "monthly-host-incentive.html"; });
+</script>
+</body>
+</html>
