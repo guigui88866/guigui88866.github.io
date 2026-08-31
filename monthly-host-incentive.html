@@ -1,1 +1,225 @@
-FILE_CONTENT_PLACEHOLDER
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Monthly Host Incentive</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#202124; --muted:#8b919b; --line:#e5e7eb; --soft:#f8f9fa; --purple:#8b5cf6; --purple-deep:#7c3aed; --green:#12a874; --yellow:#fadb14; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#e9edf1; color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+  button { font:inherit; cursor:pointer; } button:disabled { cursor:not-allowed; }
+  .page { width:min(100%,430px); min-height:100vh; margin:0 auto; padding-bottom:calc(40px + env(safe-area-inset-bottom)); background:var(--bg); }
+  .immersive-header { position:relative; display:flex; align-items:center; justify-content:center; min-height:66px; padding:14px 16px 8px; }
+  .immersive-header h1 { margin:0; color:#000; font-size:25px; font-weight:850; letter-spacing:-1px; }
+  .header-back { position:absolute; left:16px; display:grid; place-items:center; width:34px; height:34px; padding:0; border:1px solid #e3e5e9; border-radius:50%; background:#fff; color:#343840; font-size:27px; font-weight:400; line-height:1; }
+  .header-actions { position:absolute; right:16px; display:flex; align-items:center; }
+  .rule-btn { padding:5px 13px; border:1px solid #d5d7dd; border-radius:999px; background:#fff; color:#62656d; font-size:12px; }.debug-btn { display:inline-grid; place-items:center; justify-self:end; width:28px; height:28px; padding:0; border:1px dashed #c7b0ed; border-radius:50%; background:#faf7ff; color:#7c4ab4; font-size:15px; font-weight:700; }
+  .hero { padding:4px 16px 10px; text-align:center; }.hero h1 { display:none; }
+  .content { padding:0 12px; }.stack { display:grid; gap:16px; }.card { padding:16px; border:1px solid #eff0f2; border-radius:16px; background:var(--card); box-shadow:0 2px 7px rgba(28,39,52,.025); }
+  .section-title { margin:0 0 14px; text-align:center; font-size:14px; font-weight:750; }.rewards { display:flex; align-items:center; justify-content:space-between; text-align:center; }.reward { flex:1; min-width:0; }.plus { flex:0 0 18px; color:#adb1b8; font-size:18px; font-weight:700; }
+  .reward-icon { display:grid; place-items:center; width:64px; height:64px; margin:auto; border:1px solid #cbd0d7; border-radius:8px; background:#f3f4f6; color:#71757d; font-size:11px; }.reward-icon.money { color:#383b42; font-size:16px; font-weight:800; }.reward-label { margin:6px 0 0; color:#6f747e; font-size:11px; }
+  .process { text-align:center; }.process-flow { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:17px; }.process-step { flex:1; min-width:0; }.process-arrow { flex:0 0 10px; padding-top:16px; color:#a9adb5; font-size:15px; }.process-icon { display:grid; place-items:center; width:48px; height:48px; margin:auto; border:1px solid #d3d7dd; border-radius:6px; background:#f5f6f7; color:#b6bac2; font-size:22px; }.step-title { margin:5px 0 1px; font-size:10px; font-weight:800; white-space:nowrap; }.step-subtitle { margin:0; color:#a2a6ad; font-size:9px; line-height:1.2; }
+  .primary-btn { width:100%; padding:12px 16px; border:0; border-radius:999px; background:#b575f7; box-shadow:0 3px 7px rgba(181,117,247,.28); color:#fff; font-size:14px; font-weight:800; }.primary-btn:active { transform:scale(.985); opacity:.9; }.period { margin:8px 0 0; color:#a1a5ad; font-size:10px; }
+  .tasks-card { padding:16px; }.tasks-heading { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; margin-bottom:16px; }.tasks-heading h2 { margin:0; font-size:16px; font-weight:800; }.month-btn { justify-self:start; display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border:1px solid #e1e3e7; border-radius:999px; background:#f6f7f8; color:#4e535b; font-size:11px; }.month-btn.current { color:#7350a8; border-color:#d8c5f2; background:#f6f0ff; }
+  .reward-panel { margin-bottom:16px; padding:13px; border:1px solid #e4dbf2; border-radius:12px; background:#fbf9fe; }.reward-panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:5px; }.reward-panel-title { display:flex; align-items:center; gap:5px; color:#6b7280; font-size:13px; font-weight:700; }.info-button { display:grid; place-items:center; width:16px; height:16px; padding:0; border:1px solid #9ca3af; border-radius:50%; background:#fff; color:#6b7280; font-size:10px; }.reward-main { display:flex; align-items:center; gap:8px; }.reward-amount { margin:0; color:#111827; font-size:32px; font-weight:850; letter-spacing:-.7px; }.reward-amount.unlocked { color:var(--green); }.reward-lock { padding:3px 7px; border:1px solid #d9c4f3; border-radius:7px; background:#f3edfc; color:#7850ac; font-size:10px; font-weight:700; }.reward-status { margin:10px 0 0; padding-top:10px; border-top:1px solid #e8e1f1; color:#5e536a; font-size:12px; line-height:1.45; }.reward-status .days-needed { color:#8958c5; font-weight:800; }.all-task-bonus { display:grid; grid-template-columns:1fr auto; gap:2px 10px; margin-top:10px; padding:9px 10px; border-radius:8px; background:#f1ebfa; color:#675178; font-size:11px; }.all-task-bonus strong { grid-row:1 / span 2; grid-column:2; align-self:center; color:#7850ac; font-size:14px; }.bonus-title { font-weight:800; }.bonus-note { color:#867392; }.all-task-bonus.complete { background:#ecfdf5; color:#387257; }.all-task-bonus.complete strong { color:#087c4b; }.all-task-bonus.complete .bonus-note { color:#4a8a66; }
+  .task { padding:12px; border:1px solid #dfe1e6; border-radius:12px; }.task + .task { margin-top:16px; }.task-top { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; }.task-name { font-size:14px; font-weight:800; }.task-reward { flex:0 0 auto; color:#716077; font-size:12px; font-weight:800; }.task-reward.unlocked { color:#089861; }.task-reward.locked { color:#8e949e; }.task-progress { padding:10px; border-radius:8px; background:#f5f6f8; }.progress-title { display:flex; justify-content:space-between; gap:8px; margin-bottom:5px; font-size:12px; font-weight:800; }.progress-number { flex:0 0 auto; color:#b575f7; }.task-day-track { overflow:hidden; height:6px; margin:9px 0; border-radius:99px; background:#e1e3e7; }.task-day-fill { height:100%; border-radius:inherit; background:#9b73d6; transition:width .25s ease; }.task-note { margin:0; color:#9aa0a8; font-size:10px; line-height:1.45; }
+  .copy-group { display:grid; gap:10px; margin-top:11px; }.copy-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }.copy-label { flex:0 0 auto; color:#656a73; font-size:12px; font-weight:800; }.copy-value { min-width:0; overflow:hidden; color:#bd8c00; font-size:10px; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }.copy-value.code { font-size:12px; font-weight:800; }.copy-action { display:inline-flex; align-items:center; gap:7px; min-width:0; }.copy-btn { flex:0 0 auto; padding:4px 12px; border:0; border-radius:999px; background:var(--yellow); color:#262626; font-size:10px; font-weight:800; }.records-btn { display:block; width:100%; margin-top:11px; padding:0; border:0; background:transparent; color:#9aa0a8; font-size:10px; }
+  .upload-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; }.upload-item { position:relative; aspect-ratio:1; overflow:hidden; border-radius:8px; }.uploaded-image { display:flex; align-items:flex-end; padding:5px; background:linear-gradient(145deg,#f8cf8a,#b176d8 53%,#6e4fa3); color:#fff; font-size:8px; font-weight:700; }.uploaded-image::before { content:""; position:absolute; inset:8px 10px 28px; border-radius:4px; background:rgba(255,255,255,.32); }.image-status { position:relative; width:100%; padding:3px; border-radius:4px; background:rgba(38,41,49,.74); text-align:center; }.add-image { display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px dashed #cbd0d8; background:#fff; color:#a6abb3; }.add-image strong { font-size:22px; font-weight:400; line-height:.9; }.add-image small { margin-top:5px; font-size:8px; }.history .add-image, .history .copy-btn { border-color:#e2e4e8; background:#f2f3f5; color:#b7bbc2; }.history .add-image { color:#c2c5ca; }.history .records-btn { color:#b8bcc2; }
+  .agency-section { padding:16px; }.agency-heading { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; margin-bottom:14px; }.agency-heading h2 { margin:0; font-size:16px; font-weight:800; }.agency-heading .debug-btn { justify-self:end; }
+  .tab-bar { display:flex; gap:6px; margin-bottom:14px; padding:4px; border-radius:12px; background:#eceef1; }.tab { flex:1; padding:9px 0; border:0; border-radius:9px; background:transparent; color:#6b7280; font-size:13px; font-weight:700; }.tab.active { background:#fff; color:#111827; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .stat-bar { display:flex; margin-bottom:14px; padding:14px; border:1px solid #e4dbf2; border-radius:14px; background:linear-gradient(135deg,#faf5ff,#f3edfc); }.stat-item { flex:1; text-align:center; }.stat-item + .stat-item { border-left:1px solid #ddd0ee; }.stat-num { display:block; color:#4c1d95; font-size:20px; font-weight:850; letter-spacing:-.4px; }.stat-label { display:block; margin-top:2px; color:#7c6a8a; font-size:10px; font-weight:700; }
+  .streamer-list { display:grid; gap:11px; }.streamer-card { padding:13px; border:1px solid #eceef1; border-radius:14px; background:#fff; }.sc-head { display:flex; align-items:center; gap:10px; }.sc-avatar { flex:0 0 auto; display:grid; place-items:center; width:40px; height:40px; border-radius:50%; color:#fff; font-size:15px; font-weight:800; }.sc-id { flex:1; min-width:0; }.sc-name { color:#1f2329; font-size:14px; font-weight:800; }.sc-uid { color:#9aa0a8; font-size:11px; }.sc-est { flex:0 0 auto; text-align:right; }.sc-est-num { color:#0a8a55; font-size:17px; font-weight:850; letter-spacing:-.3px; }.sc-est-num.locked { color:#9aa0a8; }.sc-est-label { color:#9aa0a8; font-size:10px; }.sc-meta { display:grid; gap:6px; margin-top:11px; padding-top:11px; border-top:1px solid #f2f3f5; }.sc-row { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; }.sc-label { color:#8b919b; font-weight:700; }.sc-val { color:#3e434d; font-weight:700; }.sc-val.done { color:var(--green); }.sc-val.pending { color:#9aa0a8; }.sc-status { flex:0 0 auto; padding:4px 10px; border-radius:8px; font-size:11px; font-weight:800; }.sc-status.paid { background:#e7f8f0; color:#0a8a55; }.sc-status.invalid { background:#fdecec; color:#c0392b; }
+  .tab-panel { display:none; }.tab-panel.active { display:block; }
+  .bottom-area { padding-top:2px; }.floating-apply { position:fixed; z-index:8; left:50%; bottom:calc(16px + env(safe-area-inset-bottom)); width:min(calc(100% - 24px),406px); transform:translate(-50%,18px); opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; }.floating-apply.visible { transform:translate(-50%,0); opacity:1; pointer-events:auto; }.toast { position:fixed; z-index:12; left:50%; bottom:28px; transform:translate(-50%,15px); padding:10px 14px; border-radius:999px; background:rgba(30,32,38,.9); color:#fff; font-size:12px; opacity:0; pointer-events:none; transition:.2s ease; }.toast.show { transform:translate(-50%,0); opacity:1; }
+  .debug-option { display:flex; flex-direction:column; gap:3px; width:100%; padding:12px; border:1px solid #e6ddf5; border-radius:10px; background:#faf8ff; color:#4e3b68; text-align:left; }.debug-option strong { font-size:12px; }.debug-option span { color:#806c99; font-size:11px; }.debug-option:active { background:#f0e8fc; }
+  .modal-backdrop { position:fixed; z-index:10; inset:0; display:none; align-items:center; justify-content:center; padding:20px 12px; background:rgba(17,24,39,.45); }.modal-backdrop.open { display:flex; }.modal-shell { display:flex; flex-direction:column; align-items:center; width:min(100%,394px); max-height:calc(100vh - 40px); }.modal { width:100%; max-height:calc(100vh - 100px); overflow-y:auto; padding:18px; border-radius:20px; background:#fff; box-shadow:0 12px 34px rgba(0,0,0,.18); }.modal h3 { margin:0 32px 14px; font-size:17px; text-align:center; }.modal p { margin:0; color:#606670; font-size:13px; line-height:1.55; }.modal-list { display:grid; gap:9px; margin:14px 0 18px; }.modal-list div { padding:10px 12px; border-radius:10px; background:#f6f7f9; color:#434852; font-size:12px; }.record-table-wrap { margin:14px 0 18px; overflow-x:auto; border:1px solid #eceef1; border-radius:10px; }.record-table { width:100%; border-collapse:collapse; font-size:11px; }.record-table th { padding:10px 8px; background:#f6f7f9; color:#666c76; font-weight:800; text-align:left; white-space:nowrap; }.record-table td { padding:11px 8px; border-top:1px solid #f0f1f3; color:#3e434d; white-space:nowrap; }.record-table td:last-child { color:#8a5ac1; font-weight:700; }.record-empty { padding:22px 10px; color:#a0a5ad; font-size:12px; text-align:center; }.modal-close { display:grid; place-items:center; flex:0 0 auto; width:34px; height:34px; margin-top:14px; padding:0; border:1px solid rgba(255,255,255,.72); border-radius:50%; background:transparent; color:#fff; font-size:25px; font-weight:300; line-height:1; }
+  @media (max-width:360px) { .content { padding:0 9px; }.card,.tasks-card { padding:13px; }.process-arrow { flex-basis:5px; }.step-title { font-size:9px; }.step-subtitle { font-size:8px; }.node-box { padding:3px 5px; font-size:10px; } }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="immersive-header"><button class="header-back" id="backButton" type="button" aria-label="Back">‹</button><h1>Monthly Host Incentive</h1><div class="header-actions"><button class="rule-btn" type="button" id="ruleButton">Rule</button></div></header>
+  <section class="hero"><h1>Monthly Host Incentive</h1></section>
+  <div class="content"><div class="stack">
+    <section class="card"><h2 class="section-title">Join the event for a chance to earn</h2><div class="rewards"><div class="reward"><div class="reward-icon">Room Tag</div><p class="reward-label">Room Tag</p></div><span class="plus">+</span><div class="reward"><div class="reward-icon">Room<br>Frame</div><p class="reward-label">Room Frame</p></div><span class="plus">+</span><div class="reward"><div class="reward-icon money">$30</div><p class="reward-label">$30</p></div></div></section>
+    <section class="card process"><h2 class="section-title">Application Process</h2><div class="process-flow"><div class="process-step"><div class="process-icon">×</div><p class="step-title">1. Apply</p><p class="step-subtitle">1st-10th</p></div><span class="process-arrow">›</span><div class="process-step"><div class="process-icon">×</div><p class="step-title">2. Review</p><p class="step-subtitle">7 business days</p></div><span class="process-arrow">›</span><div class="process-step"><div class="process-icon">×</div><p class="step-title">3. Approved</p><p class="step-subtitle">Get Room Tag, Frame</p></div><span class="process-arrow">›</span><div class="process-step"><div class="process-icon">×</div><p class="step-title">4. Finish Tasks</p><p class="step-subtitle">Earn $30 per</p></div></div><button class="primary-btn apply-btn" id="topApplyButton" type="button">Apply Now</button><p class="period">Application Period: 1st–10th of every month (UTC+8)</p></section>
+    <section class="card tasks-card" id="tasksCard">
+      <div class="tasks-heading"><button class="month-btn" id="monthToggle" type="button">⇄&nbsp; Last Month</button><h2>Monthly Tasks</h2><button class="debug-btn" type="button" aria-label="Debug scenarios" title="Debug scenarios">⌘</button></div>
+      <section class="reward-panel" id="rewardPanel"></section>
+      <div id="taskList"></div>
+    </section>
+    <section class="card agency-section" id="agencySection" style="display:none">
+      <div class="agency-heading"><span></span><h2>My Agency Streamers</h2><button class="debug-btn" type="button" aria-label="Debug scenarios" title="Debug scenarios">⌘</button></div>
+      <div class="tab-bar"><button class="tab active" type="button" data-tab="thisMonth">This Month</button><button class="tab" type="button" data-tab="lastMonth">Last Month</button></div>
+      <div class="tab-panel active" id="panelThisMonth"></div>
+      <div class="tab-panel" id="panelLastMonth"></div>
+    </section>
+  </div></div>
+</main>
+<div class="floating-apply" id="floatingApply"><button class="primary-btn apply-btn" type="button">Apply Now</button></div>
+<input id="uploadInput" type="file" accept="image/*" hidden>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true"><div class="modal-shell"><section class="modal" role="dialog" aria-modal="true"><h3 id="modalTitle"></h3><div id="modalContent"></div></section><button id="modalClose" class="modal-close" type="button" aria-label="Close">×</button></div></div>
+<script>
+  // 演示配置：首月设为 true 时隐藏月份切换，只展示本月实时数据。
+  const isLaunchMonth = false;
+  const applyUrl = "https://guigui88866.github.io/quality-anchor-apply.html";
+  const rulesUrl = "monthly-host-incentive-rules.html";
+  const invitationData = { inviteUrl:"https://sxmqogev7hrtttt.example/invite", code:"YAFI3P" };
+  const debugScenarios = [
+    { label:"场景1", name:"未完成直播，邀新和宣传完成", days:12, invites:5, photos:["approved", "approved", "approved", "approved"], settlement:"$0" },
+    { label:"场景2", name:"仅完成直播任务", days:20, invites:3, photos:["review"], settlement:"$20" },
+    { label:"场景3", name:"直播和邀新任务完成", days:20, invites:5, photos:["review"], settlement:"$25" },
+    { label:"场景4", name:"直播和宣传任务完成", days:20, invites:3, photos:["approved", "approved", "approved", "approved"], settlement:"$22" },
+    { label:"场景5", name:"全部任务完成", days:20, invites:5, photos:["approved", "approved", "approved", "approved"], settlement:"$30" },
+    { label:"场景6", name:"三个任务都未完成", days:12, invites:3, photos:["review"], settlement:"$0" },
+    { label:"有效直播天数 +1天", name:"基于当前数据增加一天", action:"incrementDay" }
+  ];
+  let scenarioIndex = 0;
+  const datasets = {
+    current: { ...debugScenarios[scenarioIndex], ...invitationData },
+    last: { days:20, invites:5, photos:["approved", "approved", "approved", "approved"], ...invitationData, finalReward:30 }
+  };
+  let mode = "current";
+  // 演示身份：streamer=主播（原活动页）/ agency=代理（任务模块替换为 Agency 数据）。线上由登录态返回。
+  let userRole = new URLSearchParams(location.search).get("role") === "agency" ? "agency" : "streamer";
+  const $ = s => document.querySelector(s);
+  const toast = $("#toast");
+  const tasksCard = $("#tasksCard");
+  let toastTimer;
+  function showToast(message) { toast.textContent = message; toast.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove("show"), 1800); }
+  function done(value, goal) { return value >= goal; }
+  function openModal(title, content) { $("#modalTitle").textContent = title; $("#modalContent").innerHTML = content; $("#modalBackdrop").classList.add("open"); $("#modalBackdrop").setAttribute("aria-hidden","false"); if (title === "调试场景") bindDebugScenarioOptions(); }
+  function closeModal() { $("#modalBackdrop").classList.remove("open"); $("#modalBackdrop").setAttribute("aria-hidden","true"); }
+  function rewardPanel(data, historical) {
+    const task1Done = done(data.days, 20), task2Done = done(data.invites,5), task3Done = done(data.photos.length,4);
+    const estimated = Math.min(data.days,20) + (task2Done ? 5 : 0) + (task3Done ? 2 : 0) + (task2Done && task3Done ? 3 : 0);
+    const finalReward = task1Done ? (task2Done && task3Done ? 30 : task2Done ? 25 : task3Done ? 22 : 20) : 0;
+    if (historical) return `<div class="reward-panel-header"><span class="reward-panel-title">Reward</span></div><div class="reward-amount unlocked">$${data.finalReward ?? finalReward}</div>`;
+    const daysRemaining = Math.max(20 - data.days, 0);
+    const locked = !task1Done;
+    const allDone = task1Done && task2Done && task3Done;
+    const status = locked ? `Stream <span class="days-needed">${daysRemaining}</span> more valid day${daysRemaining === 1 ? "" : "s"} to unlock this reward.` : "Live streaming requirement completed. Final reward will be settled based on completed tasks.";
+    return `<div class="reward-panel-header"><span class="reward-panel-title">Estimated Reward <button class="info-button" id="rewardInfo" type="button" aria-label="Reward explanation">i</button></span></div><div class="reward-main"><div class="reward-amount ${locked ? "" : "unlocked"}">$${estimated}</div>${locked ? `<span class="reward-lock">Locked</span>` : ""}</div><p class="reward-status">${status}</p><div class="all-task-bonus ${allDone ? "complete" : ""}"><div class="bonus-top"><span class="bonus-title">All tasks bonus</span><span class="bonus-amount">+$3</span></div><span class="bonus-note">${allDone ? "Completed" : "Complete all 3 tasks"}</span></div>`;
+  }
+  function photoMarkup(photo) { return `<div class="upload-item uploaded-image"><span class="image-status">${photo === "review" ? "Under Review" : "Approved"}</span></div>`; }
+  function taskList(data, historical) {
+    const disabled = historical ? "disabled" : "";
+    const photoSlots = [...data.photos.map(photoMarkup)];
+    for (let i = photoSlots.length; i < 4; i++) photoSlots.push(`<button class="upload-item add-image" type="button" data-upload ${disabled}><strong>+</strong><small>Upload Image</small></button>`);
+    const task2Done = done(data.invites,5), task3Done = done(data.photos.length,4);
+    const task1Done = done(data.days,20);
+    return `
+      <article class="task"><div class="task-top"><span class="task-name">Task 1: Live Streaming Days ≥ 20</span><span class="task-reward ${task1Done ? "unlocked" : "locked"}">${task1Done ? "✓" : "🔒"} +$${Math.min(data.days,20)}</span></div><div class="task-progress"><div class="progress-title"><span>Valid live days</span><span class="progress-number">${data.days} / 20</span></div><div class="task-day-track"><div class="task-day-fill" style="width:${Math.min(data.days / 20 * 100,100)}%"></div></div><p class="task-note">A valid live day requires ≥ 2 hours of effective streaming time.</p></div></article>
+      <article class="task"><div class="task-top"><span class="task-name">Task 2: Invite valid new users ≥ 5</span><span class="task-reward ${task2Done ? "unlocked" : "locked"}">${task2Done ? "✓" : "🔒"} +$5</span></div><div class="task-progress"><div class="progress-title"><span>Valid invited users</span><span class="progress-number">${data.invites} / 5</span></div><p class="task-note">Valid new user: A new user who spends 14,000 coins or more.</p></div><div class="copy-group"><div class="copy-row"><span class="copy-label">Invitation Link</span><div class="copy-action"><span class="copy-value">${data.inviteUrl}</span><button class="copy-btn" type="button" data-copy="${data.inviteUrl}">Copy</button></div></div><div class="copy-row"><span class="copy-label">Code</span><div class="copy-action"><span class="copy-value code">${data.code}</span><button class="copy-btn" type="button" data-copy="${data.code}">Copy</button></div></div></div><button class="records-btn" type="button" id="recordsButton">Invitation Records &gt;</button></article>
+      <article class="task"><div class="task-top"><span class="task-name">Task 3: Upload 4 Valid Promo Screenshots</span><span class="task-reward ${task3Done ? "unlocked" : "locked"}">${task3Done ? "✓" : "🔒"} +$2</span></div><div class="task-progress"><div class="progress-title"><span>Uploaded screenshots</span><span class="progress-number">${data.photos.length} / 4</span></div><p class="task-note">Valid Screenshot: A screenshot showing your promotional post about the App published on an external social media platform.</p></div><div class="upload-grid">${photoSlots.join("")}</div></article>`;
+  }
+  function render() {
+    const historical = mode === "last", data = datasets[mode];
+    tasksCard.classList.toggle("history", historical);
+    $("#monthToggle").style.display = isLaunchMonth ? "none" : "inline-flex";
+    $("#monthToggle").classList.toggle("current", historical);
+    $("#monthToggle").innerHTML = historical ? "⇄&nbsp; This Month" : "⇄&nbsp; Last Month";
+    $("#rewardPanel").innerHTML = rewardPanel(data, historical);
+    $("#taskList").innerHTML = taskList(data, historical);
+    bindDynamicEvents();
+  }
+  function bindDynamicEvents() {
+    $("#rewardInfo")?.addEventListener("click", () => openModal("Estimated Reward Rules", `<div class="modal-list"><div><strong>I. Estimated Amount</strong><br>The earnings displayed during the event are estimated amounts calculated based on your current task progress.</div><div><strong>II. Mandatory Threshold</strong><br>You must complete at least 20 valid streaming days (≥ 2 hrs/day) in a natural month. If you fail to reach 20 days by the end of the month, all estimated rewards will expire, and your final payout will be $0.</div><div><strong>III. Reward Calculation</strong><br>Live Streaming: +$1 per valid day (capped at 20 days / $20);<br>Invitation Task: +$5 upon completion;<br>Promotion Task: +$2 upon completion;<br>Complete all tasks to unlock an extra +$3 Full Mastery Bonus (Max total: $30).</div></div><p>Data updates may be delayed by 10–15 minutes. Final settlement is subject to monthly backend verification.</p>`));
+    $("#recordsButton")?.addEventListener("click", () => openModal("Invitation Records", `<p>Users who spend 14,000 coins or more are counted as valid invitations.</p><div class="record-table-wrap"><table class="record-table"><thead><tr><th>User ID</th><th>Registration Time</th><th>Spending (Coins)</th></tr></thead><tbody><tr><td>10872654</td><td>2026-08-05 14:32</td><td>18,500</td></tr><tr><td>10398127</td><td>2026-08-12 09:18</td><td>14,200</td></tr><tr><td>10924536</td><td>2026-08-20 20:41</td><td>8,600</td></tr></tbody></table></div>`));
+    document.querySelectorAll("[data-copy]").forEach(btn => btn.addEventListener("click", async () => { try { await navigator.clipboard.writeText(btn.dataset.copy); showToast("Copied successfully"); } catch { showToast("Copied successfully"); } }));
+    document.querySelectorAll("[data-upload]").forEach(btn => btn.addEventListener("click", () => $("#uploadInput").click()));
+  }
+  // ===== Agency（代理身份）内嵌模块 =====
+  const avatarColors = ["#7c3aed","#ec4899","#0ea5e9","#f59e0b","#10b981","#8b5cf6","#ef4444","#06b6d4","#f97316","#6366f1","#14b8a6","#a855f7"];
+  // 每个任务完成组合场景 1 个示例：全部完成 / 任务1+2 / 任务1+3 / 仅任务1 / 都没完成
+  const agencyThisMonth = [
+    { id:"10872654", name:"Luna",  days:20, invites:5, promo:4 },
+    { id:"10398127", name:"Mira",  days:20, invites:5, promo:0 },
+    { id:"10924536", name:"Zoe",   days:20, invites:0, promo:4 },
+    { id:"10712453", name:"Aria",  days:20, invites:0, promo:0 },
+    { id:"10654218", name:"Nova",  days:12, invites:3, promo:2 }
+  ];
+  const agencyLastMonth = [
+    { id:"10872654", name:"Luna",  days:20, invites:5, promo:4, amount:30, status:"paid" },
+    { id:"10398127", name:"Mira",  days:20, invites:5, promo:0, amount:25, status:"paid" },
+    { id:"10924536", name:"Zoe",   days:20, invites:0, promo:4, amount:22, status:"paid" },
+    { id:"10712453", name:"Aria",  days:20, invites:0, promo:0, amount:20, status:"paid" },
+    { id:"10654218", name:"Nova",  days:12, invites:3, promo:2, amount:0,  status:"invalid" }
+  ];
+  function agencyEst(s) { const d = Math.min(s.days,20); const i = s.invites >= 5 ? 5 : 0; const p = s.promo >= 4 ? 2 : 0; const b = (i && p) ? 3 : 0; return d + i + p + b; }
+  function taskRow(label, current, goal) {
+    const ok = current >= goal;
+    return `<div class="sc-row"><span class="sc-label">${label}</span><span class="sc-val ${ok ? "done" : "pending"}">${current} / ${goal} ${ok ? "✓" : "✗"}</span></div>`;
+  }
+  function renderAgencyThisMonth() {
+    const total = agencyThisMonth.reduce((s,m) => s + agencyEst(m), 0);
+    const cards = agencyThisMonth.map((m,i) => {
+      const e = agencyEst(m);
+      const locked = m.days < 20;
+      return `<article class="streamer-card"><div class="sc-head"><span class="sc-avatar" style="background:${avatarColors[i % avatarColors.length]}">${m.name.charAt(0)}</span><div class="sc-id"><div class="sc-name">${m.name}</div><div class="sc-uid">ID: ${m.id}</div></div><div class="sc-est"><div class="sc-est-num ${locked ? "locked" : ""}">$${e.toFixed(2)}</div><div class="sc-est-label">Est. Reward</div></div></div><div class="sc-meta">${taskRow("Valid live day", m.days, 20)}${taskRow("Invite", m.invites, 5)}${taskRow("Promo", m.promo, 4)}</div></article>`;
+    }).join("");
+    return `<div class="stat-bar"><div class="stat-item"><span class="stat-num">${agencyThisMonth.length}</span><span class="stat-label">Approved Streamers</span></div><div class="stat-item"><span class="stat-num">$${total.toFixed(2)}</span><span class="stat-label">Estimated Agency Total</span></div></div><div class="streamer-list">${cards}</div>`;
+  }
+  function renderAgencyLastMonth() {
+    const paidTotal = agencyLastMonth.filter(m => m.status === "paid").reduce((s,m) => s + m.amount, 0);
+    const rows = agencyLastMonth.map((m,i) => {
+      const st = m.status === "paid" ? `<span class="sc-status paid">Paid ($${m.amount.toFixed(2)})</span>` : `<span class="sc-status invalid">Invalid ($0)</span>`;
+      return `<article class="streamer-card"><div class="sc-head"><span class="sc-avatar" style="background:${avatarColors[i % avatarColors.length]}">${m.name.charAt(0)}</span><div class="sc-id"><div class="sc-name">${m.name}</div><div class="sc-uid">ID: ${m.id}</div></div>${st}</div><div class="sc-meta">${taskRow("Valid live day", m.days, 20)}${taskRow("Invite", m.invites, 5)}${taskRow("Promo", m.promo, 4)}</div></article>`;
+    }).join("");
+    return `<div class="stat-bar"><div class="stat-item"><span class="stat-num">${agencyLastMonth.length}</span><span class="stat-label">Settled Streamers</span></div><div class="stat-item"><span class="stat-num">$${paidTotal.toFixed(2)}</span><span class="stat-label">Total Paid</span></div></div><div class="streamer-list">${rows}</div>`;
+  }
+  $("#panelThisMonth").innerHTML = renderAgencyThisMonth();
+  $("#panelLastMonth").innerHTML = renderAgencyLastMonth();
+  document.querySelectorAll("#agencySection .tab").forEach(tab => tab.addEventListener("click", () => {
+    document.querySelectorAll("#agencySection .tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    document.querySelectorAll("#agencySection .tab-panel").forEach(p => p.classList.remove("active"));
+    $(tab.dataset.tab === "thisMonth" ? "#panelThisMonth" : "#panelLastMonth").classList.add("active");
+  }));
+  // 身份切换：主播=原活动页（任务+申请）；代理=任务模块替换为 Agency 数据，无申请按钮
+  const agencySection = $("#agencySection");
+  function setRole(role) {
+    userRole = role;
+    const isAgency = role === "agency";
+    tasksCard.style.display = isAgency ? "none" : "";
+    agencySection.style.display = isAgency ? "" : "none";
+    topApplyButton.style.display = isAgency ? "none" : "";
+    if (isAgency) floatingApply.classList.remove("visible");
+  }
+  $("#uploadInput").addEventListener("change", e => { if (!e.target.files?.length || mode === "last") return; if (datasets.current.photos.length >= 4) return showToast("Maximum 4 images allowed"); datasets.current.photos.push("review"); render(); showToast("Image uploaded for review"); e.target.value = ""; });
+  $("#monthToggle").addEventListener("click", () => { if (isLaunchMonth) return; mode = mode === "current" ? "last" : "current"; render(); showToast(mode === "last" ? "Viewing last month snapshot" : "Viewing current month progress"); });
+  document.querySelectorAll(".debug-btn").forEach(btn => btn.addEventListener("click", () => openModal("调试场景", `<div class="modal-list"><button class="debug-option" type="button" data-role="streamer"><strong>身份：主播</strong><span>显示原活动页（任务模块 + 申请入口）</span></button><button class="debug-option" type="button" data-role="agency"><strong>身份：代理</strong><span>任务模块替换为 My Agency Streamers，隐藏申请按钮</span></button>${debugScenarios.map((scenario, index) => `<button class="debug-option" type="button" data-scenario="${index}"><strong>${scenario.label}</strong><span>${scenario.name.replace(/^场景\d+：/, "")}</span></button>`).join("")}</div>`)));
+  function bindDebugScenarioOptions() {
+    document.querySelectorAll("[data-role]").forEach(button => button.addEventListener("click", () => { setRole(button.dataset.role); showToast(button.dataset.role === "agency" ? "已切换为代理身份" : "已切换为主播身份"); closeModal(); }));
+    document.querySelectorAll("[data-scenario]").forEach(button => button.addEventListener("click", () => {
+      scenarioIndex = Number(button.dataset.scenario);
+      const scenario = debugScenarios[scenarioIndex];
+      mode = "current";
+      if (scenario.action === "incrementDay") {
+        datasets.current = { ...datasets.current, days:Math.min(datasets.current.days + 1, 20) };
+        showToast(`有效直播天数已增加至 ${datasets.current.days}/20`);
+      } else {
+        datasets.current = { ...scenario, ...invitationData };
+        showToast(scenario.name);
+      }
+      render();
+      closeModal();
+    }));
+  }
+  $("#modalClose").addEventListener("click", closeModal); $("#modalBackdrop").addEventListener("click", e => { if (e.target.id === "modalBackdrop") closeModal(); });
+  $("#backButton").addEventListener("click", () => { if (document.referrer) history.back(); else window.location.href = applyUrl; });
+  const floatingApply = $("#floatingApply");
+  const topApplyButton = $("#topApplyButton");
+  const applyObserver = new IntersectionObserver(([entry]) => {
+    floatingApply.classList.toggle("visible", !entry.isIntersecting && userRole === "streamer");
+  }, { threshold: 0.15 });
+  applyObserver.observe(topApplyButton);
+  $("#ruleButton").addEventListener("click", () => { window.location.href = rulesUrl; });
+  document.querySelectorAll(".apply-btn").forEach(btn => btn.addEventListener("click", () => { window.location.href = applyUrl; }));
+  setRole(userRole);
+  render();
+</script>
+</body>
+</html>
