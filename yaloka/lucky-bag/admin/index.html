@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>红包记录后台预览</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fa;color:#263448;font:14px Arial,"Microsoft YaHei",sans-serif}main{padding:28px}.muted{color:#98a4b3;font-size:12px}h1{font-size:24px}.card,.summary-card{background:#fff;border:1px solid #e6ebf2;border-radius:10px;box-shadow:0 2px 9px #24314a08}.card{padding:22px;margin:20px 0}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.summary-card{padding:18px 20px}.label{font-size:13px;color:#7b899e;margin-bottom:10px}.value{font-size:24px;font-weight:700}.filters{display:grid;grid-template-columns:repeat(3,minmax(250px,1fr));gap:16px 22px}.filters>div{display:flex;align-items:center;gap:10px}.filters label{white-space:nowrap;min-width:68px;color:#637084;font-size:13px}input,select{height:38px;width:100%;border:1px solid #dbe2ec;border-radius:6px;padding:0 9px;background:#fff}.date{display:flex;gap:6px;flex:1}.buttons{text-align:right;margin-top:18px}button{padding:9px 17px;border:1px solid #d9e1ec;background:#fff;border-radius:6px;cursor:pointer;color:#52627b}.primary{background:#326be7;color:#fff;border-color:#326be7}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;white-space:nowrap;font-size:12px}th,td{padding:13px 11px;border-bottom:1px solid #edf0f5;text-align:left}th{background:#f7f9fc;color:#67768b;line-height:1.25}.unit{font-size:11px;color:#8a96a8}.sender{display:flex;align-items:center;gap:8px}.avatar{width:34px;height:34px;border-radius:4px;object-fit:cover}.tag{padding:5px 8px;border-radius:5px;background:#edf4ff;color:#3470c9}.已过期{background:#f0f1f4;color:#7c8696}.已抢完{background:#e6f8ee;color:#1b8853}.待开启{background:#fff4df;color:#ae7b23}.link{border:0;color:#326be7;background:none;padding:0}.pager{display:flex;justify-content:space-between;align-items:center;margin-top:18px;color:#7b899e}.mask{position:fixed;inset:0;background:#101e3588;display:none;align-items:center;justify-content:center;padding:20px}.modal{background:#fff;width:min(850px,100%);border-radius:10px;padding:24px;max-height:90vh;overflow:auto}.top,.detail-title{display:flex;justify-content:space-between;align-items:center}.overview{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:#f6f8fb;padding:17px;border-radius:8px;margin:22px 0}.overview small{display:block;color:#8895a6;margin-bottom:9px}.detail-progress{display:flex;gap:18px;color:#66758a}@media(max-width:900px){.filters,.summary,.overview{grid-template-columns:repeat(2,1fr)}}@media(max-width:540px){main{padding:12px}.filters,.summary,.overview{grid-template-columns:1fr}}
+</style></head>
+<body><main>
+<div class="muted">活动管理 / 红包记录</div><h1>红包记录</h1>
+<div class="summary">
+<div class="summary-card"><div class="label">发送数量</div><div class="value" id="sumCount">0</div></div>
+<div class="summary-card"><div class="label">红包发送金额（Coin）</div><div class="value" id="sumAmount">0</div></div>
+<div class="summary-card"><div class="label">平台手续费（Coin）</div><div class="value" id="sumFee">0</div></div>
+<div class="summary-card"><div class="label">退款总金币（Coin）</div><div class="value" id="sumRefund">0</div></div>
+</div>
+<div class="card"><div class="filters">
+<div><label>发送人</label><input id="sender" placeholder="请输入 UID / 昵称"></div>
+<div><label>房间 ID</label><input id="room" placeholder="请输入房间 ID"></div>
+<div><label>红包类型</label><select id="type"><option value="">全部</option><option>房间红包</option><option>世界红包</option></select></div>
+<div><label>红包状态</label><select id="status"><option value="">全部</option><option>待开启</option><option>可领取</option><option>已抢完</option><option>已过期</option></select></div>
+<div><label>是否退款</label><select id="refund"><option value="">全部</option><option>是</option><option>否</option></select></div>
+<div><label>发送日期</label><div class="date"><input type="date" id="from"><input type="date" id="to"></div></div>
+</div><div class="buttons"><button id="reset">重置</button> <button class="primary" id="search">查询</button></div></div>
+<div class="card"><div class="scroll"><table><thead><tr>
+<th>红包 ID</th><th>房间 ID</th><th>红包类型</th><th>发送人</th><th>开启<br>倒计时</th>
+<th>发送金额<br><span class="unit">(Coin)</span></th><th>平台手续费<br><span class="unit">(Coin)</span></th>
+<th>可领取总额<br><span class="unit">(Coin)</span></th><th>总份数</th><th>领取进度</th>
+<th>剩余金币<br><span class="unit">(Coin)</span></th><th>是否退款</th><th>红包状态</th><th>发送时间</th><th>操作</th>
+</tr></thead><tbody id="rows"></tbody></table></div><div class="pager"><span id="total"></span><span>演示数据</span></div></div>
+</main>
+<div class="mask" id="mask"><div class="modal"><div class="top"><h2>领取明细</h2><button id="close">关闭 ×</button></div>
+<div class="overview" id="overview"></div>
+<div class="detail-title"><h3>成功领取记录</h3><div class="detail-progress" id="detailProgress"></div></div>
+<div class="scroll"><table><thead><tr><th>用户 UID</th><th>用户昵称</th><th>领取金额<br><span class="unit">(Coin)</span></th><th>领取时间</th></tr></thead><tbody id="details"></tbody></table></div>
+</div></div>
+<script>
+var $=function(id){return document.getElementById(id)}, pad=function(n){return String(n).padStart(2,"0")};
+function day(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+function time(d){return day(d)+" "+pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds())}
+var now=new Date(),base=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+var data=Array.from({length:36},function(_,i){
+ var type=i%2?"房间红包":"世界红包", amount=(type==="世界红包"?[150000,300000,500000,1000000]:[1000,10000,50000,100000])[i%4];
+ var shares=(type==="世界红包"?[10,30,50,80,100]:[5,10,20,30,50])[i%5],status=["可领取","已过期","已抢完","待开启"][i%4],delay=["Now","1 min","3 min","5 min"][i%4];
+ var claimed=status==="已抢完"?shares:status==="待开启"?0:Math.floor(shares*.6),available=amount*.95,taken=status==="已抢完"?available:Math.floor(available*claimed/shares);
+ var sent=new Date(base.getTime()-(i%12)*86400000+(10+i%10)*3600000),open=new Date(sent.getTime()+({"Now":0,"1 min":60000,"3 min":180000,"5 min":300000}[delay])),expire=new Date(open.getTime()+600000);
+ var refund=status==="已过期"&&i%3?"是":"否";
+ return {id:"LB"+day(sent).replaceAll("-","")+String(i+1).padStart(5,"0"),room:String(880010+i%8),type:type,uid:String(120000+i%12),nick:["Mia","Leo","Alice","星辰","Nina"][i%5],amount:amount,fee:amount-available,available:available,shares:shares,claimed:claimed,taken:taken,status:status,delay:delay,refund:refund,refundAmount:refund==="是"?Math.max(0,available-taken):0,sent:sent,open:open,expire:expire};
+});
+function defaults(){$("from").value=day(new Date(base.getTime()-6*86400000));$("to").value=day(base)}
+function query(){
+ var s=$("sender").value.trim().toLowerCase();
+ var baseRows=data.filter(function(r){return(!s||(r.uid===s||r.nick.toLowerCase().includes(s)))&&(!$("room").value||r.room===$("room").value.trim())&&(!$("type").value||r.type===$("type").value)&&day(r.sent)>=$("from").value&&day(r.sent)<=$("to").value});
+ $("sumCount").textContent=baseRows.length.toLocaleString();$("sumAmount").textContent=Math.round(baseRows.reduce(function(a,r){return a+r.amount},0)).toLocaleString();$("sumFee").textContent=Math.round(baseRows.reduce(function(a,r){return a+r.fee},0)).toLocaleString();$("sumRefund").textContent=Math.round(baseRows.reduce(function(a,r){return a+r.refundAmount},0)).toLocaleString();
+ var rows=baseRows.filter(function(r){return(!$("status").value||r.status===$("status").value)&&(!$("refund").value||r.refund===$("refund").value)}).sort(function(a,b){return b.sent-a.sent});
+ $("rows").innerHTML=rows.map(function(r){return '<tr><td>'+r.id+'</td><td>'+r.room+'</td><td>'+r.type+'</td><td><div class="sender"><img class="avatar" src="https://i.pravatar.cc/68?img='+((Number(r.uid)%70)+1)+'"><div><div class="muted">UID '+r.uid+'</div><b>'+r.nick+'</b></div></div></td><td>'+r.delay+'</td><td>'+r.amount.toLocaleString()+'</td><td>'+Math.round(r.fee).toLocaleString()+'</td><td>'+Math.round(r.available).toLocaleString()+'</td><td>'+r.shares+'</td><td>'+r.claimed+'/'+r.shares+' 份<br><span class="muted">'+Math.round(r.taken).toLocaleString()+'/'+Math.round(r.available).toLocaleString()+' Coin</span></td><td>'+Math.round(r.available-r.taken).toLocaleString()+'</td><td>'+r.refund+'</td><td><span class="tag '+r.status+'">'+r.status+'</span></td><td>'+time(r.sent)+'</td><td><button class="link" onclick="detail(\''+r.id+'\')">查看领取明细</button></td></tr>'}).join("")||'<tr><td colspan="15" style="text-align:center;padding:40px">暂无符合条件的记录</td></tr>';
+ $("total").textContent="共 "+rows.length+" 条";
+}
+function detail(id){
+ var r=data.find(function(x){return x.id===id});$("mask").style.display="flex";
+ var items=[["红包 ID",r.id],["发送人 UID",r.uid],["红包类型",r.type],["是否退款",r.refund],["开启倒计时",r.delay],["发送时间",time(r.sent)],["开启时间",time(r.open)],["失效时间",time(r.expire)]];
+ $("overview").innerHTML=items.map(function(x){return "<div><small>"+x[0]+"</small><strong>"+x[1]+"</strong></div>"}).join("");
+ $("detailProgress").innerHTML="<span>领取份数 <strong>"+r.claimed+"/"+r.shares+"</strong></span><span>领取金币 <strong>"+Math.round(r.taken).toLocaleString()+"/"+Math.round(r.available).toLocaleString()+"</strong></span>";
+ var claims=Array.from({length:r.claimed},function(_,j){return {uid:800000+j,nick:["Luna","Ryan","小宇","Sofia"][j%4],amount:Math.floor(r.taken/Math.max(1,r.claimed)),at:new Date(r.open.getTime()+j*7000)}});
+ $("details").innerHTML=claims.reverse().map(function(c){return "<tr><td>"+c.uid+"</td><td>"+c.nick+"</td><td>"+c.amount.toLocaleString()+"</td><td>"+time(c.at)+"</td></tr>"}).join("")||'<tr><td colspan="4" style="text-align:center;padding:40px">暂无领取记录</td></tr>';
+}
+$("search").onclick=query;$("reset").onclick=function(){$("sender").value="";$("room").value="";["type","status","refund"].forEach(function(x){$(x).value=""});defaults();query()};$("close").onclick=function(){$("mask").style.display="none"};$("mask").onclick=function(e){if(e.target===$("mask"))$("mask").style.display="none"};defaults();query();
+</script></body></html>
