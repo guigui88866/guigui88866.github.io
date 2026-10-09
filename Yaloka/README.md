@@ -2,7 +2,7 @@
 
 ## 红包
 
-- [查看需求](./lucky-bag/)
+- [查看需求](./红包/)
 - [后台 H5 预览](https://guigui88866.github.io/yaloka/lucky-bag/admin/)
 
 ## 充值活动
