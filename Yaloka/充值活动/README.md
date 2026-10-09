@@ -2,4 +2,4 @@
 
 - [前端需求](./需求文档/充值活动-前端需求.md)
 - [服务端业务需求](./需求文档/充值活动-服务端业务需求.md)
-- [H5 预览](https://guigui88866.github.io/yaloka/recharge/)
+- [H5 预览](https://guigui88866.github.io/Yaloka/%E5%85%85%E5%80%BC%E6%B4%BB%E5%8A%A8/)
