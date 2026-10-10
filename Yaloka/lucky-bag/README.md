@@ -10,4 +10,4 @@ Yaloka 红包功能需求资料。
 
 ## 在线预览
 
-- [红包后台 H5 预览](https://guigui88866.github.io/Yaloka/%E7%BA%A2%E5%8C%85/%E7%BA%A2%E5%8C%85-%E5%90%8E%E5%8F%B0%E9%A2%84%E8%A7%88.html)
+- [红包后台 H5 预览](https://guigui88866.github.io/Yaloka/lucky-bag/admin.html)
