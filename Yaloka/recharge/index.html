@@ -17,11 +17,11 @@
 <h3>V. Reward Distribution</h3><ul><li>After each recharge period ends, rewards will be automatically distributed based on the highest tier reached during that period. No manual claim is required.</li><li>To claim your Custom ID reward, please contact Customer Support.</li><li>A system notification will be sent once the rewards have been successfully distributed.</li></ul><h3>VI. 通用声明文本</h3></article></section><section class="previewpage" id="previewpage" hidden role="dialog" aria-modal="true" aria-label="Reward animation preview"><button class="previewclose" id="previewback" aria-label="Close preview">×</button><div class="previewart" id="previewart"></div></section></div><script>
 const vip=(i,d)=>({name:'VIP'+(i+1),detail:d+'天',type:'small'});
 const frame=d=>({name:'头像框',detail:d+'天',type:'small'});
-const money=(n,name='游戏币')=>({name,detail:n.toLocaleString('en-US'),type:'small'});
+const money=(n,name='金豆')=>({name,detail:n.toLocaleString('en-US'),type:'small'});
 const ride=(name,d)=>({name,detail:d+'天',type:'large'});
 const data={
-daily:{label:'Daily',amount:80000,tiers:[20000,40000,200000,500000,1000000,2000000].map((coins,i)=>({coins,rewards:i<3?[vip(i,7),frame(7)]:[vip(i,7),frame(7),money([30000,80000,200000][i-3]),ride(['掘金','龙魂战骑','极光战神'][i-3],7)]}))},
-weekly:{label:'Weekly',amount:1800000,tiers:[1000000,2000000,3000000,4000000,6000000,8000000].map((coins,i)=>({coins,rewards:[vip(i,15),frame(15),money([50000,120000,210000,320000,540000,800000][i]),ride(['幻影风神','保时捷','迈凯伦','法拉利','兰博基尼','布加迪'][i],15)]}))},
+daily:{label:'Daily',amount:80000,tiers:[20000,40000,200000,500000,1000000,2000000].map((coins,i)=>({coins,rewards:i<3?[vip(i,7),frame(7)]:[vip(i,7),frame(7),money([30000,80000,200000][i-3]),ride(['龙魂战骑','兰博基尼','布加迪'][i-3],7)]}))},
+weekly:{label:'Weekly',amount:1800000,tiers:[1000000,2000000,3000000,4000000,6000000,8000000].map((coins,i)=>({coins,rewards:[vip(i,15),frame(15),money([50000,120000,210000,320000,540000,800000][i]),ride(['保时捷','迈凯伦','法拉利','幻影风神','极光战神','凤凰逐日'][i],15)]}))},
 monthly:{label:'Monthly',amount:3500000,tiers:[5000000,10000000,15000000,20000000,30000000,40000000].map((coins,i)=>({coins,rewards:[vip(i,30),frame(30),{name:'定制靓号',detail:'30天',type:'small'},{name:'徽章',detail:(i===5?3:30)+'天',type:'small'},ride(['苍狼砺行','黑豹逐锋','金豹驰野','猛虎破途','从林雄狮','鹰驰丛林'][i],30),money([100000,250000,450000,700000,1200000,2000000][i],'金币')]}))}};
 let current='daily';const $=id=>document.getElementById(id);const fmt=n=>n.toLocaleString('en-US');
 const canPreview=r=>r.type==='large'||['头像框','徽章'].includes(r.name);
