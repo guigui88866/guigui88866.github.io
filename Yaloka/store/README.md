@@ -12,6 +12,13 @@
 - [后台商城列表](admin.html#products)
 - [后台购买记录](admin.html#orders)
 
+## 文件用途
+
+- `index.html`：客户端商城的页面入口，负责加载商城原型。
+- `admin.html`：运营后台的统一页面入口，包含「商城列表」和「购买记录」，通过左侧菜单切换。
+- `app.js`：客户端商城与运营后台共用的 JavaScript 文件，处理商品展示、TAB 切换、商品预览、购买弹窗、模拟购买与充值、后台商品配置、购买记录查询等交互逻辑。
+- `orders.html`：旧版购买记录独立入口。当前统一通过 `admin.html#orders` 进入购买记录；若旧入口文件仍保留，仅用于跳转兼容，不再维护独立页面。
+
 ## 在线预览
 
 - [移动端商城](https://guigui88866.github.io/Yaloka/store/)
