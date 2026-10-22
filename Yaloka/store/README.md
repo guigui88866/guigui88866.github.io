@@ -13,6 +13,12 @@
 - [后台购买记录](admin.html#orders)
 - [后台靓号商品配置](admin.html#ids)
 
+## 本次靓号商城草稿源码
+
+- [客户端 Store（草稿分支）](https://github.com/guigui88866/guigui88866.github.io/blob/draft/store-id-mall-20261022/Yaloka/store/index.html)
+- [商城交互逻辑（草稿分支）](https://github.com/guigui88866/guigui88866.github.io/blob/draft/store-id-mall-20261022/Yaloka/store/app.js)
+- [运营后台（草稿分支）](https://github.com/guigui88866/guigui88866.github.io/blob/draft/store-id-mall-20261022/Yaloka/store/admin.html)
+
 ## 文件用途
 
 - `index.html`：客户端商城的页面入口，负责加载商城原型。
@@ -21,6 +27,8 @@
 - `orders.html`：旧版购买记录独立入口。当前统一通过 `admin.html#orders` 进入购买记录；若旧入口文件仍保留，仅用于跳转兼容，不再维护独立页面。
 
 ## 在线预览
+
+> 当前在线预览指向 main 已发布版本；本次靓号商城改动仍在草稿分支，尚未发布到 GitHub Pages。
 
 - [移动端商城](https://guigui88866.github.io/Yaloka/store/)
 - [后台商城列表](https://guigui88866.github.io/Yaloka/store/admin.html#products)
