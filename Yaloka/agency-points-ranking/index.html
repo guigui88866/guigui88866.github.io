@@ -26,7 +26,7 @@ function renderReward(t,group='Agency'){
   };
   const ranks=['TOP 1','TOP 2','TOP 3'],monthly=t==='Monthly';
   const itemsByRank=monthly?configs.Monthly[monthlyRewardGroup]:configs[t];
-  const groupContent=monthly?`<div class="reward-group-tabs"><button class="reward-group-tab ${monthlyRewardGroup==='Agency'?'active':''}" onclick="renderReward('Monthly','Agency')">Agency Rewards</button><button class="reward-group-tab ${monthlyRewardGroup==='Host'?'active':''}" onclick="renderReward('Monthly','Host')">Host Rewards</button></div>`:'';
+  const groupContent=monthly?`<div class="reward-group-tabs"><button class="reward-group-tab ${monthlyRewardGroup==='Agency'?'active':''}" onclick="renderReward('Monthly','Agency')">Agency</button><button class="reward-group-tab ${monthlyRewardGroup==='Host'?'active':''}" onclick="renderReward('Monthly','Host')">Host</button></div>`:'';
   const sections=itemsByRank.map((items,i)=>`<section class="rank-reward"><div class="rank-reward-title">${ranks[i]}</div><div class="rewardcards ${monthly?'compact':''}">${items.map(r=>`<div class="rewardcard"><div class="reward-thumb">${r[2]}</div><div class="rewardname"><b>${r[0]}</b>${r[1]?`<br>${r[1]}`:''}</div></div>`).join('')}</div></section>`).join('');
   document.getElementById('sheetContent').innerHTML=`<h2>Rewards</h2><div class="rewardtabs">${['Daily','Weekly','Monthly'].map(x=>`<button class="rewardtab ${x===t?'active':''}" onclick="renderReward('${x}')">${x} Ranking</button>`).join('')}</div>${groupContent}<div id="rewardContent">${sections}</div>`;
 }
