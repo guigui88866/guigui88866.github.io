@@ -4,10 +4,9 @@
 
 ## 文件说明
 
-| 英文文件名 | 中文说明 |
+| 文件名 | 中文说明 |
 |---|---|
-| `docs/server-requirements.md` | 跨房 PK 服务端需求 |
-| `docs/client-requirements.md` | 跨房 PK 客户端需求 |
-| `docs/admin-operations-requirements.md` | 跨房 PK 后台运营需求 |
+| `docs/跨房PK-服务端需求.md` | 跨房 PK 服务端需求 |
+| `docs/跨房PK-客户端需求.md` | 跨房 PK 客户端需求 |
+| `docs/跨房PK-后台运营需求.md` | 跨房 PK 后台运营需求 |
 | `admin/host-pk-record-preview.html` | 跨房 PK 运营后台预览页面 |
-
