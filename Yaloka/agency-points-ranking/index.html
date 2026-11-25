@@ -67,7 +67,7 @@
 .reward-details{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px 2px}
 .reward-details b{font-size:12px;color:#ffe7a5}.reward-details small{font-size:10px;color:#d9bf83;white-space:nowrap}
 @media(max-width:370px){.reward-thumb-wide{height:78px;padding:0 14px}}
-.fixedlinks button[hidden]{display:none!important}</style>
+.fixedlinks button[hidden]{display:none!important}.user-status.ranking-status{height:82px;left:0;right:auto;width:100%;margin:0;padding:10px 18px;gap:12px;border:0;border-top:1px solid #d5ad61;border-radius:0;background:linear-gradient(100deg,#261807f7,#503414f7 55%,#241506f7);box-shadow:0 -5px 18px #0009;color:#ffe7b0}.ranking-status .user-rank{width:24px;text-align:center;font-weight:bold;color:#f1d48a;font-size:16px}.ranking-status .user-avatar{width:52px;height:52px;flex:none;border:2px solid #e2c66b;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#473116,#100b06 72%);color:#ffe0a0;font-size:22px;box-shadow:0 0 12px #d29e4055}.ranking-status .user-info{flex:1;min-width:0;font-size:12px;text-align:left}.ranking-status .user-info strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff;font-size:12px}.ranking-status .user-score{margin-top:5px;color:#f5dc83;font-size:12px;font-weight:bold}.ranking-status .user-hosts{display:flex;gap:8px}.ranking-status .user-hosts .host-medal{width:36px;height:36px}</style>
 </head>
 <body>
 <div class="device">
@@ -226,12 +226,7 @@
 <span class="entry-label">Rewards</span>
 </button>
 </div>
-<div class="user-status ranking-status" id="rankingStatus">
-<div class="user-avatar">头像</div>
-<div class="user-info">
-<strong>Peak Points: 500,000,000</strong>
-<div class="user-score">Valid Hosts: 55</div>
-</div>
+<div class="user-status ranking-status" id="rankingStatus"><span class="user-rank">-</span><div class="user-avatar">✦</div><div class="user-info"><strong>Your Agency</strong><div class="user-score"><i class="pointicon">🏆</i> 0</div></div><div class="user-hosts"><span class="host-medal gold"><img src="https://i.pravatar.cc/60?img=12"></span><span class="host-medal silver"><img src="https://i.pravatar.cc/60?img=32"></span><span class="host-medal bronze"><img src="https://i.pravatar.cc/60?img=47"></span></div></div>
 </div>
 <div class="user-status levels-status" id="levelsStatus" hidden>
 <div class="user-avatar">头像</div>
