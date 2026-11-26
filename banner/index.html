@@ -63,7 +63,7 @@ select{cursor:pointer}
    <div class="form-row"><div class="field-label required">开屏标题:</div><div class="control"><input placeholder="请输入开屏标题"></div></div>
    <div class="form-row"><div class="field-label required">展示时间:</div><div class="control time-range"><input type="datetime-local" aria-label="展示开始时间"><span>至</span><input type="datetime-local" aria-label="展示结束时间"></div></div>
    <div class="form-row"><div class="field-label">展示周期:</div><div class="control"><select id="period"><option value="" selected>常显</option><option value="daily">每天</option><option value="weekly">每周</option><option value="monthly">每月</option></select></div></div>
-   <div class="form-row" id="triggerRow" hidden><div class="field-label">周期触发时间:</div><div class="inline" id="triggerConfig"></div></div>
+   <div class="form-row" id="firstTriggerRow" hidden><div class="field-label">首次触发时间:</div><div class="control"><input type="datetime-local" id="firstTriggerTime" aria-label="首次触发时间"></div></div>
    <div class="form-row" id="durationRow" hidden><div class="field-label" id="durationLabel">展示天数:</div><div class="inline"><div class="control number"><input type="number" min="1" id="days" placeholder="请输入"></div><span id="durationUnit">天</span></div></div>
 
    <div class="form-row"><div class="field-label required">展示时长:</div><div class="inline"><div class="control number"><input type="number" min="1" value="3"></div><span class="unit">秒</span></div></div>
@@ -82,16 +82,14 @@ select{cursor:pointer}
  </div>
 </div>
 <script>
-const period=document.getElementById('period'), config=document.getElementById('triggerConfig'), days=document.getElementById('days');
+const period=document.getElementById('period'), days=document.getElementById('days');
 function render(){
  const p=period.value;
- document.getElementById('triggerRow').hidden=!p;
+ document.getElementById('firstTriggerRow').hidden=!p;
  document.getElementById('durationRow').hidden=!p;
  document.getElementById('durationLabel').textContent=p==='daily'?'展示小时数:':'展示天数:';
  document.getElementById('durationUnit').textContent=p==='daily'?'小时':'天';
  days.value='';
- const time='<input class="control time-input" type="time" aria-label="触发时间">';
- config.innerHTML=p==='weekly'?'<select class="control small-select"><option value="">请选择星期</option>'+['一','二','三','四','五','六','日'].map(x=>'<option>星期'+x+'</option>').join('')+'</select>'+time:p==='monthly'?'<select class="control day-select"><option value="">请选择日期</option>'+Array.from({length:31},(_,i)=>'<option>每月 '+(i+1)+' 日</option>').join('')+'</select>'+time:p?time:'';
 }
 period.addEventListener('change',render);render();
 const h5Url=document.getElementById('h5Url'),h5ModeRow=document.getElementById('h5ModeRow');
