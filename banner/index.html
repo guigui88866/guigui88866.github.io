@@ -70,7 +70,8 @@ select{cursor:pointer}
    <div class="form-row"><div class="field-label required">展示对象:</div><div class="control"><select><option>全部用户</option><option>新用户</option><option>指定用户</option></select></div></div>
    <div class="form-row"><div class="field-label required">地区标识:</div><div class="control"><select><option>全部</option><option>印度</option><option>巴基斯坦</option><option>沙特阿拉伯</option><option>土耳其</option></select></div></div>
    <div class="form-row"><div class="field-label">内容链接:</div><div class="inline" style="width:100%"><div class="control" style="width:90px"><select><option>前缀选择</option><option>https://</option><option>http://</option></select></div><div class="control" style="flex:1"><input placeholder="请输入内容链接"></div></div></div>
-   <div class="form-row"><div class="field-label">开屏H5链接:</div><div class="control"><input placeholder="请输入开屏H5链接"></div></div>
+   <div class="form-row"><div class="field-label">开屏H5链接:</div><div class="control"><input id="h5Url" placeholder="请输入开屏H5链接"></div></div>
+   <div class="form-row" id="h5ModeRow" hidden><div class="field-label">H5展示方式:</div><div class="inline"><label style="display:flex;align-items:center;gap:6px;margin-right:16px;cursor:pointer"><input style="width:14px;height:14px;accent-color:#409eff" type="radio" name="h5Mode" value="single" checked>单张展示</label><label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input style="width:14px;height:14px;accent-color:#409eff" type="radio" name="h5Mode" value="multi">多张展示</label></div></div>
    <div class="form-row"><div class="field-label">背景色:</div><div class="color-row"><span>#101010</span><input type="color" value="#101010" style="width:30px;height:30px;padding:0;border:0"></div></div>
 
    <div class="form-row top"><div class="field-label required">开屏图(简体):</div><div><div class="upload" onclick="document.getElementById('file').click()">＋</div><input id="file" type="file" accept="image/*" hidden></div></div>
@@ -93,6 +94,9 @@ function render(){
  config.innerHTML=p==='weekly'?'<select class="control small-select"><option value="">请选择星期</option>'+['一','二','三','四','五','六','日'].map(x=>'<option>星期'+x+'</option>').join('')+'</select>'+time:p==='monthly'?'<select class="control day-select"><option value="">请选择日期</option>'+Array.from({length:31},(_,i)=>'<option>每月 '+(i+1)+' 日</option>').join('')+'</select>'+time:p?time:'';
 }
 period.addEventListener('change',render);render();
+const h5Url=document.getElementById('h5Url'),h5ModeRow=document.getElementById('h5ModeRow');
+function renderH5Mode(){h5ModeRow.hidden=!h5Url.value.trim();if(h5ModeRow.hidden)document.querySelector('input[name="h5Mode"][value="single"]').checked=true;}
+h5Url.addEventListener('input',renderH5Mode);renderH5Mode();
 </script>
 </body>
 </html>
