@@ -62,7 +62,7 @@ select{cursor:pointer}
   <div class="content">
    <div class="form-row"><div class="field-label required">开屏标题:</div><div class="control"><input placeholder="请输入开屏标题"></div></div>
    <div class="form-row"><div class="field-label required">展示时间:</div><div class="control time-range"><input type="datetime-local" aria-label="展示开始时间"><span>至</span><input type="datetime-local" aria-label="展示结束时间"></div></div>
-   <div class="form-row"><div class="field-label">展示周期:</div><div class="control"><select id="period"><option value="">请选择展示周期</option><option value="daily">每天</option><option value="weekly">每周</option><option value="monthly">每月</option></select></div></div>
+   <div class="form-row"><div class="field-label">展示周期:</div><div class="control"><select id="period"><option value="" selected>常显</option><option value="daily">每天</option><option value="weekly">每周</option><option value="monthly">每月</option></select></div></div>
    <div class="form-row" id="triggerRow" hidden><div class="field-label">周期触发时间:</div><div class="inline" id="triggerConfig"></div></div>
    <div class="form-row" id="durationRow" hidden><div class="field-label" id="durationLabel">展示天数:</div><div class="inline"><div class="control number"><input type="number" min="1" id="days" placeholder="请输入"></div><span id="durationUnit">天</span></div></div>
 
