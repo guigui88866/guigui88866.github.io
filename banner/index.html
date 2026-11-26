@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新增开屏 - 操作原型</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f3f5;font:14px "Microsoft YaHei",Arial,sans-serif;color:#333}
+.page{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px}
+.modal{width:620px;background:#fff;border-radius:3px;box-shadow:0 4px 24px rgba(0,0,0,.16);display:flex;flex-direction:column;max-height:calc(100vh - 48px)}
+.header{height:58px;flex:none;border-bottom:1px solid #e8e8e8;padding:0 22px;display:flex;align-items:center;justify-content:space-between;font-size:16px}
+.close{font-size:20px;color:#999;cursor:pointer;font-weight:300}
+.content{padding:20px 28px 16px 14px;overflow:auto}
+.form-row{display:grid;grid-template-columns:78px 1fr;align-items:center;margin:12px 0;min-height:32px}
+.form-row.top{align-items:start}
+.field-label{text-align:right;padding-right:12px;color:#555;line-height:32px}
+.required:before{content:"*";color:#f56c6c;margin-right:5px}
+.control{height:32px;border:1px solid #dcdfe6;border-radius:4px;display:flex;align-items:center;background:#fff;min-width:0}
+input,select{font:inherit;color:#555;border:0;outline:0;background:transparent;width:100%;min-width:0;padding:0 10px;height:30px}
+input::placeholder{color:#a8abb2}
+select{cursor:pointer}
+.time-range{display:grid;grid-template-columns:1fr 28px 1fr;align-items:center;text-align:center}
+.time-range input{text-align:center}
+.time-range span{color:#333}
+.number{width:108px}
+.number input{width:72px;text-align:center}
+.unit{margin-left:8px;color:#555}
+.hint{font-size:12px;color:#999;margin-top:5px;line-height:1.5}
+.section-title{font-weight:600;margin:22px 0 10px 78px;display:flex;align-items:center;gap:8px}
+.tag{font-size:11px;color:#409eff;background:#ecf5ff;padding:2px 6px;border-radius:3px;font-weight:400}
+.rule-box{margin-left:78px;border:1px solid #ebeef5;border-radius:4px;padding:12px 14px;background:#fcfcfd}
+.rule-row{display:grid;grid-template-columns:92px 1fr;align-items:center;margin:10px 0}
+.rule-label{color:#606266}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio{border:1px solid #dcdfe6;border-radius:4px;padding:6px 15px;cursor:pointer;color:#606266;background:#fff}
+.radio.active{border-color:#409eff;color:#409eff;background:#ecf5ff}
+.inline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.small-select{width:116px}
+.time-input{width:118px}
+.day-select{width:130px}
+.preview-note{margin:10px 0 0 78px;color:#909399;font-size:12px;line-height:1.6}
+.color-row{display:flex;align-items:center;gap:10px}
+.color-swatch{width:28px;height:28px;border:1px solid #dcdfe6;border-radius:3px;background:#101010;cursor:pointer}
+.upload{width:132px;height:90px;border:1px dashed #c0c4cc;border-radius:4px;background:#fafafa;display:flex;align-items:center;justify-content:center;color:#999;font-size:28px;cursor:pointer}
+.upload small{display:block;font-size:11px}
+.footer{height:60px;flex:none;border-top:1px solid #ebeef5;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;gap:10px}
+.btn{height:32px;padding:0 18px;border-radius:4px;border:1px solid #dcdfe6;background:#fff;color:#606266;cursor:pointer}
+.btn.primary{background:#409eff;border-color:#409eff;color:#fff}
+.divider{border-top:1px solid #f0f0f0;margin:16px 0}
+@media(max-width:650px){.page{padding:0}.modal{width:100%;max-height:100vh;min-height:100vh}.content{padding-right:14px}.form-row{grid-template-columns:86px 1fr}.section-title,.rule-box,.preview-note{margin-left:86px}.rule-row{grid-template-columns:82px 1fr}}
+[hidden]{display:none!important}
+.form-row{grid-template-columns:106px 1fr}
+.field-label{white-space:nowrap;font-size:13px}
+@media(max-width:650px){.form-row{grid-template-columns:106px 1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+ <div class="modal">
+  <div class="header"><span>新增开屏</span><span class="close" title="关闭">×</span></div>
+  <div class="content">
+   <div class="form-row"><div class="field-label required">开屏标题:</div><div class="control"><input placeholder="请输入开屏标题"></div></div>
+   <div class="form-row"><div class="field-label required">展示时间:</div><div class="control time-range"><input type="datetime-local" aria-label="展示开始时间"><span>至</span><input type="datetime-local" aria-label="展示结束时间"></div></div>
+   <div class="form-row"><div class="field-label">展示周期:</div><div class="control"><select id="period"><option value="">请选择展示周期</option><option value="daily">每天</option><option value="weekly">每周</option><option value="monthly">每月</option></select></div></div>
+   <div class="form-row" id="triggerRow" hidden><div class="field-label">周期触发时间:</div><div class="inline" id="triggerConfig"></div></div>
+   <div class="form-row" id="durationRow" hidden><div class="field-label" id="durationLabel">展示天数:</div><div class="inline"><div class="control number"><input type="number" min="1" id="days" placeholder="请输入"></div><span id="durationUnit">天</span></div></div>
+
+   <div class="form-row"><div class="field-label required">展示时长:</div><div class="inline"><div class="control number"><input type="number" min="1" value="3"></div><span class="unit">秒</span></div></div>
+   <div class="form-row"><div class="field-label required">展示对象:</div><div class="control"><select><option>全部用户</option><option>新用户</option><option>指定用户</option></select></div></div>
+   <div class="form-row"><div class="field-label required">地区标识:</div><div class="control"><select><option>全部</option><option>印度</option><option>巴基斯坦</option><option>沙特阿拉伯</option><option>土耳其</option></select></div></div>
+   <div class="form-row"><div class="field-label">内容链接:</div><div class="inline" style="width:100%"><div class="control" style="width:90px"><select><option>前缀选择</option><option>https://</option><option>http://</option></select></div><div class="control" style="flex:1"><input placeholder="请输入内容链接"></div></div></div>
+   <div class="form-row"><div class="field-label">开屏H5链接:</div><div class="control"><input placeholder="请输入开屏H5链接"></div></div>
+   <div class="form-row"><div class="field-label">背景色:</div><div class="color-row"><span>#101010</span><input type="color" value="#101010" style="width:30px;height:30px;padding:0;border:0"></div></div>
+
+   <div class="form-row top"><div class="field-label required">开屏图(简体):</div><div><div class="upload" onclick="document.getElementById('file').click()">＋</div><input id="file" type="file" accept="image/*" hidden></div></div>
+   <div class="form-row top"><div class="field-label">开屏图(繁体):</div><div class="upload" onclick="alert('图片上传示意')">＋</div></div>
+   <div class="form-row top"><div class="field-label">开屏图(英文):</div><div class="upload" onclick="alert('图片上传示意')">＋</div></div>
+  </div>
+  <div class="footer"><button class="btn" onclick="alert('已取消（原型示意）')">取消</button><button class="btn primary" onclick="alert('配置已提交（原型示意）')">确定</button></div>
+ </div>
+</div>
+<script>
+const period=document.getElementById('period'), config=document.getElementById('triggerConfig'), days=document.getElementById('days');
+function render(){
+ const p=period.value;
+ document.getElementById('triggerRow').hidden=!p;
+ document.getElementById('durationRow').hidden=!p;
+ document.getElementById('durationLabel').textContent=p==='daily'?'展示小时数:':'展示天数:';
+ document.getElementById('durationUnit').textContent=p==='daily'?'小时':'天';
+ days.value='';
+ const time='<input class="control time-input" type="time" aria-label="触发时间">';
+ config.innerHTML=p==='weekly'?'<select class="control small-select"><option value="">请选择星期</option>'+['一','二','三','四','五','六','日'].map(x=>'<option>星期'+x+'</option>').join('')+'</select>'+time:p==='monthly'?'<select class="control day-select"><option value="">请选择日期</option>'+Array.from({length:31},(_,i)=>'<option>每月 '+(i+1)+' 日</option>').join('')+'</select>'+time:p?time:'';
+}
+period.addEventListener('change',render);render();
+</script>
+</body>
+</html>
